@@ -1,0 +1,70 @@
+
+{% load static %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<!--<link rel="stylesheet" href="../static/font-awesome-4.7.0/css/font-awesome.css" />
+		<link rel="stylesheet" href="../static/common.css" />-->
+		<link rel="stylesheet" href="{% static "font-awesome-4.7.0/css/font-awesome.css" %}" />
+		<link rel="stylesheet" href="{% static "common.css" %}" />
+		<title>{% block title%}{% endblock %}</title>
+		{% block css%}{% endblock %}
+	</head>
+	<body>
+		<div class="pg-header">
+			<div class="logo left">
+				<a href="http://www.sogou.com"><img src="../static/img/dir_logo.gif" style="width: 200px; height: 48px;"/></a>
+			</div>
+			
+			<!--<div class="user right" style="position: relative;">
+				<a class="a" href="#">
+					<img  src="../static/img/ddd.jpg" "/>
+				</a>
+				<div class="b" >
+					<a>个人资料</a>
+					<a>注销</a>
+				</div>
+			</div>
+			<div class="icon right">
+				<i class="fa fa-envelope-o" aria-hidden="true"></i>
+				<span>1</span>
+			</div>
+			<div class="icon right">
+				<i class="fa fa-bell-o" aria-hidden="true"></i>
+			</div>-->
+		</div>
+		<div class="pg-content" >
+            <div class="menu left">
+            	{% for item in business_lst %}
+            	<div class="item">
+            		
+					<div id="{{item.id}}" class="item_header">{{item.businame}}</div>					
+					<div class="item_content hide">
+						{% for app in app_lst %}	
+            				{% ifequal app.busi_id item.id %}
+            					<a href="{{app.urlname}}"class="linka"><div id="{{app.id}}">{{app.appname}}</div></a>
+            				{% endifequal %}	
+            			{% endfor %}
+					</div>					
+				</div>
+				{% endfor %}
+            </div>
+            <div class="content right">
+            	<div style="width: 50px;height: 50px;position: fixed;bottom: 0;right: 0;background-color: blue;"></div>
+            	<div>
+            		{% block content%}{% endblock %}
+            	</div>
+            </div>
+		</div>
+		<div class="pg-footer"></div>
+		<script src="/static/jquery-3.3.1.min.js"></script>
+		<script>
+			$('.item_header').click(function(){
+				$(this).next().removeClass('hide').parent().siblings().find('.item_content').addClass('hide');
+			})
+		</script>
+		{% block js%}{% endblock %}
+	</body>
+</html>
