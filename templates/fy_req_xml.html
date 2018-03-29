@@ -1,170 +1,396 @@
-{% extends 'layout.html' %}
-{% block content %}
+{% extends 'layout.html' %} {% load tag_tools %} {% block content %}
 <ol class="breadcrumb">
-  <li>{{businame}}</li>
-  <li class="active">{{app_name}}</li>
-  <li style="color: red;"><span id="error_xml"></span></li>
+	<li>{{businame}}</li>
+	<li class="active">{{app_name}}</li>
+	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">
-  <div class="col-md-3">
-  	<table class="table table-hover">
-		<thead>
-				<tr>
-					<td>应用名称</td>
-					<td>应用主机列表</td>
-					<td>操作</td>
-				</tr>
-			</thead>
-			<tbody>
-				
-				<tr>
-					<td>aaaa</td>
-					<td>bbb</td>
-					<td>ccc</td>
-				</tr>
-			</tbody>
-	</table>
-  </div>
-  <div class="col-md-9">
-  	<form class="form-horizontal" action="" method="post" id="form_xml">
-  <div class="form-group">
-    <label  class="col-sm-1 control-label">HOST</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="inputHost" name="inputHost" value="http://10.153.51.60:12000/xml">
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-1 control-label">翻译方向</label>
-    <div class="col-sm-10" >
-      <select id="lan_sel" name="lan_sel" class="form-control" >
-        <option value="en">  英  </option>
-        <option value="fr">  法  </option>
-        <option value="ru">  俄  </option>
-        <option value="ko">  韩  </option>
-        <option value="ja">  日  </option>
-        <option value="ar">  阿拉伯语  </option>
-        <option value="et">  爱沙尼亚语  </option>
-        <option value="bg">  保加利亚语  </option>
-        <option value="pl">  波兰语  </option>
-        <option value="bs-Latn">  波斯尼亚语  </option>
-        <option value="fa">  波斯语  </option>
-        <option value="mww">  白苗文  </option>
-        <option value="da">  丹麦语  </option>
-        <option value="de" selected="">  德语  </option>
-        <option value="fi">  芬兰语  </option>
-        <option value="tlh-Qaak">  克林贡语(piqaD)  </option>
-        <option value="tlh">  克林贡语  </option>
-        <option value="hr">  克罗地亚语  </option>
-        <option value="otq">  克雷塔罗奥托米语  </option>
-        <option value="ca">  加泰隆语  </option>
-        <option value="cs">  捷克语  </option>
-        <option value="ro">  罗马尼亚语  </option>
-        <option value="lv">  拉脱维亚语  </option>
-        <option value="ht">  海地克里奥尔语  </option>
-        <option value="lt">  立陶宛语  </option>
-        <option value="nl">  荷兰语  </option>
-        <option value="ms">  马来语  </option>
-        <option value="mt">  马耳他语  </option>
-        <option value="pt">  葡萄牙语  </option>
-        <option value="sl">  斯洛文尼亚语  </option>
-        <option value="th">  泰语  </option>
-        <option value="tr">  土耳其语  </option>
-        <option value="sr-Latn">  塞尔维亚语(拉丁文)  </option>
-        <option value="sr-Cyrl">  塞尔维亚语(西里尔文)  </option>
-        <option value="sk">  斯洛伐克语  </option>
-        <option value="sw">  斯瓦希里语  </option>
-        <option value="af">  南非荷兰语  </option>
-        <option value="no">  挪威语  </option>
-        <option value="es">  西班牙语  </option>
-        <option value="uk">  乌克兰语  </option>
-        <option value="ur">  乌尔都语  </option>
-        <option value="el">  希腊语  </option>
-        <option value="hu">  匈牙利语  </option>
-        <option value="cy">  威尔士语  </option>
-        <option value="yua">  尤卡坦玛雅语  </option>
-        <option value="he">  希伯来语  </option>
-        <option value="it">  意大利语  </option>
-        <option value="hi">  印地语  </option>
-        <option value="id">  印度尼西亚语  </option>
-        <option value="vi">  越南语  </option>
-        <option value="sv">  瑞典语  </option>
-        <option value="yue">  粤语(繁体)  </option>
-        <option value="fj">  斐济语  </option>
-        <option value="FIL">  菲律宾语  </option>
-        <option value="sm">  萨摩亚语  </option>
-        <option value="to">  汤加语  </option>
-        <option value="ty">  塔希提语  </option>
-        <option value="mg">  马尔加什语  </option>
-        <option value="bn">  孟加拉语  </option>
-	</select>
-    </div>
-  </div>
-  <div class="form-group">
-    	<label class="col-sm-1 control-label">From-to</label>
-    	<div class="col-sm-10">
-	    	<label class="radio-inline">
+	<div class="col-md-5">
+		<div style="position:absolute; height:700px; overflow:auto">
+			<table class="table table-hover" id="reqData">
+				<thead>
+					<tr>
+						<td>Time</td>
+						<td>Host</td>
+						<td style="width: 100px;">
+							<select id="lan_filter" name="lan_filter" class="form-control" style="cursor: pointer;height: 30px;padding: 3px 6px;">
+								<option value="all" selected=""> Lang </option>
+								<option value="en"> 英 </option>
+								<option value="fr"> 法 </option>
+								<option value="ru"> 俄 </option>
+								<option value="ko"> 韩 </option>
+								<option value="ja"> 日 </option>
+								<option value="ar"> 阿拉伯语 </option>
+								<option value="et"> 爱沙尼亚语 </option>
+								<option value="bg"> 保加利亚语 </option>
+								<option value="pl"> 波兰语 </option>
+								<option value="bs-Latn"> 波斯尼亚语 </option>
+								<option value="fa"> 波斯语 </option>
+								<option value="mww"> 白苗文 </option>
+								<option value="da"> 丹麦语 </option>
+								<option value="de"> 德语 </option>
+								<option value="fi"> 芬兰语 </option>
+								<option value="tlh-Qaak"> 克林贡语(piqaD) </option>
+								<option value="tlh"> 克林贡语 </option>
+								<option value="hr"> 克罗地亚语 </option>
+								<option value="otq"> 克雷塔罗奥托米语 </option>
+								<option value="ca"> 加泰隆语 </option>
+								<option value="cs"> 捷克语 </option>
+								<option value="ro"> 罗马尼亚语 </option>
+								<option value="lv"> 拉脱维亚语 </option>
+								<option value="ht"> 海地克里奥尔语 </option>
+								<option value="lt"> 立陶宛语 </option>
+								<option value="nl"> 荷兰语 </option>
+								<option value="ms"> 马来语 </option>
+								<option value="mt"> 马耳他语 </option>
+								<option value="pt"> 葡萄牙语 </option>
+								<option value="sl"> 斯洛文尼亚语 </option>
+								<option value="th"> 泰语 </option>
+								<option value="tr"> 土耳其语 </option>
+								<option value="sr-Latn"> 塞尔维亚语(拉丁文) </option>
+								<option value="sr-Cyrl"> 塞尔维亚语(西里尔文) </option>
+								<option value="sk"> 斯洛伐克语 </option>
+								<option value="sw"> 斯瓦希里语 </option>
+								<option value="af"> 南非荷兰语 </option>
+								<option value="no"> 挪威语 </option>
+								<option value="es"> 西班牙语 </option>
+								<option value="uk"> 乌克兰语 </option>
+								<option value="ur"> 乌尔都语 </option>
+								<option value="el"> 希腊语 </option>
+								<option value="hu"> 匈牙利语 </option>
+								<option value="cy"> 威尔士语 </option>
+								<option value="yua"> 尤卡坦玛雅语 </option>
+								<option value="he"> 希伯来语 </option>
+								<option value="it"> 意大利语 </option>
+								<option value="hi"> 印地语 </option>
+								<option value="id"> 印度尼西亚语 </option>
+								<option value="vi"> 越南语 </option>
+								<option value="sv"> 瑞典语 </option>
+								<option value="yue"> 粤语(繁体) </option>
+								<option value="fj"> 斐济语 </option>
+								<option value="FIL"> 菲律宾语 </option>
+								<option value="sm"> 萨摩亚语 </option>
+								<option value="to"> 汤加语 </option>
+								<option value="ty"> 塔希提语 </option>
+								<option value="mg"> 马尔加什语 </option>
+								<option value="bn"> 孟加拉语 </option>
+							</select>
+						</td>
+						<td>Request</td>
+						<td>Result</td>
+						<td style="width: 60px;">Ctrl</td>
+					</tr>
+				</thead>
+				<tbody style="cursor: pointer;" id="reqBody">
+					{% for item in req_lst %}
+					<tr req_id="{{item.id}}" class="get_data" lang_type="{{item.trans_direct}}">
+						<td>{% formatTime item.c_time %}</td>
+						<td>{{item.host_ip}}</td>
+						<td style="width: 50px;">{{item.trans_direct}}</td>
+						<td> {{item.req_text}}</td>
+						<td>{{item.result}}</td>
+						<td class="hide">{{item.isfromzh}}</td>
+						<td style="width: 60px;">
+							<button class="del_line">DEL</button>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+
+			</table>
+		</div>
+		<div id="showDiv"></div>
+	</div>
+	<div class="col-md-7">
+		<form class="form-horizontal" action="" method="post" id="form_xml">
+			<div class="form-group">
+				<label class="col-sm-1 control-label">HOST</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="inputHost" name="inputHost" value="http://10.153.51.60:12000/xml">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">Direction</label>
+				<div class="col-sm-10">
+					<select id="lan_sel" name="lan_sel" class="form-control" style="cursor: pointer;">
+						<option value="en"> 英 </option>
+						<option value="fr"> 法 </option>
+						<option value="ru"> 俄 </option>
+						<option value="ko"> 韩 </option>
+						<option value="ja"> 日 </option>
+						<option value="ar"> 阿拉伯语 </option>
+						<option value="et"> 爱沙尼亚语 </option>
+						<option value="bg"> 保加利亚语 </option>
+						<option value="pl"> 波兰语 </option>
+						<option value="bs-Latn"> 波斯尼亚语 </option>
+						<option value="fa"> 波斯语 </option>
+						<option value="mww"> 白苗文 </option>
+						<option value="da"> 丹麦语 </option>
+						<option value="de" selected=""> 德语 </option>
+						<option value="fi"> 芬兰语 </option>
+						<option value="tlh-Qaak"> 克林贡语(piqaD) </option>
+						<option value="tlh"> 克林贡语 </option>
+						<option value="hr"> 克罗地亚语 </option>
+						<option value="otq"> 克雷塔罗奥托米语 </option>
+						<option value="ca"> 加泰隆语 </option>
+						<option value="cs"> 捷克语 </option>
+						<option value="ro"> 罗马尼亚语 </option>
+						<option value="lv"> 拉脱维亚语 </option>
+						<option value="ht"> 海地克里奥尔语 </option>
+						<option value="lt"> 立陶宛语 </option>
+						<option value="nl"> 荷兰语 </option>
+						<option value="ms"> 马来语 </option>
+						<option value="mt"> 马耳他语 </option>
+						<option value="pt"> 葡萄牙语 </option>
+						<option value="sl"> 斯洛文尼亚语 </option>
+						<option value="th"> 泰语 </option>
+						<option value="tr"> 土耳其语 </option>
+						<option value="sr-Latn"> 塞尔维亚语(拉丁文) </option>
+						<option value="sr-Cyrl"> 塞尔维亚语(西里尔文) </option>
+						<option value="sk"> 斯洛伐克语 </option>
+						<option value="sw"> 斯瓦希里语 </option>
+						<option value="af"> 南非荷兰语 </option>
+						<option value="no"> 挪威语 </option>
+						<option value="es"> 西班牙语 </option>
+						<option value="uk"> 乌克兰语 </option>
+						<option value="ur"> 乌尔都语 </option>
+						<option value="el"> 希腊语 </option>
+						<option value="hu"> 匈牙利语 </option>
+						<option value="cy"> 威尔士语 </option>
+						<option value="yua"> 尤卡坦玛雅语 </option>
+						<option value="he"> 希伯来语 </option>
+						<option value="it"> 意大利语 </option>
+						<option value="hi"> 印地语 </option>
+						<option value="id"> 印度尼西亚语 </option>
+						<option value="vi"> 越南语 </option>
+						<option value="sv"> 瑞典语 </option>
+						<option value="yue"> 粤语(繁体) </option>
+						<option value="fj"> 斐济语 </option>
+						<option value="FIL"> 菲律宾语 </option>
+						<option value="sm"> 萨摩亚语 </option>
+						<option value="to"> 汤加语 </option>
+						<option value="ty"> 塔希提语 </option>
+						<option value="mg"> 马尔加什语 </option>
+						<option value="bn"> 孟加拉语 </option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">zh_CHS</label>
+				<div class="col-sm-10">
+					<label class="radio-inline">
 	  			<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="tozh" checked="checked"> TO-zh
 			</label>
-			<label class="radio-inline">
+					<label class="radio-inline">
 	 	 		<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="fromzh"> FROM-zh
 			</label>
-		</div>
-  </div>
-  <div class="form-group">
+				</div>
+			</div>
+			<div class="form-group">
 
-    	<label class="col-sm-1 control-label">Request</label>
-    	<div class="col-sm-10">
-	    	<textarea class="form-control" rows="4" style="resize: none;" name="reqtext"></textarea>
+				<label class="col-sm-1 control-label">Request</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="4" style="resize: none;" name="reqtext" id="reqtext"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-1 col-sm-10">
+					<div class="col-sm-offset-1 col-sm-5">
+						<label class="btn btn-primary btn-lg btn-block" id="request_xml">开始调试</label>
+					</div>
+					<div class=" col-sm-5">
+						<label class="btn btn-primary btn-lg btn-block" id="save_xml">保存请求</label>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="form-horizontal">
+			<div class="form-group">
+				<label class="col-sm-1 control-label">Result</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="4" style="resize: none;" id="result" name="req_result"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">OutInfo</label>
+				<div class="col-sm-10">
+					<textarea class="form-control" rows="15" style="resize: none;" id="debugInfo"></textarea>
+				</div>
+			</div>
 		</div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-1 col-sm-10">
-      <label class="btn btn-primary btn-lg btn-block" id="request_xml">提交</label>
-    </div>
-  </div>
-</form>
- <div class="form-horizontal">
-		<div class="form-group">
-    	<label class="col-sm-1 control-label">Result</label>
-    	<div class="col-sm-10">
-	    	<textarea class="form-control" rows="4" style="resize: none;" id="result"></textarea>
-		</div>
-		</div>
-		<div class="form-group">
-    	<label class="col-sm-1 control-label">调试信息</label>
-    	<div class="col-sm-10">
-	    	<textarea class="form-control" rows="15" style="resize: none;" id="debugInfo"></textarea>
-		</div>
-		</div>
- </div>
-  </div>
+	</div>
 </div>
 
-
-{% endblock %}
-{% block js %}
-	<script>
-		$('#request_xml').click(function(){
+{% endblock %} {% block js %}
+<script>
+	//save
+	$('#save_xml').click(function() {
+		var reqtext = $('#reqtext').val()
+		var inputHost = $('#inputHost').val()
+		var lan_sel = $('#lan_sel').val()
+		var inlineRadioOptions = $("input[name='inlineRadioOptions']:checked").val()
+		var result = $('#result').val()
+		console.log("1:" + reqtext + "2:" + inputHost + "3:" + lan_sel + "4:" + inlineRadioOptions + "5:" + result)
+		if(reqtext != "" && inputHost != "") {
 			$.ajax({
-						type:"POST",
-						url:"/xml_req",
-						async:true,
-						traditional:true,
-						data:$('#form_xml').serialize(),
-						dataType:'JSON',
-						success:function(obj){
-							if(obj.status){
-								$('#result').val(obj.transResult);
-								$('#debugInfo').val(obj.debugInfo);
-								$('#error_xml').text('');
-							}else{
-								$('#error_xml').text(obj.error);
-							}
-						},
-						error:function(){
-							
-						},
-					});
-		})
-	</script>
+				type: "POST",
+				url: "/xml_req_save",
+				async: true,
+				traditional: true,
+				data: {
+					'inputHost': inputHost,
+					'lan_sel': lan_sel,
+					'inlineRadioOptions': inlineRadioOptions,
+					'reqtext': reqtext,
+					'result': result
+				},
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						location.reload();
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+			$('#error_xml').text('');
+		} else {
+			if(reqtext == '') {
+				$('#error_xml').text('Request不可为空。');
+			} else if(inputHost == '') {
+				$('#error_xml').text('Host不可为空。');
+			} else {
+				$('#error_xml').text('未知错误。');
+			}
+		}
+	})
+
+	//request
+	$('#request_xml').click(function() {
+		var reqtext = $('#reqtext').val()
+		var inputHost = $('#inputHost').val()
+		if(reqtext != "" && inputHost != "") {
+			$.ajax({
+				type: "POST",
+				url: "/xml_req",
+				async: true,
+				traditional: true,
+				data: $('#form_xml').serialize(),
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						$('#result').val(obj.transResult);
+						$('#debugInfo').val(obj.debugInfo);
+						$('#error_xml').text('');
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+			$('#error_xml').text('');
+		} else {
+			if(reqtext == '') {
+				$('#error_xml').text('Request不可为空');
+			} else if(inputHost == '') {
+				$('#error_xml').text('Host不可为空');
+			} else {
+				$('#error_xml').text('未知错误');
+			}
+		}
+	})
+
+	//table hover
+	$(function() {
+		function showBox(obj, box) {
+			var timer = null;
+			$(obj).on("mouseover", function(e) {
+				clearTimeout(timer);
+				var clientX = e.clientX;
+				var clientY = e.clientY;
+				var y = clientY + 20;
+				var txt = $(this).text();
+				timer = setTimeout(function() {
+					$(box).css("left", clientX).css("top", y);
+					if(txt == "") {
+						$(box).hide();
+					} else {
+						$(box).show();
+						$(box).html(txt);
+					}
+				}, 300);
+			});
+			$(obj).on("mouseout", function() {
+				clearTimeout(timer);
+				$(box).hide();
+			});
+		}
+		showBox("#reqData > tbody td", "#showDiv");
+	});
+
+	//del
+	$('.del_line').click(function() {
+		var line_id = $(this).parent().parent().attr('req_id');
+		if(confirm('确认删除?')) {
+			$.ajax({
+				type: "POST",
+				url: "del_xml_line",
+				async: true,
+				data: {
+					'line_id': line_id
+				},
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						location.reload();
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				}
+			});
+		} else {
+			return;
+		}
+	})
+
+	//getData
+	$('.get_data').dblclick(function() {
+		var linelst = $(this).children();
+		hostip = $(linelst[1]).text();
+		direction = $(linelst[2]).text();
+		reqtext = $(linelst[3]).text();
+		result = $(linelst[4]).text();
+		$('#inputHost').val(hostip);
+		$('#lan_sel').val(direction);
+		$('#reqtext').val(reqtext);
+
+	})
+
+	$('#lan_filter').change(function() {
+		var line_lst = $('#reqBody').children();
+		var sel_lang = $(this).val();
+
+		if(sel_lang == 'all') {
+			line_lst.each(function() {
+				$(this).removeClass('hide');
+			})
+		} else {
+			line_lst.each(function() {
+				var line_lang = $(this).attr('lang_type');
+				if(sel_lang != line_lang) {
+					$(this).addClass('hide');
+				}
+			})
+
+		}
+	})
+</script>
 {% endblock %}
