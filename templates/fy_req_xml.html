@@ -368,25 +368,34 @@
 		direction = $(linelst[2]).text();
 		reqtext = $(linelst[3]).text();
 		result = $(linelst[4]).text();
+		isfromzh = $(linelst[5]).text();
 		$('#inputHost').val(hostip);
 		$('#lan_sel').val(direction);
+		$('#lan_sel').val(direction);
 		$('#reqtext').val(reqtext);
-
+		if(isfromzh=='fromzh'){
+			$('#inlineRadio2').attr("checked",'checked');
+			$('#inlineRadio1').attr("checked",false);
+		}else{
+			$('#inlineRadio1').attr("checked",'checked');
+			$('#inlineRadio2').attr("checked",false);
+		}
 	})
 
 	$('#lan_filter').change(function() {
-		var line_lst = $('#reqBody').children();
 		var sel_lang = $(this).val();
-
+		console.log(sel_lang)
 		if(sel_lang == 'all') {
-			line_lst.each(function() {
+			$('#reqBody').children().each(function() {
 				$(this).removeClass('hide');
 			})
 		} else {
-			line_lst.each(function() {
+			$('#reqBody').children().each(function() {
 				var line_lang = $(this).attr('lang_type');
 				if(sel_lang != line_lang) {
 					$(this).addClass('hide');
+				}else{
+					$(this).removeClass('hide');
 				}
 			})
 
