@@ -1,42 +1,54 @@
 from django.shortcuts import render,HttpResponse,redirect
 from fanyi import models
 from fanyi import requestData
-import json,requests,time,subprocess,urllib
+import json,requests,time,subprocess,urllib.parse
 # Create your views here.
 
 # fy_automation
 def fy_automation(request):
-	if request.method == 'GET':
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
-		req_lst = models.ReqInfo.objects.all()
-		timea =models.ReqInfo.objects.all().values()
-		# for item in timea:
-		# 	print(item)
-		return render(request, 'fy_automation.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"翻译性能对比自动化"})
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	business_lst = models.Business.objects.all()
+	app_lst = models.Application.objects.all()
+	req_lst = models.ReqInfo.objects.all()
+	timea =models.ReqInfo.objects.all().values()
+	# for item in timea:
+	# 	print(item)
+	return render(request, 'fy_automation.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"翻译性能对比自动化"})
 
 
 # allj request
 def fy_req_allj(request):
-	if request.method == 'GET':
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
-		req_lst = models.ReqInfo.objects.all()
-		timea =models.ReqInfo.objects.all().values()
-		# for item in timea:
-		# 	print(item)
-		return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"JSON请求调试"})
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	business_lst = models.Business.objects.all()
+	app_lst = models.Application.objects.all()
+	req_lst = models.ReqInfo.objects.all()
+	timea =models.ReqInfo.objects.all().values()
+	# for item in timea:
+	# 	print(item)
+	return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"JSON请求调试"})
 
 # json request
 def fy_req_json(request):
-	if request.method == 'GET':
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
-		req_lst = models.ReqInfo.objects.all()
-		timea =models.ReqInfo.objects.all().values()
-		# for item in timea:
-		# 	print(item)
-		return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"Alltrans_json请求调试"})
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	business_lst = models.Business.objects.all()
+	app_lst = models.Application.objects.all()
+	req_lst = models.ReqInfo.objects.all()
+	timea =models.ReqInfo.objects.all().values()
+	# for item in timea:
+	# 	print(item)
+	return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"Alltrans_json请求调试"})
 
 # xml request
 def del_xml_line(request):
@@ -57,11 +69,13 @@ def xml_req_save(request):
 	fromto = request.POST.get('inlineRadioOptions')
 	reqtext = request.POST.get('reqtext')
 	result = request.POST.get('result')
-	print(inputHost,lan_sel,fromto,reqtext,result)
 	try:
+		getuser = models.UserInfo.objects.filter(user_name='zhangjingjun')
+		print(request)
 		models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=1)
 	except Exception as e:
 		ret['error'] = "Error:" + str(e)
+		print(e)
 		ret['status'] = False
 	return HttpResponse(json.dumps(ret))
 
@@ -80,9 +94,7 @@ def xml_req(request):
 		fromlan = 'zh-CHS'
 		tolan = lan_sel
 	output = 'host={_host},from_lang={_fromlan},to_lang={_tolan},query={_query}'.format(_host=inputHost,_fromlan=fromlan,_tolan=tolan,_query=reqtext)
-	print(output)
 	data = '''<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://api.microsofttranslator.com/V2"><soapenv:Header/><soapenv:Body><v2:Translate><v2:appId></v2:appId><v2:debug>true</v2:debug><v2:text>{_reqtext}</v2:text><v2:from>{_fromlan}</v2:from><v2:to>{_tolan}</v2:to><v2:contentType>text/plain</v2:contentType><v2:category>general</v2:category></v2:Translate></soapenv:Body></soapenv:Envelope>'''.format(_reqtext=query,_fromlan=fromlan,_tolan=tolan)
-	print(data)
 	try:
 		resp = requests.post(inputHost, data=data)
 		result = requestData.parseXmlRes(resp.text)
@@ -100,6 +112,12 @@ def xml_req(request):
 
 
 def fy_req_xml(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+
 	if request.method == 'GET':
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
@@ -113,10 +131,14 @@ def fy_req_xml(request):
 
 # index
 def index(request):
-	if request.method == 'GET':
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
-		return render(request,'layout.html',{'business_lst':business_lst,'app_lst':app_lst})
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	business_lst = models.Business.objects.all()
+	app_lst = models.Application.objects.all()
+	return render(request,'layout.html',{'business_lst':business_lst,'app_lst':app_lst})
 
 
 
@@ -130,9 +152,11 @@ def home(request):
 	if ('uid' not in request.COOKIES and ptoken is ""):
 		print("no login and not login")
 		return redirect(login_url)
+	business_lst = models.Business.objects.all()
+	app_lst = models.Application.objects.all()
 	if (ptoken != ""):#login request callback
-		message = urllib.unquote(ptoken)
-		child = subprocess.Popen(['/bin/php', 'E:/html/lianxi/pyonsg/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
+		message = urllib.parse.unquote(ptoken)
+		child = subprocess.Popen(['/usr/bin/php', '/search/odin/daemon/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
 		child.wait()
 		user = child.stdout.read().decode('utf-8')
 		try:
@@ -144,7 +168,7 @@ def home(request):
 			login_time = 0
 		now_time = time.time()
 		if (uid != "" and now_time - login_time < 60):
-			response = render(request, 'home.html', {'uid': uid})
+			response = render(request, 'layout.html', {'uid': uid,'business_lst':business_lst,'app_lst':app_lst})
 			if ('uid' not in request.COOKIES):
 				response.set_cookie("uid", uid)
 		else:
@@ -157,7 +181,7 @@ def home(request):
 			print("should be login, but not login")
 			uid = ""
 		if (uid != ""):
-			response = render(request, 'home.html', {'uid': uid})
+			response = render(request, 'layout.html', {'business_lst':business_lst,'app_lst':app_lst,'uid': uid})
 		else:
 			response = None
 	if (response == None):

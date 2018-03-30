@@ -15,7 +15,7 @@ class Application(models.Model):
 
 
 class UserInfo(models.Model):
-	user_email = models.CharField(max_length=64,unique=True)
+	user_name = models.CharField(max_length=64,unique=True)
 
 
 class ReqInfo(models.Model):
