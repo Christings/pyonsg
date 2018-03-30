@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from fanyi import views as trans
+from webqo import views as webqo
+from webqw import views as webqw
 from django.urls import path,re_path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -34,4 +36,10 @@ urlpatterns = [
     re_path(r'^fy_req_allj$',trans.fy_req_allj),
     # fy_automation
     re_path(r'^fy_automation$',trans.fy_automation),
+    # webqo
+    re_path(r'^qo_automation$',webqo.qo_automation),
+    re_path(r'^qo_req$',webqo.qo_req),
+    # webqo
+    re_path(r'^qw_automation$',webqw.qw_automation),
+    re_path(r'^qw_req$',webqw.qw_req),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

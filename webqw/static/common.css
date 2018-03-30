@@ -1,0 +1,123 @@
+/* 对整个页面的所有元素进行设置*/
+body{
+	/* 元素所占空间边缘到相邻元素得举例 */
+	margin: 0;
+}
+/* .left和.right是公共的css样式，创建后，在元素中可以直接使用,如<div class="menu left"></div>当中的left */
+.left{
+	float: left;
+}
+.right{
+	float: right;
+}
+.pg-header{
+	/* 头部样式：高度，背景颜色，字体颜色*/
+	height: 48px;
+	background-color: #ADADAD;
+	color: white;
+	/*使用line-height为实际的高度，则在这个头部div中的文字元素上下都会居中*/
+	line-height: 48px;
+}
+.pg-header .logo{
+	width: 200px;
+	background-color: bisque;
+	/*文字在该div左右居中*/
+	text-align: center;
+	color: black;
+}
+.pg-header .user{
+	margin-right: 60px;
+	padding: 0 20px;
+	color: white;
+	height: 48px;								
+}
+/*用户头像，链接使用a标签，图片方形，变成圆的，使用border-radius*/
+.pg-header .user .a img{
+	height: 40px;
+	width: 40px;
+	margin-top: 4px;
+	margin-left: 4px;
+	border-radius: 50%;
+}
+/* 鼠标移动到右上角，背景颜色会发生变化，使用hover*/
+.pg-header .user:hover{
+	background-color: #DDDDDD;
+}
+.pg-header .user .b{
+	z-index：20000;
+	position: absolute;
+	top: 47px;
+	right: 40px;
+	background-color: aquamarine;
+	width: 160px;
+	/*默认不显示*/
+	display: none;
+}
+/*当鼠标移动到user的div上时,它下面的b的样式变成显示*/
+.pg-header .user:hover .b{
+	display: block;
+}
+.pg-header .user .b a{
+	display: block;
+}
+/*设置邮箱和消息图标的间距*/
+.pg-header .icon{
+	padding: 0 20px;
+}
+/*设置邮箱和消息鼠标悬浮操作*/
+.pg-header .icon:hover{
+	background-color: #DDDDDD;
+}
+/* 一下两个样式，是内容div当中两个小div的大小比例，但是如果浏览器页面不断缩小，会造成两个子元素不断变小，所以增加最小宽度 * */
+.pg-content .menu{
+	position: absolute;
+	top: 48px;
+	left: 0;
+	bottom: 0;
+	width: 200px;
+	background-color: #dddddd;
+}
+.item{
+	
+}
+.hide{
+	display: none;
+}
+.item .item_header{
+	height: 35px;
+	background-color: #ADADAD;
+	color: white;
+	line-height: 35px;
+	cursor: pointer;
+}
+.item .item_content{
+	cursor: pointer;
+	line-height: 35px;
+	
+}
+.linka{
+	text-decoration:none;
+}
+.pg-content{
+	/*显示的层级关系,越大越靠上*/
+	z-index: 1;
+}
+.pg-content .content{
+	position: absolute;
+	top: 48px;
+	left: 200px;
+	bottom: 0;
+	right: 0;
+	/* 当右侧内容div因为浏览器缩小和而宽度小鱼980像素时，自动出现左右的滚动条 */
+	min-width: 980px;
+	/* 左侧菜单栏，使用absolute是绝对定位，后面不会在动，而右侧内容，使用overflow：auto，不动的前提下
+	 自动生成滚动条 */
+	overflow: auto;
+}
+/*
+ * 会有一个问题，就是在ie低版本中，图像四周出现一个蓝色的边框，ie高版本，火狐和Chrome都没这个问题。
+ * 原因是a标签是链接标签，会自动给标签里面的内容加上一些颜色，所以要去掉这个，可以统一加一个css样式，img{border: 0}
+ */
+img{
+	border: 0px;
+}
