@@ -10,7 +10,7 @@
 			<table class="table table-hover" id="reqData">
 				<thead>
 					<tr>
-						<td>Time</td>
+						<td style="width: 100px;">Time</td>
 						<td>Host</td>
 						<td style="width: 100px;">
 							<select id="lan_filter" name="lan_filter" class="form-control" style="cursor: pointer;height: 30px;padding: 3px 6px;">
@@ -84,8 +84,8 @@
 				<tbody style="cursor: pointer;" id="reqBody">
 					{% for item in req_lst %}
 					<tr req_id="{{item.id}}" class="get_data" lang_type="{{item.trans_direct}}">
-						<td>{% formatTime item.c_time %}</td>
-						<td>{{item.host_ip}}</td>
+						<td style="width: 100px;">{% formatTime item.c_time %}</td>
+						<td>{% formatIp item.host_ip %}</td>
 						<td style="width: 50px;">{{item.trans_direct}}</td>
 						<td> {{item.req_text}}</td>
 						<td>{{item.result}}</td>
@@ -377,6 +377,7 @@
 			$('#inlineRadio1').attr("checked", 'checked');
 			$('#inlineRadio2').attr("checked", false);
 		}
+		$('#result').val(result);
 	})
 
 	$('#lan_filter').change(function() {

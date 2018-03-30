@@ -24,6 +24,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    re_path(r'^$',trans.home),
     # xml
     re_path(r'^index$',trans.index),
     re_path(r'^fy_req_xml$',trans.fy_req_xml),
