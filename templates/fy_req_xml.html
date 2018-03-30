@@ -336,29 +336,26 @@
 	//del
 	$('.del_line').click(function() {
 		var line_id = $(this).parent().parent().attr('req_id');
-		if(confirm('确认删除?')) {
-			$.ajax({
-				type: "POST",
-				url: "del_xml_line",
-				async: true,
-				data: {
-					'line_id': line_id
-				},
-				dataType: 'JSON',
-				success: function(obj) {
-					if(obj.status) {
-						location.reload();
-					} else {
-						$('#error_xml').text(obj.error);
-					}
-				},
-				error: function() {
-
+		$.ajax({
+			type: "POST",
+			url: "del_xml_line",
+			async: true,
+			data: {
+				'line_id': line_id
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
 				}
-			});
-		} else {
-			return;
-		}
+			},
+			error: function() {
+
+			}
+		});
+
 	})
 
 	//getData
@@ -373,12 +370,12 @@
 		$('#lan_sel').val(direction);
 		$('#lan_sel').val(direction);
 		$('#reqtext').val(reqtext);
-		if(isfromzh=='fromzh'){
-			$('#inlineRadio2').attr("checked",'checked');
-			$('#inlineRadio1').attr("checked",false);
-		}else{
-			$('#inlineRadio1').attr("checked",'checked');
-			$('#inlineRadio2').attr("checked",false);
+		if(isfromzh == 'fromzh') {
+			$('#inlineRadio2').attr("checked", 'checked');
+			$('#inlineRadio1').attr("checked", false);
+		} else {
+			$('#inlineRadio1').attr("checked", 'checked');
+			$('#inlineRadio2').attr("checked", false);
 		}
 	})
 
@@ -394,7 +391,7 @@
 				var line_lang = $(this).attr('lang_type');
 				if(sel_lang != line_lang) {
 					$(this).addClass('hide');
-				}else{
+				} else {
 					$(this).removeClass('hide');
 				}
 			})

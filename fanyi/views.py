@@ -4,6 +4,41 @@ from fanyi import requestData
 import json,requests
 # Create your views here.
 
+# fy_automation
+def fy_automation(request):
+	if request.method == 'GET':
+		business_lst = models.Business.objects.all()
+		app_lst = models.Application.objects.all()
+		req_lst = models.ReqInfo.objects.all()
+		timea =models.ReqInfo.objects.all().values()
+		# for item in timea:
+		# 	print(item)
+		return render(request, 'fy_automation.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"翻译性能对比自动化"})
+
+
+# allj request
+def fy_req_allj(request):
+	if request.method == 'GET':
+		business_lst = models.Business.objects.all()
+		app_lst = models.Application.objects.all()
+		req_lst = models.ReqInfo.objects.all()
+		timea =models.ReqInfo.objects.all().values()
+		# for item in timea:
+		# 	print(item)
+		return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"JSON请求调试"})
+
+# json request
+def fy_req_json(request):
+	if request.method == 'GET':
+		business_lst = models.Business.objects.all()
+		app_lst = models.Application.objects.all()
+		req_lst = models.ReqInfo.objects.all()
+		timea =models.ReqInfo.objects.all().values()
+		# for item in timea:
+		# 	print(item)
+		return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"Alltrans_json请求调试"})
+
+# xml request
 def del_xml_line(request):
 	ret = {'status': True, 'error': None, 'data': None}
 	req_id = request.POST.get('line_id')
@@ -57,7 +92,7 @@ def xml_req(request):
 		ret['tolan'] = tolan
 		ret['lan_sel'] = lan_sel
 		ret['host'] = inputHost
-		print(ret)
+		# print(ret)
 	except Exception as e:
 		ret['error'] = "Error:"+str(e)
 		ret['status'] = False
@@ -70,13 +105,13 @@ def fy_req_xml(request):
 		app_lst = models.Application.objects.all()
 		req_lst = models.ReqInfo.objects.all()
 		timea =models.ReqInfo.objects.all().values()
-		for item in timea:
-			print(item)
+		# for item in timea:
+		# 	print(item)
 		return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
 
 
 
-
+# index
 def index(request):
 	if request.method == 'GET':
 		business_lst = models.Business.objects.all()

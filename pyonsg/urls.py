@@ -22,9 +22,16 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # xml
     re_path(r'^index$',trans.index),
     re_path(r'^fy_req_xml$',trans.fy_req_xml),
     re_path(r'^xml_req$',trans.xml_req),
     re_path(r'^xml_req_save$',trans.xml_req_save),
     re_path(r'^del_xml_line$',trans.del_xml_line),
+    # json
+    re_path(r'^fy_req_json$',trans.fy_req_json),
+    # allj
+    re_path(r'^fy_req_allj$',trans.fy_req_allj),
+    # fy_automation
+    re_path(r'^fy_automation$',trans.fy_automation),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
