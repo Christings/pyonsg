@@ -27,3 +27,7 @@ class ReqInfo(models.Model):
 	user_fk = models.ForeignKey(to='UserInfo',to_field='user_name',on_delete=models.CASCADE)
 	c_time = models.DateTimeField(auto_now=True)
 
+class UserToApp(models.Model):
+	user_name = models.ForeignKey(to='UserInfo',to_field='user_name',on_delete=models.CASCADE)
+	app_id = models.ForeignKey(to='Application', to_field='id',on_delete=models.CASCADE)
+

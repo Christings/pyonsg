@@ -25,7 +25,8 @@ def fy_automation(request):
 def fy_req_allj(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user = request.COOKIES['uid']
+		user_id = request.COOKIES['uid']
+		user_name = request.COOKIES['name']
 	except:
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
@@ -34,13 +35,14 @@ def fy_req_allj(request):
 	timea =models.ReqInfo.objects.all().values()
 	# for item in timea:
 	# 	print(item)
-	return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"JSON请求调试"})
+	return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'user_name':user_name,'businame':'Translate','app_name':"JSON请求调试"})
 
 # json request
 def fy_req_json(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user = request.COOKIES['uid']
+		user_id = request.COOKIES['uid']
+		user_name = request.COOKIES['name']
 	except:
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
@@ -49,7 +51,7 @@ def fy_req_json(request):
 	timea =models.ReqInfo.objects.all().values()
 	# for item in timea:
 	# 	print(item)
-	return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"Alltrans_json请求调试"})
+	return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'user_name':user_name,'businame':'Translate','app_name':"Alltrans_json请求调试"})
 
 # xml request
 def del_xml_line(request):
@@ -71,7 +73,7 @@ def del_xml_line(request):
 def xml_req_save(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user = request.COOKIES['uid']
+		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
@@ -81,7 +83,7 @@ def xml_req_save(request):
 	reqtext = request.POST.get('reqtext')
 	result = request.POST.get('result')
 	try:
-		models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=user)
+		models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=user_id)
 	except Exception as e:
 		ret['error'] = "Error:" + str(e)
 		print(e)
@@ -123,7 +125,8 @@ def xml_req(request):
 def fy_req_xml(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user_name = request.COOKIES['uid']
+		user_id = request.COOKIES['uid']
+		user_name = request.COOKIES['name']
 	except:
 		return redirect(login_url)
 
@@ -131,9 +134,9 @@ def fy_req_xml(request):
 		try:
 			business_lst = models.Business.objects.all()
 			app_lst = models.Application.objects.all()
-			req_lst = models.ReqInfo.objects.filter(user_fk_id=user_name)
+			req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 			timea =models.ReqInfo.objects.all().values()
-			return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
+			return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','user_name':user_name,'app_name':"XML请求调试"})
 		except Exception as e:
 			print(e)
 			pass
@@ -144,7 +147,7 @@ def fy_req_xml(request):
 def index(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user = request.COOKIES['uid']
+		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
@@ -174,6 +177,7 @@ def home(request):
 			print("111111")
 			json_data = json.loads(user)
 			uid = json_data['uid']
+			name = json_data['name']
 			login_time = int(json_data['ts'])/1000 #s
 			userStatus = models.UserInfo.objects.filter(user_name=uid)
 			print(userStatus.exists())
@@ -190,6 +194,7 @@ def home(request):
 			response = render(request, 'layout.html', {'uid': uid,'business_lst':business_lst,'app_lst':app_lst})
 			if ('uid' not in request.COOKIES):
 				response.set_cookie("uid", uid)
+				response.set_cookie("name", name)
 		else:
 			print("maybe uid[%s] is empty or now_time[%d] - login_time[%d] >= 60" % (uid, now_time, login_time))
 			response = None

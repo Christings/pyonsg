@@ -13,7 +13,7 @@ def qo_req(request):
 		timea =models.ReqInfo.objects.all().values()
 		# for item in timea:
 		# 	print(item)
-		return render(request, 'qo_req.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Webqo','app_name':"webqo性能对比自动化"})
+		return render(request, 'qo_req.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Webqo','app_name':"webqo请求调试"})
 
 
 def qo_automation(request):

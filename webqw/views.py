@@ -9,7 +9,7 @@ def qw_req(request):
 	if request.method == 'GET':
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
-		return render(request, 'qw_req.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Webqw','app_name':"webqw性能对比自动化"})
+		return render(request, 'qw_req.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Webqw','app_name':"webqw请求调试"})
 
 
 def qw_automation(request):
