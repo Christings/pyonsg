@@ -26,7 +26,6 @@ def fy_req_allj(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
 		user_id = request.COOKIES['uid']
-		user_name = request.COOKIES['name']
 	except:
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
@@ -35,14 +34,13 @@ def fy_req_allj(request):
 	timea =models.ReqInfo.objects.all().values()
 	# for item in timea:
 	# 	print(item)
-	return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'user_name':user_name,'businame':'Translate','app_name':"JSON请求调试"})
+	return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"JSON请求调试"})
 
 # json request
 def fy_req_json(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
 		user_id = request.COOKIES['uid']
-		user_name = request.COOKIES['name']
 	except:
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
@@ -51,13 +49,13 @@ def fy_req_json(request):
 	timea =models.ReqInfo.objects.all().values()
 	# for item in timea:
 	# 	print(item)
-	return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'user_name':user_name,'businame':'Translate','app_name':"Alltrans_json请求调试"})
+	return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"Alltrans_json请求调试"})
 
 # xml request
 def del_xml_line(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user_name = request.COOKIES['uid']
+		user_id = request.COOKIES['uid']
 	except Exception as e:
 		return redirect(login_url)
 	ret = {'status': True, 'error': None, 'data': None}
@@ -126,7 +124,6 @@ def fy_req_xml(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
 		user_id = request.COOKIES['uid']
-		user_name = request.COOKIES['name']
 	except:
 		return redirect(login_url)
 
@@ -136,7 +133,7 @@ def fy_req_xml(request):
 			app_lst = models.Application.objects.all()
 			req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 			timea =models.ReqInfo.objects.all().values()
-			return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','user_name':user_name,'app_name':"XML请求调试"})
+			return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
 		except Exception as e:
 			print(e)
 			pass
