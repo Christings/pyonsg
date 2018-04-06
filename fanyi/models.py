@@ -24,6 +24,6 @@ class ReqInfo(models.Model):
 	isfromzh = models.CharField(max_length=10)
 	req_text = models.CharField(max_length=2000)
 	result = models.CharField(max_length=2000)
-	user_fk = models.ForeignKey(to='UserInfo',to_field='id',on_delete=models.CASCADE)
+	user_fk = models.ForeignKey(to='UserInfo',to_field='user_name',on_delete=models.CASCADE)
 	c_time = models.DateTimeField(auto_now=True)
 

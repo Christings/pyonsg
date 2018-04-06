@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse,redirect
 from fanyi import models
 from fanyi import requestData
+from fanyi.models import UserInfo
 import json,requests,time,subprocess,urllib.parse
 # Create your views here.
 
@@ -52,6 +53,11 @@ def fy_req_json(request):
 
 # xml request
 def del_xml_line(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_name = request.COOKIES['uid']
+	except Exception as e:
+		return redirect(login_url)
 	ret = {'status': True, 'error': None, 'data': None}
 	req_id = request.POST.get('line_id')
 	try:
@@ -63,6 +69,11 @@ def del_xml_line(request):
 
 
 def xml_req_save(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	inputHost = request.POST.get('inputHost')
 	lan_sel = request.POST.get('lan_sel')
@@ -70,9 +81,7 @@ def xml_req_save(request):
 	reqtext = request.POST.get('reqtext')
 	result = request.POST.get('result')
 	try:
-		getuser = models.UserInfo.objects.filter(user_name='zhangjingjun')
-		print(request)
-		models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=1)
+		models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=user)
 	except Exception as e:
 		ret['error'] = "Error:" + str(e)
 		print(e)
@@ -114,18 +123,20 @@ def xml_req(request):
 def fy_req_xml(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user = request.COOKIES['uid']
+		user_name = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
 
 	if request.method == 'GET':
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
-		req_lst = models.ReqInfo.objects.all()
-		timea =models.ReqInfo.objects.all().values()
-		# for item in timea:
-		# 	print(item)
-		return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
+		try:
+			business_lst = models.Business.objects.all()
+			app_lst = models.Application.objects.all()
+			req_lst = models.ReqInfo.objects.filter(user_fk_id=user_name)
+			timea =models.ReqInfo.objects.all().values()
+			return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
+		except Exception as e:
+			print(e)
+			pass
 
 
 
@@ -147,7 +158,7 @@ def home(request):
 	ptoken = ""
 	try:
 		ptoken = request.GET['ptoken']
-	except:
+	except Exception as e:
 		pass
 	if ('uid' not in request.COOKIES and ptoken is ""):
 		print("no login and not login")
@@ -160,13 +171,21 @@ def home(request):
 		child.wait()
 		user = child.stdout.read().decode('utf-8')
 		try:
+			print("111111")
 			json_data = json.loads(user)
 			uid = json_data['uid']
 			login_time = int(json_data['ts'])/1000 #s
-		except:
+			userStatus = models.UserInfo.objects.filter(user_name=uid)
+			print(userStatus.exists())
+			if userStatus.exists()==False:
+				insertInfo = UserInfo(user_name=uid)
+				insertInfo.save()
+		except Exception as e :
+			print(e)
 			uid = ""
 			login_time = 0
 		now_time = time.time()
+		print('now_time:',now_time)
 		if (uid != "" and now_time - login_time < 60):
 			response = render(request, 'layout.html', {'uid': uid,'business_lst':business_lst,'app_lst':app_lst})
 			if ('uid' not in request.COOKIES):
