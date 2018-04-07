@@ -5,6 +5,11 @@ from fanyi.models import UserInfo
 import json,requests,time,subprocess,urllib.parse
 # Create your views here.
 
+def sys_admin(request):
+	return render(request,'sys_admin.html')
+
+
+
 # fy_automation
 def fy_automation(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
