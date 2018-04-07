@@ -6,7 +6,15 @@ import json,requests,time,subprocess,urllib.parse
 # Create your views here.
 
 def sys_admin(request):
-	return render(request,'sys_admin.html')
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	business_lst = models.Business.objects.all()
+	app_lst = models.Application.objects.all()
+	return render(request, 'sys_admin.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'sysadmin', 'app_name': "系统管理"})
+
 
 
 
@@ -19,10 +27,6 @@ def fy_automation(request):
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
-	req_lst = models.ReqInfo.objects.all()
-	timea =models.ReqInfo.objects.all().values()
-	# for item in timea:
-	# 	print(item)
 	return render(request, 'fy_automation.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"翻译性能对比自动化"})
 
 
@@ -35,10 +39,6 @@ def fy_req_allj(request):
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
-	req_lst = models.ReqInfo.objects.all()
-	timea =models.ReqInfo.objects.all().values()
-	# for item in timea:
-	# 	print(item)
 	return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"JSON请求调试"})
 
 # json request
