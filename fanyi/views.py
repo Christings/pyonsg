@@ -330,16 +330,15 @@ def fy_req_xml(request):
 	except:
 		return redirect(login_url)
 
-	if request.method == 'GET':
-		try:
-			business_lst = models.Business.objects.all()
-			app_lst = models.Application.objects.all()
-			req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
-			timea =models.ReqInfo.objects.all().values()
-			return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
-		except Exception as e:
-			print(e)
-			pass
+	try:
+		business_lst = models.Business.objects.all()
+		app_lst = models.Application.objects.all()
+		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
+		timea =models.ReqInfo.objects.all().values()
+	except Exception as e:
+		print(e)
+		pass
+	return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
 
 
 
@@ -376,7 +375,6 @@ def home(request):
 		try:
 			json_data = json.loads(user)
 			uid = json_data['uid']
-			name = json_data['name']
 			login_time = int(json_data['ts'])/1000 #s
 			userStatus = models.UserInfo.objects.filter(user_name=uid)
 			print(userStatus.exists())
@@ -393,7 +391,6 @@ def home(request):
 			response = render(request, 'layout.html', {'uid': uid,'business_lst':business_lst,'app_lst':app_lst})
 			if ('uid' not in request.COOKIES):
 				response.set_cookie("uid", uid)
-				response.set_cookie("name", name)
 		else:
 			print("maybe uid[%s] is empty or now_time[%d] - login_time[%d] >= 60" % (uid, now_time, login_time))
 			response = None
