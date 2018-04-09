@@ -98,7 +98,7 @@ body {
 	padding: 20px;
 }
 
-table td {
+.tabletd {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -168,4 +168,47 @@ table {
 
 .hide {
 	display: none;
+}
+
+
+/*admin*/
+
+.shade {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	opacity: 0.6;
+	background-color: #000000;
+	z-index: 1050;
+}
+
+.editmenu {
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1051;
+}
+
+.editapp {
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1052;
+}
+.edituser{
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1053;
 }

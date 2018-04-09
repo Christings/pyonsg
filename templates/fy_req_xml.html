@@ -84,13 +84,13 @@
 				<tbody style="cursor: pointer;" id="reqBody">
 					{% for item in req_lst %}
 					<tr req_id="{{item.id}}" class="get_data" lang_type="{{item.trans_direct}}">
-						<td style="width: 100px;">{% formatTime item.c_time %}</td>
-						<td>{% formatIp item.host_ip %}</td>
-						<td style="width: 50px;">{{item.trans_direct}}</td>
-						<td> {{item.req_text}}</td>
-						<td>{{item.result}}</td>
+						<td class="tabletd" style="width: 100px;">{% formatTime item.c_time %}</td>
+						<td class="tabletd">{% formatIp item.host_ip %}</td>
+						<td class="tabletd" style="width: 50px;">{{item.trans_direct}}</td>
+						<td class="tabletd"> {{item.req_text}}</td>
+						<td class="tabletd">{{item.result}}</td>
 						<td class="hide">{{item.isfromzh}}</td>
-						<td style="width: 60px;">
+						<td class="tabletd" style="width: 60px;">
 							<button class="del_line">DEL</button>
 						</td>
 					</tr>

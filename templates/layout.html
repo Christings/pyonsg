@@ -8,7 +8,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="{% static "bfavicon.ico" %}">
+    <link rel="icon" href="{% static "favicon.ico" %}">
 
     <title>Tools For SogouTest</title>
 
@@ -50,17 +50,16 @@
             	{% ifequal app.busi_id item.id %}
             	<li><a class="appclick" app_id="{{app.id}}"href="{{app.urlname}}">{{app.appname}}</a></li>
             	{% endifequal %}	
-			{% endfor %}
+						{% endfor %}
           </ul>
           {% endfor %}
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">         
           {% block content%}{% endblock %}
         </div>
       </div>
     </div>
-
+	<div id='shade' class="shade hide"></div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

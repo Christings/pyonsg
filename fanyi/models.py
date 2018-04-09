@@ -4,10 +4,6 @@ from django.db import models
 class Business(models.Model):
 	businame = models.CharField(max_length=64)
 
-
-
-
-
 class Application(models.Model):
 	appname = models.CharField(max_length=64)
 	urlname = models.CharField(max_length=64)
@@ -16,6 +12,7 @@ class Application(models.Model):
 
 class UserInfo(models.Model):
 	user_name = models.CharField(max_length=64,unique=True)
+
 
 
 class ReqInfo(models.Model):

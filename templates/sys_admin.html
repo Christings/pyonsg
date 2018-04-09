@@ -7,153 +7,248 @@
 <div class="row">
 	<div class="col-md-5">
 		<div style="position:absolute; height:700px; overflow:auto">
-			<table class="table table-hover" id="reqData">
-				<thead>
-					<tr>
-						<td style="width: 100px;">Time</td>
-						<td>Host</td>
-						<td style="width: 100px;">AAAA
-						</td>
-						<td>Request</td>
-						<td>Result</td>
-						<td style="width: 60px;">Ctrl</td>
-					</tr>
-				</thead>
-				<tbody style="cursor: pointer;" id="reqBody">
-					{% for item in req_lst %}
-					<tr req_id="{{item.id}}" class="get_data" lang_type="{{item.trans_direct}}">
-						<td style="width: 100px;">{% formatTime item.c_time %}</td>
-						<td>{% formatIp item.host_ip %}</td>
-						<td style="width: 50px;">{{item.trans_direct}}</td>
-						<td> {{item.req_text}}</td>
-						<td>{{item.result}}</td>
-						<td class="hide">{{item.isfromzh}}</td>
-						<td style="width: 60px;">
-							<button class="del_line">DEL</button>
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
+			<div class="form-group">
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addmenu">功能添加</button>
+			</div>
+			<div class="form-group">
+				<div class="alert alert-info" role="alert">点击名称修改 点击X删除</div>
+			</div>
+			<div class="form-group">
+				{% for item in business_lst %}
+				<h3 style="display: inline" bid='{{item.id}}'>
+					<span class="label label-info" style="display: inline-block;cursor: pointer;">
+						<a class="edit-busi" style="text-decoration: none;color: white;">{{item.businame}}</a>&nbsp;&nbsp;
+						<a class="delete_busi"style="color: red;cursor: pointer;" >&times;</a>
+					</span>
+				</h3> {% endfor %}
+			</div>
 
-			</table>
+			<div class="form-group">
+				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addapp">菜单添加</button>
+			</div>
+
+			<div class="form-group">
+				<div class="alert alert-success" role="alert">点击名称修改 点击X删除</div>
+			</div>
+			<div class="form-group">
+				<table class="table" id="reqData">
+					<thead>
+						<tr>
+							<td style="width: 150px;">功能模块</td>
+							<td>菜单列表</td>
+						</tr>
+					</thead>
+					<tbody id="reqBody">
+						{% for item in business_lst %}
+						<tr req_id="" class="" lang_type="">
+							<td style="width: 150px;">{{item.businame}}</td>
+							<td b_id={{item.id}}>
+								{% for app in app_lst %} {% ifequal app.busi_id item.id %}
+								<h4 style="display: inline; cursor: pointer;" appid="{{app.id}}" urlname="{{app.urlname}}">
+									<span class="label label-success" style="display: inline-block;cursor: pointer;">
+										<a class="edit-app" style="text-decoration: none;color: white;">{{app.appname}}</a>&nbsp;&nbsp;
+										<a class="delete_app"style="color: red;cursor: pointer;" >&times;</a>
+									</span>
+								</h4> {% endifequal %} {% endfor %}
+							</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+
+				</table>
+			</div>
+
 		</div>
 		<div id="showDiv"></div>
 	</div>
 	<div class="col-md-7">
-		<form class="form-horizontal" action="" method="post" id="form_xml">
-			<div class="form-group">
-				<label class="col-sm-1 control-label">HOST</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="inputHost" name="inputHost" value="http://10.153.51.60:12000/xml">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-1 control-label">Direction</label>
-				<div class="col-sm-10">
-					<select id="lan_sel" name="lan_sel" class="form-control" style="cursor: pointer;">
-						<option value="en"> 英 </option>
-						<option value="fr"> 法 </option>
-						<option value="ru"> 俄 </option>
-						<option value="ko"> 韩 </option>
-						<option value="ja"> 日 </option>
-						<option value="ar"> 阿拉伯语 </option>
-						<option value="et"> 爱沙尼亚语 </option>
-						<option value="bg"> 保加利亚语 </option>
-						<option value="pl"> 波兰语 </option>
-						<option value="bs-Latn"> 波斯尼亚语 </option>
-						<option value="fa"> 波斯语 </option>
-						<option value="mww"> 白苗文 </option>
-						<option value="da"> 丹麦语 </option>
-						<option value="de" selected=""> 德语 </option>
-						<option value="fi"> 芬兰语 </option>
-						<option value="tlh-Qaak"> 克林贡语(piqaD) </option>
-						<option value="tlh"> 克林贡语 </option>
-						<option value="hr"> 克罗地亚语 </option>
-						<option value="otq"> 克雷塔罗奥托米语 </option>
-						<option value="ca"> 加泰隆语 </option>
-						<option value="cs"> 捷克语 </option>
-						<option value="ro"> 罗马尼亚语 </option>
-						<option value="lv"> 拉脱维亚语 </option>
-						<option value="ht"> 海地克里奥尔语 </option>
-						<option value="lt"> 立陶宛语 </option>
-						<option value="nl"> 荷兰语 </option>
-						<option value="ms"> 马来语 </option>
-						<option value="mt"> 马耳他语 </option>
-						<option value="pt"> 葡萄牙语 </option>
-						<option value="sl"> 斯洛文尼亚语 </option>
-						<option value="th"> 泰语 </option>
-						<option value="tr"> 土耳其语 </option>
-						<option value="sr-Latn"> 塞尔维亚语(拉丁文) </option>
-						<option value="sr-Cyrl"> 塞尔维亚语(西里尔文) </option>
-						<option value="sk"> 斯洛伐克语 </option>
-						<option value="sw"> 斯瓦希里语 </option>
-						<option value="af"> 南非荷兰语 </option>
-						<option value="no"> 挪威语 </option>
-						<option value="es"> 西班牙语 </option>
-						<option value="uk"> 乌克兰语 </option>
-						<option value="ur"> 乌尔都语 </option>
-						<option value="el"> 希腊语 </option>
-						<option value="hu"> 匈牙利语 </option>
-						<option value="cy"> 威尔士语 </option>
-						<option value="yua"> 尤卡坦玛雅语 </option>
-						<option value="he"> 希伯来语 </option>
-						<option value="it"> 意大利语 </option>
-						<option value="hi"> 印地语 </option>
-						<option value="id"> 印度尼西亚语 </option>
-						<option value="vi"> 越南语 </option>
-						<option value="sv"> 瑞典语 </option>
-						<option value="yue"> 粤语(繁体) </option>
-						<option value="fj"> 斐济语 </option>
-						<option value="FIL"> 菲律宾语 </option>
-						<option value="sm"> 萨摩亚语 </option>
-						<option value="to"> 汤加语 </option>
-						<option value="ty"> 塔希提语 </option>
-						<option value="mg"> 马尔加什语 </option>
-						<option value="bn"> 孟加拉语 </option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-1 control-label">zh_CHS</label>
-				<div class="col-sm-10">
-					<label class="radio-inline">
-	  			<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="tozh" checked="checked"> TO-zh
-			</label>
-					<label class="radio-inline">
-	 	 		<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="fromzh"> FROM-zh
-			</label>
-				</div>
-			</div>
-			<div class="form-group">
+		<div class="form-group">
+			<button type="button" class="btn btn-warning">权限管理</button>
+		</div>
+		<div class="form-group">
+			<div class="alert alert-warning" role="alert">点击名称修改 点击X删除</div>
+		</div>
+		<div class="form-group">
+			<table class="table" id="reqData">
+				<thead>
+					<tr>
+						<td style="width: 150px;">用户名</td>
+						<td>用户菜单权限</td>
+						<td style="width: 100px;">操作</td>
+					</tr>
+				</thead>
+				<tbody id="reqBody">
+					{% for item in user_lst %}
+					<tr req_id="" class="" lang_type="">
+						<td style="width: 150px;">{{item.user_name}}</td>
+						<td b_id={{item.id}}>
+							{% for app in utoapp %} {% ifequal item.user_name app.user_name_id %}
+							<h4 style="display: inline;" app_id="{{app.app_id.id}}" user_app_id="{{app.id}}">
+									<span class="label label-warning" style="display: inline-block;">
+										<a style="text-decoration: none;color: white;">{{app.app_id.appname}}</a>&nbsp;&nbsp;
+										<a class="delete_user_app"style="color: red;cursor: pointer;" >&times;</a>										
+									</span>
+							</h4> {% endifequal %} {% endfor %}
+						</td>
+						<td style="width: 100px;"><button class="edituserapp">编辑</button></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
 
-				<label class="col-sm-1 control-label">Request</label>
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="4" style="resize: none;" name="reqtext" id="reqtext"></textarea>
-				</div>
+<div class="modal fade" id="addmenu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="exampleModalLabel">功能添加</h4>
 			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-1 col-sm-10">
-					<div class="col-sm-offset-1 col-sm-5">
-						<label class="btn btn-primary btn-lg btn-block" id="request_xml">开始调试</label>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">功能名称:<span id="error_info" style="color: red;" ></span></label>
+						<input type="text" class="form-control" id="business-name">
 					</div>
-					<div class=" col-sm-5">
-						<label class="btn btn-primary btn-lg btn-block" id="save_xml">保存请求</label>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="add_business" class="btn btn-primary">保存</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="editmenu hide" id="editmenu">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close"><span class="cancaledit">&times;</span></button>
+				<h4 class="modal-title">名称修改</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<input type="text" name="bid" id="busi_id" style="display: none;" />
+						<label class="control-label">功能名称:<span id="error_info" style="color: red;" ></span></label>
+						<input type="text" class="form-control" name="busi_name" id="busi_name">
 					</div>
-				</div>
+				</form>
 			</div>
-		</form>
-		<div class="form-horizontal">
-			<div class="form-group">
-				<label class="col-sm-1 control-label">Result</label>
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="4" style="resize: none;" id="result" name="req_result"></textarea>
-				</div>
+			<div class="modal-footer">
+				<button type="button" class="cancaledit btn btn-default">取消</button>
+				<button type="button" class="btn btn-primary" id="edit_business">保存</button>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-1 control-label">OutInfo</label>
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="15" style="resize: none;" id="debugInfo"></textarea>
-				</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="addapp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="exampleModalLabel">菜单添加<span id="app_error_info" style="color: red;" ></h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">功能名称:<span  style="color: red;" ></span></label>
+						<select id="busi_sel" name="busi_sel" class="form-control" style="cursor: pointer;">
+							{% for item in business_lst %}
+							<option value="{{item.id}}"> {{item.businame}} </option>
+							{% endfor %}
+						</select>
+						<label for="recipient-name" class="control-label">菜单名称:</label>
+						<input type="text" class="form-control" id="app-name">
+						<label for="recipient-name" class="control-label">URL名称:</span></label>
+						<input type="text" class="form-control" id="url-name">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="add_app" class="btn btn-primary">保存</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="editapp hide" id="editapp">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close"><span class="cancaledit">&times;</span></button>
+				<h4 class="modal-title">名称修改<span id="error_info_edit" style="color: red;" ></span></h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<input type="text" name="aid" id="aid" style="display: none;" />
+						<select name="b_id" id="b_id" class="form-control" style="cursor: pointer;">
+							{% for item in business_lst %}
+							<option value="{{item.id}}"> {{item.businame}} </option>
+							{% endfor %}
+						</select>
+						<label class="control-label">菜单名称:</label>
+						<input type="text" class="form-control" name="a_name" id="a_name">
+						<label for="recipient-name" class="control-label">URL名称:</span></label>
+						<input type="text" class="form-control" id="a-url-name" name="a-url-name">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="cancaledit btn btn-default">取消</button>
+				<button type="button" class="btn btn-primary" id="edit_app">保存</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="edituser hide" id="edituserapp">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close"><span class="cancal_user">&times;</span></button>
+				<h4 class="modal-title">菜单添加<span id="error_user_app" style="color: red;" ></span></h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="control-label">用户名:</label>
+						<input type="text" class="form-control" id="user-name" readonly>
+						<input type="text" class="form-control" id="applength" style="display: none;">
+						<table class="table" id="reqData">
+							<thead>
+								<tr>
+									<td style="width: 150px;">功能模块</td>
+									<td>菜单列表</td>
+								</tr>
+							</thead>
+							<tbody id="reqBody">
+								{% for item in business_lst %}
+								<tr req_id="" class="" lang_type="">
+									<td style="width: 150px;">{{item.businame}}</td>
+									<td>
+										{% for app in app_lst %} {% ifequal item.id app.busi_id %}
+										<label class="checkbox-inline">
+  											<input type="checkbox" id="inlineCheckbox1" name="appcheck" value="{{app.id}}">{{app.appname}}
+										</label> {% endifequal %} {% endfor %}
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="cancal_user btn btn-default">取消</button>
+				<button type="button" id="add_user_app" class="btn btn-primary">保存</button>
 			</div>
 		</div>
 	</div>
@@ -161,115 +256,324 @@
 
 {% endblock %} {% block js %}
 <script>
-	//save
-	$('#save_xml').click(function() {
-		var reqtext = $('#reqtext').val()
-		var inputHost = $('#inputHost').val()
-		var lan_sel = $('#lan_sel').val()
-		var inlineRadioOptions = $("input[name='inlineRadioOptions']:checked").val()
-		var result = $('#result').val()
-		console.log("1:" + reqtext + "2:" + inputHost + "3:" + lan_sel + "4:" + inlineRadioOptions + "5:" + result)
-		if(reqtext != "" && inputHost != "") {
+	//del userapp
+	$('.delete_user_app').click(function(){
+		var user_app_id = $(this).parent().parent().attr('user_app_id');
+		$.ajax({
+			type: "POST",
+			url: "/user_app_del",
+			async: true,
+			traditional: true,
+			data: {
+				'user_app_id': user_app_id,
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			},
+		});
+	})
+	//edit edituserapp
+	//1
+	$('.edituserapp').click(function() {
+		$('.edituser,.shade').removeClass('hide')
+		var tds = $(this).parent().prevAll();
+		var username = $(tds[1]).text();
+		var app_list = [];
+		$(tds[0]).children().each(function() {
+			var aid = $(this).attr('app_id');
+			app_list.push(aid);
+		})
+		applength=app_list.length;
+		$('#applength').val(applength);
+		$('#user-name').val(username);
+
+		var all_app_lst = []
+		$('#edituserapp').find('input[name=appcheck]').each(function() {
+			var vid = $(this).attr('value');
+			all_app_lst.push(vid)
+		});
+		obj = $('#edituserapp').find('input[name=appcheck]');
+		for(k in app_list) {
+			for(i in obj) {
+				if(app_list[k] == obj[i].value) {
+					obj[i].checked = true;
+					$(obj[i]).attr('onclick', 'return false');
+				}
+			}
+
+		}
+
+	})
+	//2
+	$('.cancal_user').click(function() {
+		$('#edituserapp').find('input[name=appcheck]').each(function() {
+			$(this)[0].checked = false;
+			if($(this)[0].hasAttribute("onclick")) {
+				$(this).removeAttr('onclick');
+			}
+		})
+		$('.edituser,.shade').addClass('hide');
+	})
+	//3
+	$('#add_user_app').click(function() {
+		var all_app_lst = [];
+		obj = $('#edituserapp').find('input[name=appcheck]');
+		for(k in obj) {
+			if(obj[k].checked) {
+				all_app_lst.push(obj[k].value);
+			}
+		}
+		var user_name = $('#user-name').val();
+		if(all_app_lst.length>$('#applength').val()){
+			$.ajax({
+			type: "POST",
+			url: "/sys_user_app",
+			async: true,
+			traditional: true,
+			data: {
+				'username': user_name,
+				'app_lst': all_app_lst,
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_user_app').text(obj.error);
+				}
+			},
+			error: function() {
+
+			},
+		});
+		}else{
+			$('#error_user_app').text(' error：权限未发生变化');
+		}
+	})
+
+	//edit app
+	$('.edit-app').click(function() {
+		$('#editapp,.shade').removeClass('hide');
+		var a_id = $(this).parent().parent().attr('appid');
+		var b_id = $(this).parent().parent().parent().attr('b_id');
+		var a_name = $(this).text();
+		var url_name = $(this).parent().parent().attr('urlname');
+		$('#editapp').find('input[name=aid]').val(a_id);
+		$('#b_id').val(b_id);
+		$('#editapp').find('input[name=a_name]').val(a_name);
+		$('#editapp').find('input[name=a-url-name]').val(url_name);
+	})
+
+	$('#edit_app').click(function() {
+		var b_id = $('#b_id').val();
+		var app_id = $('#aid').val();
+		var app_name = $('#a_name').val();
+		var url_name = $('#a-url-name').val();
+		if(app_name != "" && url_name != "") {
 			$.ajax({
 				type: "POST",
-				url: "/xml_req_save",
+				url: "/sys_app_edit",
 				async: true,
 				traditional: true,
 				data: {
-					'inputHost': inputHost,
-					'lan_sel': lan_sel,
-					'inlineRadioOptions': inlineRadioOptions,
-					'reqtext': reqtext,
-					'result': result
+					'b_id': b_id,
+					'app_id': app_id,
+					'a_name': app_name,
+					'url_name': url_name,
 				},
 				dataType: 'JSON',
 				success: function(obj) {
 					if(obj.status) {
 						location.reload();
 					} else {
-						$('#error_xml').text(obj.error);
+						$('#error_info_edit').text(obj.error);
 					}
 				},
 				error: function() {
 
 				},
 			});
-			$('#error_xml').text('');
+			$('#error_info_edit').text('');
 		} else {
-			if(reqtext == '') {
-				$('#error_xml').text('Request不可为空。');
-			} else if(inputHost == '') {
-				$('#error_xml').text('Host不可为空。');
-			} else {
-				$('#error_xml').text('未知错误。');
+			if(app_name != "") {
+				$('#app_error_info').text('菜单名称不可为空。');
+			} else if(url_name != "") {
+				$('#app_error_info').text('url名称不可为空。');
 			}
 		}
 	})
+	//del app
+	$('.delete_app').click(function() {
+		var app_id = $(this).parent().parent().attr('appid')
+		$.ajax({
+			type: "POST",
+			url: "/sys_app_del",
+			async: true,
+			traditional: true,
+			data: {
+				'app_id': app_id,
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
 
-	//request
-	$('#request_xml').click(function() {
-		var reqtext = $('#reqtext').val()
-		var inputHost = $('#inputHost').val()
-		if(reqtext != "" && inputHost != "") {
+			},
+		});
+
+	})
+
+	//add appname
+	$('#add_app').click(function() {
+		var busi_sel = $('#busi_sel').val();
+		var app_name = $('#app-name').val();
+		var url_name = $('#url-name').val();
+		if(app_name != "" && url_name != "") {
 			$.ajax({
 				type: "POST",
-				url: "/xml_req",
+				url: "/sys_app_add",
 				async: true,
 				traditional: true,
-				data: $('#form_xml').serialize(),
+				data: {
+					'busi_sel': busi_sel,
+					'app_name': app_name,
+					'url_name': url_name,
+				},
 				dataType: 'JSON',
 				success: function(obj) {
 					if(obj.status) {
-						$('#result').val(obj.transResult);
-						$('#debugInfo').val(obj.debugInfo);
-						$('#error_xml').text('');
+						location.reload();
 					} else {
-						$('#error_xml').text(obj.error);
+						$('#app_error_info').text(obj.error);
 					}
 				},
 				error: function() {
 
 				},
 			});
-			$('#error_xml').text('');
+			$('#error_info').text('');
 		} else {
-			if(reqtext == '') {
-				$('#error_xml').text('Request不可为空');
-			} else if(inputHost == '') {
-				$('#error_xml').text('Host不可为空');
-			} else {
-				$('#error_xml').text('未知错误');
+			if(app_name != "") {
+				$('#app_error_info').text('菜单名称不可为空。');
+			} else if(url_name != "") {
+				$('#app_error_info').text('url名称不可为空。');
 			}
 		}
 	})
 
-	//table hover
-	$(function() {
-		function showBox(obj, box) {
-			var timer = null;
-			$(obj).on("mouseover", function(e) {
-				clearTimeout(timer);
-				var clientX = e.clientX;
-				var clientY = e.clientY;
-				var y = clientY + 20;
-				var txt = $(this).text();
-				timer = setTimeout(function() {
-					$(box).css("left", clientX).css("top", y);
-					if(txt == "") {
-						$(box).hide();
+	//add busi
+	$('#add_business').click(function() {
+		var business_name = $('#business-name').val()
+		if(business_name != "") {
+			$.ajax({
+				type: "POST",
+				url: "/sys_busi_add",
+				async: true,
+				traditional: true,
+				data: {
+					'business_name': business_name,
+				},
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						location.reload();
 					} else {
-						$(box).show();
-						$(box).html(txt);
+						$('#error_info').text(obj.error);
 					}
-				}, 300);
+				},
+				error: function() {
+
+				},
 			});
-			$(obj).on("mouseout", function() {
-				clearTimeout(timer);
-				$(box).hide();
-			});
+			$('#error_info').text('');
+		} else {
+			$('#error_info').text('功能名称不可为空。');
 		}
-		showBox("#reqData > tbody td", "#showDiv");
-	});
+	})
+
+	//del busi
+	$('.delete_busi').click(function() {
+		var busi_id = $(this).parent().parent().attr('bid')
+		$.ajax({
+			type: "POST",
+			url: "/sys_busi_del",
+			async: true,
+			traditional: true,
+			data: {
+				'busi_id': busi_id
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			},
+		});
+
+	})
+
+	//edit busi
+	$('.edit-busi').click(function() {
+		$('#editmenu,.shade').removeClass('hide');
+		var busi_id = $(this).parent().parent().attr('bid');
+		var busi_name = $(this).text();
+		$('#editmenu').find('input[name=bid]').val(busi_id);
+		$('#editmenu').find('input[name=busi_name]').val(busi_name);
+	})
+
+	$('#edit_business').click(function() {
+		var bid = $('#busi_id').val();
+		var business_name = $('#busi_name').val();
+		if(business_name != "") {
+			$.ajax({
+				type: "POST",
+				url: "/sys_busi_edit",
+				async: true,
+				traditional: true,
+				data: {
+					'bid': bid,
+					'business_name': business_name,
+				},
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						location.reload();
+					} else {
+						$('#error_info').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+			$('#error_info').text('');
+		} else {
+			$('#error_info').text('功能名称不可为空。');
+		}
+	})
+
+	//canceledit
+	$('.cancaledit').click(function() {
+		$('#editmenu,#editapp,.shade').addClass('hide');
+	})
 
 	//del
 	$('.del_line').click(function() {
@@ -320,7 +624,6 @@
 
 	$('#lan_filter').change(function() {
 		var sel_lang = $(this).val();
-		console.log(sel_lang)
 		if(sel_lang == 'all') {
 			$('#reqBody').children().each(function() {
 				$(this).removeClass('hide');
@@ -337,5 +640,6 @@
 
 		}
 	})
+
 </script>
 {% endblock %}

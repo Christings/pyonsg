@@ -5,6 +5,201 @@ from fanyi.models import UserInfo
 import json,requests,time,subprocess,urllib.parse
 # Create your views here.
 
+# admin
+def user_app_del(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	user_app_id = request.POST.get('user_app_id')
+	try:
+		nameisExist = models.UserToApp.objects.filter(id=user_app_id)
+		if nameisExist.exists() == True:
+			nameisExist.delete()
+		else:
+			ret['error'] = "Error:未找到"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+def sys_user_app(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	username = request.POST.get('username')
+	app_lst = request.POST.getlist('app_lst')
+	try:
+		for appid in app_lst:
+			appisExist = models.UserToApp.objects.filter(user_name_id=username, app_id_id=appid)
+			if appisExist.exists() == False:
+				models.UserToApp.objects.create(user_name_id=username, app_id_id=appid)
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+
+
+def sys_app_edit(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	a_id = request.POST.get('app_id')
+	b_id = request.POST.get('b_id')
+	app_name = request.POST.get('a_name')
+	url_name = request.POST.get('url_name')
+	print(a_id)
+	try:
+		nameisExist = models.Application.objects.filter(id=a_id)
+		if nameisExist.exists() == True:
+			urlisExist = models.Application.objects.filter(urlname=url_name).exclude(id=a_id)
+			print(urlisExist.exists())
+			if urlisExist.exists() == True:
+				ret['error'] = "Error:url已存在"
+				ret['status'] = False
+			else:
+				nameisExist.update(appname=app_name,urlname=url_name,busi_id=b_id)
+		else:
+			ret['error'] = "Error:未找到"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		print(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+def sys_app_del(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	app_id = request.POST.get('app_id')
+	try:
+		nameisExist = models.Application.objects.filter(id=app_id)
+		if nameisExist.exists() == True:
+			app_name = nameisExist.values('urlname')[0]['urlname']
+			if app_name=='sys_admin':
+				ret['error'] = "Error:无删除权限"
+				ret['status'] = False
+			else:
+				nameisExist.delete()
+		else:
+			ret['error'] = "Error:未找到"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+
+def sys_app_add(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	busi_id = request.POST.get('busi_sel')
+	app_name = request.POST.get('app_name')
+	url_name = request.POST.get('url_name')
+	try:
+		urlisExist = models.Application.objects.filter(urlname=url_name)
+		if urlisExist.exists() == False:
+			models.Application.objects.create(appname=app_name,busi_id=busi_id,urlname=url_name)
+		else:
+			ret['error'] = "Error:url已存在"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		print(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+
+def sys_busi_edit(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	b_id = request.POST.get('bid')
+	businame = request.POST.get('business_name')
+	print(b_id,businame)
+	try:
+		nameisExist = models.Business.objects.filter(id=b_id)
+		if nameisExist.exists() == True:
+			nameisExist.update(businame=businame)
+		else:
+			ret['error'] = "Error:未找到"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		print(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+def sys_del_busi(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	busi_id = request.POST.get('busi_id')
+	try:
+		nameisExist = models.Business.objects.filter(id=busi_id)
+
+		if nameisExist.exists() == True:
+			busi_name = nameisExist.values('businame')[0]['businame']
+			if busi_name=='sysadmin':
+				ret['error'] = "Error:无删除权限"
+				ret['status'] = False
+			else:
+				nameisExist.delete()
+		else:
+			ret['error'] = "Error:未找到"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+
+def sys_add_busi(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	ret = {'status': True, 'errro': None, 'data': None}
+	businame = request.POST.get('business_name')
+	try:
+		nameisExist = models.Business.objects.filter(businame=businame)
+		if nameisExist.exists() == False:
+
+			models.Business.objects.create(businame=businame)
+		else:
+			ret['error'] = "Error:功能已存在"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		print(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
 def sys_admin(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
@@ -13,7 +208,10 @@ def sys_admin(request):
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
-	return render(request, 'sys_admin.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'sysadmin', 'app_name': "系统管理"})
+	utoapp = models.UserToApp.objects.all()
+	user_lst = models.UserInfo.objects.all()
+
+	return render(request, 'sys_admin.html',{'business_lst': business_lst, 'app_lst': app_lst,'user_lst':user_lst,'utoapp':utoapp,'businame': 'sysadmin', 'app_name': "系统管理"})
 
 
 
@@ -176,7 +374,6 @@ def home(request):
 		child.wait()
 		user = child.stdout.read().decode('utf-8')
 		try:
-			print("111111")
 			json_data = json.loads(user)
 			uid = json_data['uid']
 			name = json_data['name']
