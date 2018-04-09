@@ -361,7 +361,7 @@
 	//getData
 	$('.get_data').dblclick(function() {
 		var linelst = $(this).children();
-		hostip = $(linelst[1]).text();
+		hostip = "http://"+$(linelst[1]).text()+"/xml";
 		direction = $(linelst[2]).text();
 		reqtext = $(linelst[3]).text();
 		result = $(linelst[4]).text();
