@@ -87,7 +87,7 @@
 						<td class="tabletd" style="width: 100px;">{% formatTime item.c_time %}</td>
 						<td class="tabletd">{% formatIp item.host_ip %}</td>
 						<td class="tabletd" style="width: 50px;">{{item.trans_direct}}</td>
-						<td class="tabletd"> {{item.req_text}}</td>
+						<td class="tabletd">{{item.req_text}}</td>
 						<td class="tabletd">{{item.result}}</td>
 						<td class="hide">{{item.isfromzh}}</td>
 						<td class="tabletd" style="width: 60px;">
@@ -367,7 +367,6 @@
 		result = $(linelst[4]).text();
 		isfromzh = $(linelst[5]).text();
 		$('#inputHost').val(hostip);
-		$('#lan_sel').val(direction);
 		$('#lan_sel').val(direction);
 		$('#reqtext').val(reqtext);
 		if(isfromzh == 'fromzh') {
