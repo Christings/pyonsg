@@ -294,7 +294,7 @@ def xml_req_save(request):
 	reqtype = request.POST.get('reqtype')
 	try:
 		# models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=user_id)
-		models.ReqInfo.objects.create(host_ip=inputHost, trans_direct=lan_sel, isfromzh=fromto, req_text=reqtext,result=result, user_fk_id='user_id',reqtype=reqtype)
+		models.ReqInfo.objects.create(host_ip=inputHost, trans_direct=lan_sel, isfromzh=fromto, req_text=reqtext,result=result, user_fk_id=user_id,reqtype=reqtype)
 		ret['inputHost']=inputHost
 		ret['lan_sel']=lan_sel
 		ret['fromto']=fromto
@@ -375,7 +375,7 @@ def fy_req_xml(request):
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
 		# req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
-		req_lst = models.ReqInfo.objects.filter(user_fk_id='user_id')
+		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 		timea =models.ReqInfo.objects.all().values()
 	except Exception as e:
 		print(e)
