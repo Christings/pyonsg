@@ -10,9 +10,10 @@
 			<table class="table table-hover" id="reqData">
 				<thead>
 					<tr>
-						<td style="width: 100px;">Time</td>
+						<td style="">Time</td>
+						<td style="">Type</td>
 						<td>Host</td>
-						<td style="width: 100px;">
+						<td style="">
 							<select id="lan_filter" name="lan_filter" class="form-control" style="cursor: pointer;height: 30px;padding: 3px 6px;">
 								<option value="all" selected=""> Lang </option>
 								<option value="en"> 英 </option>
@@ -78,19 +79,20 @@
 						</td>
 						<td>Request</td>
 						<td>Result</td>
-						<td style="width: 60px;">Ctrl</td>
+						<td style="">Ctrl</td>
 					</tr>
 				</thead>
 				<tbody style="cursor: pointer;" id="reqBody">
 					{% for item in req_lst %}
 					<tr req_id="{{item.id}}" class="get_data" lang_type="{{item.trans_direct}}">
-						<td class="tabletd" style="width: 100px;">{% formatTime item.c_time %}</td>
+						<td class="tabletd" style="">{% formatTime item.c_time %}</td>
+						<td style="">{{item.reqtype}}</td>
 						<td class="tabletd">{% formatIp item.host_ip %}</td>
-						<td class="tabletd" style="width: 50px;">{{item.trans_direct}}</td>
+						<td class="tabletd" style="">{{item.trans_direct}}</td>
 						<td class="tabletd">{{item.req_text}}</td>
 						<td class="tabletd">{{item.result}}</td>
 						<td class="hide">{{item.isfromzh}}</td>
-						<td class="tabletd" style="width: 60px;">
+						<td class="tabletd" style="">
 							<button class="del_line">DEL</button>
 						</td>
 					</tr>
@@ -105,8 +107,15 @@
 		<form class="form-horizontal" action="" method="post" id="form_xml">
 			<div class="form-group">
 				<label class="col-sm-1 control-label">HOST</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="inputHost" name="inputHost" value="http://10.153.51.60:12000/xml">
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="inputHost" name="inputHost" value="http://ywhub01.fy.sjs.ted:12000">
+				</div>
+				<div class="col-sm-3">
+					<select id="reqtype" name="reqtype" class="form-control" style="cursor: pointer;">
+						<option value="xml" selected=""> xml </option>
+						<option value="alltrans_json"> alltrans_json </option>
+						<option value="json" style="display: none;"> json </option>						
+					</select>
 				</div>
 			</div>
 			<div class="form-group">
@@ -230,7 +239,7 @@
 		var lan_sel = $('#lan_sel').val()
 		var inlineRadioOptions = $("input[name='inlineRadioOptions']:checked").val()
 		var result = $('#result').val()
-		console.log("1:" + reqtext + "2:" + inputHost + "3:" + lan_sel + "4:" + inlineRadioOptions + "5:" + result)
+		var reqtpye = $('#reqtype').val()
 		if(reqtext != "" && inputHost != "") {
 			$.ajax({
 				type: "POST",
@@ -242,12 +251,25 @@
 					'lan_sel': lan_sel,
 					'inlineRadioOptions': inlineRadioOptions,
 					'reqtext': reqtext,
-					'result': result
+					'result': result,
+					'reqtype':reqtpye,
 				},
 				dataType: 'JSON',
 				success: function(obj) {
 					if(obj.status) {
 						location.reload();
+//						$('#inputHost').val(obj.inputHost)
+//						$('#result').val(obj.result);
+//						$('#reqtype').val(obj.reqtype);
+//						$('#lan_sel').val(obj.lan_sel);
+//						if(obj.fromto == 'fromzh') {
+//							$('#inlineRadio2').attr("checked", 'checked');
+//							$('#inlineRadio1').attr("checked", false);
+//						} else {
+//							$('#inlineRadio1').attr("checked", 'checked');
+//							$('#inlineRadio2').attr("checked", false);
+//						}
+//						$('#error_xml').text('');
 					} else {
 						$('#error_xml').text(obj.error);
 					}
@@ -282,8 +304,22 @@
 				dataType: 'JSON',
 				success: function(obj) {
 					if(obj.status) {
-						$('#result').val(obj.transResult);
-						$('#debugInfo').val(obj.debugInfo);
+						if(obj.reqtype=='alltrans_json'){
+							resultSplit=(obj.transResult).split('|||');
+							result_str=""
+							for(i=0;i<resultSplit.length;i++){
+								console.log(i)
+								result_str+=(resultSplit[i]+'\r\n')
+								console.log(resultSplit[i])
+							}
+							debugInfo_str="请求串:\r\n"+obj.requestStr
+						}else{
+							result_str=obj.transResult
+							
+							debugInfo_str="Debug信息：\r\n"+obj.debugInfo+'\r\n'+ "请求串:\r\n"+ obj.requestStr
+						}
+						$('#result').val(result_str)
+						$('#debugInfo').val(debugInfo_str);
 						$('#error_xml').text('');
 					} else {
 						$('#error_xml').text(obj.error);
@@ -361,12 +397,14 @@
 	//getData
 	$('.get_data').dblclick(function() {
 		var linelst = $(this).children();
-		hostip = "http://"+$(linelst[1]).text()+"/xml";
-		direction = $(linelst[2]).text();
-		reqtext = $(linelst[3]).text();
-		result = $(linelst[4]).text();
-		isfromzh = $(linelst[5]).text();
+		reqtype = $(linelst[1]).text();
+		hostip = "http://"+$(linelst[2]).text();
+		direction = $(linelst[3]).text();
+		reqtext = $(linelst[4]).text();
+		result = $(linelst[5]).text();
+		isfromzh = $(linelst[6]).text();
 		$('#inputHost').val(hostip);
+		$('#reqtype').val(reqtype);
 		$('#lan_sel').val(direction);
 		$('#reqtext').val(reqtext);
 		if(isfromzh == 'fromzh') {
@@ -377,6 +415,7 @@
 			$('#inlineRadio2').attr("checked", false);
 		}
 		$('#result').val(result);
+		$('#debugInfo').val('');
 	})
 
 	$('#lan_filter').change(function() {

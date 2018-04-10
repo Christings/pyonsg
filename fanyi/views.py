@@ -7,11 +7,11 @@ import json,requests,time,subprocess,urllib.parse
 
 # admin
 def user_app_del(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	user_app_id = request.POST.get('user_app_id')
 	try:
@@ -27,11 +27,11 @@ def user_app_del(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_user_app(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	username = request.POST.get('username')
 	app_lst = request.POST.getlist('app_lst')
@@ -48,11 +48,11 @@ def sys_user_app(request):
 
 
 def sys_app_edit(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	a_id = request.POST.get('app_id')
 	b_id = request.POST.get('b_id')
@@ -79,11 +79,11 @@ def sys_app_edit(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_app_del(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	app_id = request.POST.get('app_id')
 	try:
@@ -105,11 +105,11 @@ def sys_app_del(request):
 
 
 def sys_app_add(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	busi_id = request.POST.get('busi_sel')
 	app_name = request.POST.get('app_name')
@@ -129,11 +129,11 @@ def sys_app_add(request):
 
 
 def sys_busi_edit(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	b_id = request.POST.get('bid')
 	businame = request.POST.get('business_name')
@@ -152,11 +152,11 @@ def sys_busi_edit(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_del_busi(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	busi_id = request.POST.get('busi_id')
 	try:
@@ -179,11 +179,11 @@ def sys_del_busi(request):
 
 
 def sys_add_busi(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	businame = request.POST.get('business_name')
 	try:
@@ -201,11 +201,11 @@ def sys_add_busi(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_admin(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
 	utoapp = models.UserToApp.objects.all()
@@ -230,14 +230,22 @@ def fy_automation(request):
 
 # allj request
 def fy_req_allj(request):
+
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
-	business_lst = models.Business.objects.all()
-	app_lst = models.Application.objects.all()
-	return render(request, 'fy_req_allj.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"JSON请求调试"})
+	if request.method == 'GET':
+		business_lst = models.Business.objects.all()
+		app_lst = models.Application.objects.all()
+
+		query=""
+		resp = requests.post('http://ywhub01.fy.sjs.ted:12000/alltrans_json', data=query)
+		print(resp.text)
+		return render(request, 'fy_req_allj.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "alltrans_josn请求调试"})
+	# else:
+	# 	return render(request, 'fy_req_allj.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "JSON请求调试"})
 
 # json request
 def fy_req_json(request):
@@ -283,8 +291,16 @@ def xml_req_save(request):
 	fromto = request.POST.get('inlineRadioOptions')
 	reqtext = request.POST.get('reqtext')
 	result = request.POST.get('result')
+	reqtype = request.POST.get('reqtype')
 	try:
-		models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=user_id)
+		# models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=user_id)
+		models.ReqInfo.objects.create(host_ip=inputHost, trans_direct=lan_sel, isfromzh=fromto, req_text=reqtext,result=result, user_fk_id='user_id',reqtype=reqtype)
+		ret['inputHost']=inputHost
+		ret['lan_sel']=lan_sel
+		ret['fromto']=fromto
+		ret['reqtext']=reqtext
+		ret['result']=result
+		ret['reqtype']=reqtype
 	except Exception as e:
 		ret['error'] = "Error:" + str(e)
 		print(e)
@@ -295,29 +311,54 @@ def xml_req_save(request):
 def xml_req(request):
 	ret = {'status': True, 'errro': None, 'data': None}
 	inputHost = request.POST.get('inputHost')
+	reqtype = request.POST.get('reqtype')
 	lan_sel = request.POST.get('lan_sel')
 	fromto = request.POST.get('inlineRadioOptions')
 	reqtext = request.POST.get('reqtext')
-	query = requestData.getUniNum(reqtext)
+	# query = requestData.getUniNum(reqtext)
 	if fromto == 'tozh':
 		fromlan = lan_sel
 		tolan = 'zh-CHS'
 	else:
 		fromlan = 'zh-CHS'
 		tolan = lan_sel
-	output = 'host={_host},from_lang={_fromlan},to_lang={_tolan},query={_query}'.format(_host=inputHost,_fromlan=fromlan,_tolan=tolan,_query=reqtext)
-	data = '''<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://api.microsofttranslator.com/V2"><soapenv:Header/><soapenv:Body><v2:Translate><v2:appId></v2:appId><v2:debug>true</v2:debug><v2:text>{_reqtext}</v2:text><v2:from>{_fromlan}</v2:from><v2:to>{_tolan}</v2:to><v2:contentType>text/plain</v2:contentType><v2:category>general</v2:category></v2:Translate></soapenv:Body></soapenv:Envelope>'''.format(_reqtext=query,_fromlan=fromlan,_tolan=tolan)
+	output = 'host={_host},reqtype={_reqtype},from_lang={_fromlan},to_lang={_tolan},query={_query}'.format(_host=inputHost,_reqtype=reqtype,_fromlan=fromlan,_tolan=tolan,_query=reqtext)
 	try:
-		resp = requests.post(inputHost, data=data)
-		result = requestData.parseXmlRes(resp.text)
-		ret['transResult'] = result['transRes']
-		ret['debugInfo'] = result['DebugInfo'].replace('<br>','')
+		if reqtype == 'xml':
+			xmldata = '''<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://api.microsofttranslator.com/V2"><soapenv:Header/><soapenv:Body><v2:Translate><v2:appId></v2:appId><v2:debug>true</v2:debug><v2:text>{_reqtext}</v2:text><v2:from>{_fromlan}</v2:from><v2:to>{_tolan}</v2:to><v2:contentType>text/plain</v2:contentType><v2:category>general</v2:category></v2:Translate></soapenv:Body></soapenv:Envelope>'''.format(_reqtext=reqtext, _fromlan=fromlan, _tolan=tolan)
+			resp = requests.post(inputHost+'/'+reqtype, data=xmldata.encode('utf-8'))
+			result = requestData.parseXmlRes(resp.text)
+			ret['transResult'] = result['transRes']
+			print(result['DebugInfo'])
+			ret['debugInfo'] = result['DebugInfo'].replace('<br>','')
+			ret['requestStr'] = xmldata
+		elif reqtype == 'alltrans_json':
+			prefixq = '''{"to_lang": "'''+tolan+'''"'''+''',"from_lang": "'''+fromlan+'''''''"'''+''',"uuid": "74ad13f3-891c-45f6-99ef-f6de63173a20","sendback": "title"'''+''',"trans_frag": ['''
+			suffix=""
+			alljquery=""
+			temp_len=1
+			reqlst = reqtext.split()
+			for req in reqlst:
+				if temp_len==len(reqlst):
+					suffix += '''{"sendback": "title","id":"''' + str(temp_len) + '''","text":"''' + req + '''''''"}]}'''
+				else:
+					suffix += '''{"sendback": "title","id":"''' + str(temp_len) + '''","text":"''' + req + '''''''"},'''
+				temp_len+=1
+				alljquery=prefixq+suffix
+			resp = requests.post(inputHost + '/' + reqtype, data=alljquery.encode('utf-8'))
+			ret['transResult']=requestData.parseAlljRes(resp.text)
+			ret['debugInfo'] = resp.text
+			ret['requestStr'] = alljquery
+		else:
+			ret['error'] = "Error:未知的请求类型"
+			ret['status'] = False
 		ret['fromlan'] = fromlan
 		ret['tolan'] = tolan
 		ret['lan_sel'] = lan_sel
 		ret['host'] = inputHost
-		# print(ret)
+		ret['reqtype'] = reqtype
 	except Exception as e:
+		print(e)
 		ret['error'] = "Error:"+str(e)
 		ret['status'] = False
 	return HttpResponse(json.dumps(ret))
@@ -333,7 +374,8 @@ def fy_req_xml(request):
 	try:
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
-		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
+		# req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
+		req_lst = models.ReqInfo.objects.filter(user_fk_id='user_id')
 		timea =models.ReqInfo.objects.all().values()
 	except Exception as e:
 		print(e)

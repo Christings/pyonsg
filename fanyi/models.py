@@ -23,6 +23,7 @@ class ReqInfo(models.Model):
 	result = models.CharField(max_length=2000)
 	user_fk = models.ForeignKey(to='UserInfo',to_field='user_name',on_delete=models.CASCADE)
 	c_time = models.DateTimeField(auto_now=True)
+	reqtype = models.CharField(max_length=20)
 
 class UserToApp(models.Model):
 	user_name = models.ForeignKey(to='UserInfo',to_field='user_name',on_delete=models.CASCADE)

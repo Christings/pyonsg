@@ -21,6 +21,7 @@ __mtime__ = '2018/3/28'
                    ┗━┻━┛   ┗━┻━┛
 """
 from xml.etree import ElementTree
+import json
 language_dict = {
                         'en' : '英',
                         'fr' : '法',
@@ -82,6 +83,24 @@ language_dict = {
                         'mg' : '马尔加什语',
                         'bn' : '孟加拉语',
 }
+
+def parseAlljRes(xml_str):
+    resparse = json.loads(xml_str)
+    result = resparse['trans_result']
+    result_dict=dict()
+    resultstr=""
+    temlen=1
+    for sub_res in result:
+        result_dict[sub_res['id']]=sub_res['trans_text']
+    for i in range(1,len(result_dict)+1):
+        if temlen == len(result_dict):
+            resultstr += result_dict[str(i)]
+        else:
+            resultstr += (result_dict[str(i)] + "|||")
+        temlen += 1
+    return resultstr
+
+
 def parseXmlRes(xml_str):
     result_dic=dict()
     ns={'parent':'http://schemas.xmlsoap.org/soap/envelope/','child':'http://fanyi.sogou.com/'}
