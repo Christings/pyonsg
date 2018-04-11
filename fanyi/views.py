@@ -315,7 +315,7 @@ def xml_req(request):
 	lan_sel = request.POST.get('lan_sel')
 	fromto = request.POST.get('inlineRadioOptions')
 	reqtext = request.POST.get('reqtext')
-	# query = requestData.getUniNum(reqtext)
+	query = requestData.getUniNum(reqtext)
 	if fromto == 'tozh':
 		fromlan = lan_sel
 		tolan = 'zh-CHS'
@@ -329,7 +329,6 @@ def xml_req(request):
 			resp = requests.post(inputHost+'/'+reqtype, data=xmldata.encode('utf-8'))
 			result = requestData.parseXmlRes(resp.text)
 			ret['transResult'] = result['transRes']
-			print(result['DebugInfo'])
 			ret['debugInfo'] = result['DebugInfo'].replace('<br>','')
 			ret['requestStr'] = xmldata
 		elif reqtype == 'alltrans_json':

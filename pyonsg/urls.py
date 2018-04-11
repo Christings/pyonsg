@@ -36,7 +36,7 @@ urlpatterns = [
     re_path(r'^user_app_del$',trans.user_app_del),
     # xml
     re_path(r'^index$',trans.index),
-    re_path(r'^fy_req_xml$',trans.fy_req_xml),
+    re_path(r'^fy_req$',trans.fy_req_xml),
     re_path(r'^xml_req$',trans.xml_req),
     re_path(r'^xml_req_save$',trans.xml_req_save),
     re_path(r'^del_xml_line$',trans.del_xml_line),
