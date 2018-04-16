@@ -1,11 +1,311 @@
-{% extends 'layout.html' %}  {% block content %}
+{% extends 'layout.html' %} {% load tag_tools %} {% block content %}
 <ol class="breadcrumb">
 	<li>{{businame}}</li>
 	<li class="active">{{app_name}}</li>
 	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">
-	<h3>敬请期待</h3>
+	<div class="col-md-6">
+		<form class="form-horizontal" action="" method="post" id="form_qo_addtask">
+			<label class="col-sm-1 control-label">Basesvn</label>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<textarea class="form-control" rows="8" style="resize: none;" name="qo_basesvn" id="qo_basesvn" placeholder='job.ini[main.svn]'></textarea>
+				</div>
+			</div>
+			<label class="col-sm-1 control-label">Testsvn</label>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<textarea class="form-control" rows="8" style="resize: none;" name="qo_testsvn" id="qo_testsvn" placeholder='job.ini[main.svn]'></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">newcfg</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="new_conf_ip" name="new_conf_ip" placeholder="conf file@ip">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="new_conf_user" name="new_conf_user" placeholder="user">
+				</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="new_conf_pass" name="new_conf_pass" placeholder="password">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">cfgpath</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="new_conf_path" name="new_conf_path" placeholder="path(e.g.)/search/odin/daemon/qo/conf">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">newdata</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="new_data_ip" name="new_data_ip" placeholder="data file@ip">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="new_data_user" name="new_data_user" placeholder="user">
+				</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="new_data_pass" name="new_data_pass" placeholder="password">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">cfgpath</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="new_data_path" name="new_data_path" placeholder="path(e.g.)/search/odin/daemon/qo/data">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">presscfg</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="qo_qps" name="qo_qps" placeholder="press qps">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="qo_press_time" name="qo_press_time" placeholder="press time">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-1 col-sm-10">
+					<div class="col-sm-offset-1 col-sm-10">
+						<label class="btn btn-primary btn-lg btn-block" id="add_qo_task">添加队列</label>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="col-md-6">
+		<div style="position:absolute; height: 700px; overflow:auto">
+			<table class="table table-hover" id="reqData">
+				<thead>
+					<tr>
+						<td style="width: 30px;">ID</td>
+						<td style="">CreateTime</td>
+						<td>StartTime</td>
+						<td style="width: 100px;">Status</td>
+						<td style="width: 70px;">TestItem</td>
+						<td style="width: 100px;">User</td>
+						<td style="display: none;">Ctrl</td>
+					</tr>
+				</thead>
+				<tbody style="cursor: pointer;" id="reqBody">
+					{% for item in task_list %}
+					<tr>
+						<td style="width: 20px;">{{ item.id }}</td>
+						<td>{{ item.create_time }}</td>
+						<td>{{ item.start_time }}</td>
+						<td style="width: 100px;">
+							<a href="/qo_task_detail_{{ item.id }}.html">
+								{% ifequal item.status 0 %}
+								<font color="gray">Waiting</font>{% endifequal %} {% ifequal item.status 1 %}
+								<font color="cream">Ready</font>{% endifequal %} {% ifequal item.status 2 %}
+								<font color="green">Running</font>{% endifequal %} {% ifequal item.status 3 %}
+								<font color="red">Error</font>{% endifequal %} {% ifequal item.status 4 %}
+								<font color="blue">Finished</font>{% endifequal %} {% ifequal item.status 5 %}
+								<font color="orange">Canceled</font>{% endifequal %} {% ifequal item.status 6 %}
+								<font color="orange">Canceling</font>{% endifequal %}
+							</a>
+						</td>
+						{% ifequal item.testitem 1 %}
+						<td style="width: 70px;">cost</td>
+						{% else %}
+						<td style="width: 70px;">Null</td>
+						{% endifequal%}
+						<td style="width: 100px;">{{ item.user }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div id="showDiv"></div>
+	</div>
+
 </div>
 
+{% endblock %} {% block js %}
+<script>
+	//save
+	$('#save_xml').click(function() {
+		var reqtext = $('#reqtext').val()
+		var inputHost = $('#inputHost').val()
+		var lan_sel = $('#lan_sel').val()
+		var inlineRadioOptions = $("input[name='inlineRadioOptions']:checked").val()
+		var result = $('#result').val()
+		var reqtpye = $('#reqtype').val()
+		if(reqtext != "" && inputHost != "") {
+			$.ajax({
+				type: "POST",
+				url: "/xml_req_save",
+				async: true,
+				traditional: true,
+				data: {
+					'inputHost': inputHost,
+					'lan_sel': lan_sel,
+					'inlineRadioOptions': inlineRadioOptions,
+					'reqtext': reqtext,
+					'result': result,
+					'reqtype': reqtpye,
+				},
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						location.reload();
+						//						$('#inputHost').val(obj.inputHost)
+						//						$('#result').val(obj.result);
+						//						$('#reqtype').val(obj.reqtype);
+						//						$('#lan_sel').val(obj.lan_sel);
+						//						if(obj.fromto == 'fromzh') {
+						//							$('#inlineRadio2').attr("checked", 'checked');
+						//							$('#inlineRadio1').attr("checked", false);
+						//						} else {
+						//							$('#inlineRadio1').attr("checked", 'checked');
+						//							$('#inlineRadio2').attr("checked", false);
+						//						}
+						//						$('#error_xml').text('');
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+			$('#error_xml').text('');
+		} else {
+			if(reqtext == '') {
+				$('#error_xml').text('Request不可为空。');
+			} else if(inputHost == '') {
+				$('#error_xml').text('Host不可为空。');
+			} else {
+				$('#error_xml').text('未知错误。');
+			}
+		}
+	})
+
+	//request
+	$('#add_qo_task').click(function() {
+		var qo_base_svn = $('#qo_basesvn').val()
+		var qo_text_svn = $('#qo_testsvn').val()
+		if(qo_base_svn != "" || qo_text_svn != "") {
+			$.ajax({
+				type: "POST",
+				url: "/qo_automation",
+				async: true,
+				traditional: true,
+				data: $('#form_qo_addtask').serialize(),
+				dataType: 'JSON',
+				success: function(obj) {
+					console.log(obj.status)
+					if(obj.status) {
+						location.reload();
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+			$('#error_xml').text('');
+		} else {
+			$('#error_xml').text('svn不可都为空');
+		}
+	})
+
+	//table hover
+	$(function() {
+		function showBox(obj, box) {
+			var timer = null;
+			$(obj).on("mouseover", function(e) {
+				clearTimeout(timer);
+				var clientX = e.clientX;
+				var clientY = e.clientY;
+				var y = clientY + 20;
+				var txt = $(this).text();
+				timer = setTimeout(function() {
+					$(box).css("left", clientX).css("top", y);
+					if(txt == "") {
+						$(box).hide();
+					} else {
+						$(box).show();
+						$(box).html(txt);
+					}
+				}, 300);
+			});
+			$(obj).on("mouseout", function() {
+				clearTimeout(timer);
+				$(box).hide();
+			});
+		}
+		showBox("#reqData > tbody td", "#showDiv");
+	});
+
+	//del
+	$('.del_line').click(function() {
+		var line_id = $(this).parent().parent().attr('req_id');
+		$.ajax({
+			type: "POST",
+			url: "del_xml_line",
+			async: true,
+			data: {
+				'line_id': line_id
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			}
+		});
+
+	})
+
+	//getData
+	$('.get_data').dblclick(function() {
+		var linelst = $(this).children();
+		reqtype = $(linelst[1]).text();
+		hostip = "http://" + $(linelst[2]).text();
+		direction = $(linelst[3]).text();
+		reqtext = $(linelst[4]).text();
+		result = $(linelst[5]).text();
+		isfromzh = $(linelst[6]).text();
+		$('#inputHost').val(hostip);
+		$('#reqtype').val(reqtype);
+		$('#lan_sel').val(direction);
+		$('#reqtext').val(reqtext);
+		if(isfromzh == 'fromzh') {
+			$('#inlineRadio2').attr("checked", 'checked');
+			$('#inlineRadio1').attr("checked", false);
+		} else {
+			$('#inlineRadio1').attr("checked", 'checked');
+			$('#inlineRadio2').attr("checked", false);
+		}
+		$('#result').val(result);
+		$('#debugInfo').val('');
+	})
+
+	$('#lan_filter').change(function() {
+		var sel_lang = $(this).val();
+		console.log(sel_lang)
+		if(sel_lang == 'all') {
+			$('#reqBody').children().each(function() {
+				$(this).removeClass('hide');
+			})
+		} else {
+			$('#reqBody').children().each(function() {
+				var line_lang = $(this).attr('lang_type');
+				if(sel_lang != line_lang) {
+					$(this).addClass('hide');
+				} else {
+					$(this).removeClass('hide');
+				}
+			})
+
+		}
+	})
+</script>
 {% endblock %}

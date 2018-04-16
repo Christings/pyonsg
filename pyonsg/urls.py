@@ -48,6 +48,9 @@ urlpatterns = [
     re_path(r'^fy_automation$',trans.fy_automation),
     # webqo
     re_path(r'^qo_automation$',webqo.qo_automation),
+    re_path(r'^qo_task_detail_(?P<task_id>\d+).html$',webqo.qo_task_detail),
+    re_path(r'^qo_task_readd$',webqo.qo_task_readd),
+    re_path(r'^qo_task_cancel',webqo.qo_task_cancel),
     re_path(r'^qo_req$',webqo.qo_req),
     # webqo
     re_path(r'^qw_automation$',webqw.qw_automation),

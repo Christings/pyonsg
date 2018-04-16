@@ -258,18 +258,6 @@
 				success: function(obj) {
 					if(obj.status) {
 						location.reload();
-//						$('#inputHost').val(obj.inputHost)
-//						$('#result').val(obj.result);
-//						$('#reqtype').val(obj.reqtype);
-//						$('#lan_sel').val(obj.lan_sel);
-//						if(obj.fromto == 'fromzh') {
-//							$('#inlineRadio2').attr("checked", 'checked');
-//							$('#inlineRadio1').attr("checked", false);
-//						} else {
-//							$('#inlineRadio1').attr("checked", 'checked');
-//							$('#inlineRadio2').attr("checked", false);
-//						}
-//						$('#error_xml').text('');
 					} else {
 						$('#error_xml').text(obj.error);
 					}

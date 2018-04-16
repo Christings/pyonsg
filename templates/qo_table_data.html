@@ -1,0 +1,40 @@
+<table class="table table-hover" id="reqData">
+				<thead>
+					<tr>
+						<td style="width: 30px;">ID</td>
+						<td style="">CreateTime</td>
+						<td>StartTime</td>
+						<td style="width: 100px;">Status</td>
+						<td style="width: 70px;">TestItem</td>
+						<td style="width: 100px;">User</td>
+						<td style="display: none;">Ctrl</td>
+					</tr>
+				</thead>
+				<tbody style="cursor: pointer;" id="reqBody">
+					{% for item in task_list %}
+					<tr>
+						<td style="width: 20px;">{{ item.id }}</td>
+						<td>{{ item.create_time }}</td>
+						<td>{{ item.start_time }}</td>
+						<td style="width: 100px;">
+							<a href="/autocacheqps/task_detail?id={{ item.task_id }}">
+								{% ifequal item.status 0 %}
+								<font color="gray">Waiting</font>{% endifequal %} {% ifequal item.status 1 %}
+								<font color="cream">Ready</font>{% endifequal %} {% ifequal item.status 2 %}
+								<font color="green">Running</font>{% endifequal %} {% ifequal item.status 3 %}
+								<font color="red">Error</font>{% endifequal %} {% ifequal item.status 4 %}
+								<font color="blue">Finished</font>{% endifequal %} {% ifequal item.status 5 %}
+								<font color="orange">Canceled</font>{% endifequal %} {% ifequal item.status 6 %}
+								<font color="orange">Canceling</font>{% endifequal %}
+							</a>
+						</td>
+						{% ifequal item.testitem 1 %}
+						<td style="width: 70px;">cost</td>
+						{% else %}
+						<td style="width: 70px;">Null</td>
+						{% endifequal%}
+						<td style="width: 100px;">{{ item.user }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+</table>
