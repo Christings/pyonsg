@@ -92,6 +92,7 @@ def qo_automation(request):
 		newdatauser = str_dos2unix(request.POST.get('new_data_user'))
 		newdatapassw = str_dos2unix(request.POST.get('new_data_pass'))
 		newdatapath = str_dos2unix(request.POST.get('new_data_path'))
+		newdatatopath = str_dos2unix(request.POST.get('new_data_to_path'))
 		press_qps = str_dos2unix(request.POST.get('qo_qps'))
 		press_time = str_dos2unix(request.POST.get('qo_press_time'))
 		if test_svn=="":
@@ -101,8 +102,8 @@ def qo_automation(request):
 			just_run_base = 0
 			just_run_test = 1
 		else:
-			just_run_base = 1
-			just_run_test = 1
+			just_run_base = 0
+			just_run_test = 0
 		if press_qps=="":
 			press_qps=1000
 		if press_time=="":
@@ -112,7 +113,7 @@ def qo_automation(request):
 			models.webqoqps.objects.create(create_time=get_now_time(), user='zhangjingjun', testitem=1, testsvn=test_svn, basesvn=base_svn,
 								newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
 								newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
-								newdatapassw=newdatapassw, newdatapath=newdatapath, just_run_test=just_run_test,
+								newdatapassw=newdatapassw, newdatapath=newdatapath, newdata_topath=newdatatopath,just_run_test=just_run_test,
 								just_run_base=just_run_base, press_qps=press_qps, press_time=press_time)
 		except Exception as e:
 			ret['error'] = 'error:'+str(e)

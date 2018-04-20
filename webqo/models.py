@@ -13,6 +13,7 @@ class webqoqps(models.Model):
     newdatauser = models.CharField(max_length=500, default="")
     newdatapassw = models.CharField(max_length=500, default="")
     newdatapath = models.CharField(max_length=500, default="")
+    newdata_topath = models.CharField(max_length=500, default="")
     newconfip = models.CharField(max_length=500, default="")
     newconfuser = models.CharField(max_length=500, default="")
     newconfpassw = models.CharField(max_length=500, default="")

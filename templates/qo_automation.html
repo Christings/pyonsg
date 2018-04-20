@@ -10,13 +10,13 @@
 			<label class="col-sm-1 control-label">Basesvn</label>
 			<div class="form-group">
 				<div class="col-sm-12">
-					<textarea class="form-control" rows="8" style="resize: none;" name="qo_basesvn" id="qo_basesvn" placeholder='job.ini[main.svn]'></textarea>
+					<textarea class="form-control" rows="7" style="resize: none;" name="qo_basesvn" id="qo_basesvn" placeholder='job.ini[main.svn]'></textarea>
 				</div>
 			</div>
 			<label class="col-sm-1 control-label">Testsvn</label>
 			<div class="form-group">
 				<div class="col-sm-12">
-					<textarea class="form-control" rows="8" style="resize: none;" name="qo_testsvn" id="qo_testsvn" placeholder='job.ini[main.svn]'></textarea>
+					<textarea class="form-control" rows="7" style="resize: none;" name="qo_testsvn" id="qo_testsvn" placeholder='job.ini[main.svn]'></textarea>
 				</div>
 			</div>
 			<div class="form-group">
@@ -34,7 +34,7 @@
 			<div class="form-group">
 				<label class="col-sm-1 control-label">cfgpath</label>
 				<div class="col-sm-7">
-					<input type="text" class="form-control" id="new_conf_path" name="new_conf_path" placeholder="path(e.g.)/search/odin/daemon/qo/conf">
+					<input type="text" class="form-control" id="new_conf_path" name="new_conf_path" placeholder="path(e.g.)/search/odin/daemon/qo/conf(绝对路径)">
 				</div>
 			</div>
 			<div class="form-group">
@@ -50,9 +50,15 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-1 control-label">cfgpath</label>
+				<label class="col-sm-1 control-label">datafrom</label>
 				<div class="col-sm-7">
-					<input type="text" class="form-control" id="new_data_path" name="new_data_path" placeholder="path(e.g.)/search/odin/daemon/qo/data">
+					<input type="text" class="form-control" id="new_data_path" name="new_data_path" placeholder="path(e.g.)/search/odin/daemon/qo/data(绝对路径)">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">datato</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="new_data_to_path" name="new_data_to_path" placeholder="path(e.g.)data/base/nb(相对路径)">
 				</div>
 			</div>
 			<div class="form-group">
@@ -149,18 +155,6 @@
 				success: function(obj) {
 					if(obj.status) {
 						location.reload();
-						//						$('#inputHost').val(obj.inputHost)
-						//						$('#result').val(obj.result);
-						//						$('#reqtype').val(obj.reqtype);
-						//						$('#lan_sel').val(obj.lan_sel);
-						//						if(obj.fromto == 'fromzh') {
-						//							$('#inlineRadio2').attr("checked", 'checked');
-						//							$('#inlineRadio1').attr("checked", false);
-						//						} else {
-						//							$('#inlineRadio1').attr("checked", 'checked');
-						//							$('#inlineRadio2').attr("checked", false);
-						//						}
-						//						$('#error_xml').text('');
 					} else {
 						$('#error_xml').text(obj.error);
 					}
