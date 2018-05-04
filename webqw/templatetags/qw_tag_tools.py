@@ -3,7 +3,7 @@
 """
 __title__ = ''
 __author__ = 'zhangjingjun'
-__mtime__ = '2018/3/29'
+__mtime__ = '2018/4/12'
 # ----------Dragon be here!----------
               ┏━┓      ┏━┓
             ┏━┛ ┻━━━━━━┛ ┻━━┓
@@ -23,21 +23,25 @@ __mtime__ = '2018/3/29'
 from django import template
 from django.utils.safestring import mark_safe
 register = template.Library()
-import requests
 
 @register.simple_tag
-def formatTime(intime):
-	return intime.strftime("%m%d %H:%M")
+def formatStr(instr):
+	print(instr)
+	#newstr=instr.replace('\n','\r\n')
+	newstr = instr.split('\n')
+	print(newstr)
+	return len(newstr)
+
 
 @register.simple_tag
-def formatIp(inip):
-	ip = 'http://10.153.51.60:12000/xml'
-	ip_list = inip.split('/')
-	# print(ip_list)
-	return ip_list[2]
+def formatStr2(instr):
+	print(instr)
+	newstr=instr.replace('\n','\r\n')
+	#newstr = instr.split('\n')
+	print(newstr)
+	return newstr
+
 
 
 if __name__ == '__main__':
 	pass
-
-

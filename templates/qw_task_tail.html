@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% load qo_tag_tools %} {% block content %}
+{% extends 'layout.html' %} {% load qw_tag_tools %} {% block content %}
 <ol class="breadcrumb">
 	<li>{{businame}}</li>
 	<li>{{app_name}}</li>
@@ -134,7 +134,7 @@
 		var task_id = $(this).attr('task_id');
 		$.ajax({
 				type: "POST",
-				url: "/qo_task_cancel",
+				url: "/qw_task_cancel",
 				async: true,
 				traditional: true,
 				data: {
@@ -159,7 +159,7 @@
 		var task_id = $(this).attr('task_id');
 		$.ajax({
 				type: "POST",
-				url: "/qo_task_readd",
+				url: "/qw_task_readd",
 				async: true,
 				traditional: true,
 				data: {
@@ -169,7 +169,7 @@
 				success: function(obj) {
 					if(obj.status) {
 						//location.reload();
-						window.location.href='/qo_automation';
+						window.location.href='/qw_automation';
 					} else {
 						$('#error_xml').text(obj.error);
 					}

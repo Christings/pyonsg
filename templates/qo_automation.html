@@ -7,34 +7,34 @@
 <div class="row">
 	<div class="col-md-6">
 		<form class="form-horizontal" action="" method="post" id="form_qo_addtask">
-			<label class="col-sm-1 control-label">Basesvn</label>
-			<div class="form-group">
-				<div class="col-sm-12">
-					<textarea class="form-control" rows="7" style="resize: none;" name="qo_basesvn" id="qo_basesvn" placeholder='job.ini[main.svn]'></textarea>
-				</div>
-			</div>
 			<label class="col-sm-1 control-label">Testsvn</label>
 			<div class="form-group">
 				<div class="col-sm-12">
-					<textarea class="form-control" rows="7" style="resize: none;" name="qo_testsvn" id="qo_testsvn" placeholder='job.ini[main.svn]'></textarea>
+					<textarea class="form-control" rows="5" style="resize: none;" name="qo_testsvn" id="qo_testsvn" placeholder='job.ini[main.svn]'></textarea>
 				</div>
 			</div>
+			<label class="col-sm-1 control-label">Basesvn</label>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<textarea class="form-control" rows="5" style="resize: none;" name="qo_basesvn" id="qo_basesvn" placeholder='job.ini[main.svn]'></textarea>
+				</div>
+			</div>			
 			<div class="form-group">
 				<label class="col-sm-1 control-label">newcfg</label>
 				<div class="col-sm-4">
 					<input type="text" class="form-control" id="new_conf_ip" name="new_conf_ip" placeholder="conf file@ip">
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-4">
 					<input type="text" class="form-control" id="new_conf_user" name="new_conf_user" placeholder="user">
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					<input type="text" class="form-control" id="new_conf_pass" name="new_conf_pass" placeholder="password">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-1 control-label">cfgpath</label>
-				<div class="col-sm-7">
-					<input type="text" class="form-control" id="new_conf_path" name="new_conf_path" placeholder="path(e.g.)/search/odin/daemon/qo/conf(绝对路径)">
+				<div class="col-sm-11">
+					<input type="text" class="form-control" id="new_conf_path" name="new_conf_path" placeholder="path(e.g.)/search/odin/daemon/qo/conf/qo.cfg(绝对路径)">
 				</div>
 			</div>
 			<div class="form-group">
@@ -42,37 +42,43 @@
 				<div class="col-sm-4">
 					<input type="text" class="form-control" id="new_data_ip" name="new_data_ip" placeholder="data file@ip">
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-4">
 					<input type="text" class="form-control" id="new_data_user" name="new_data_user" placeholder="user">
 				</div>
-				<div class="col-sm-4">
+				<div class="col-sm-3">
 					<input type="text" class="form-control" id="new_data_pass" name="new_data_pass" placeholder="password">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-1 control-label">datafrom</label>
-				<div class="col-sm-7">
+				<!--<div class="col-sm-7">
 					<input type="text" class="form-control" id="new_data_path" name="new_data_path" placeholder="path(e.g.)/search/odin/daemon/qo/data(绝对路径)">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-1 control-label">datato</label>
-				<div class="col-sm-7">
-					<input type="text" class="form-control" id="new_data_to_path" name="new_data_to_path" placeholder="path(e.g.)data/base/nb(相对路径)">
+				</div>-->
+				<div class="col-sm-11">
+					<textarea class="form-control" rows="4" style="resize: none;" name="new_data_path" id="new_data_path" placeholder='1.使用和线上一致的数据，置空&#13;&#10;2.更新单独文件/search/odin/daemon/qo/data/vocab.txt;data/base/nb&#13;&#10;3.更新多文件/search/odin/daemon/zhangjj/tools/qo/data/{template.lst,tflag_qo.xml};data/base&#13;&#10;4.完全使用自有完整数据(需支持rsync)/search/odin/daemon/zhangjj/tools/qo/data;data'></textarea>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-1 control-label">presscfg</label>
-				<div class="col-sm-3">
+				<div class="col-sm-4">
 					<input type="text" class="form-control" id="qo_qps" name="qo_qps" placeholder="press qps">
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-4">
 					<input type="text" class="form-control" id="qo_press_time" name="qo_press_time" placeholder="press time">
 				</div>
 			</div>
 			<div class="form-group">
+				<label class="col-sm-1 control-label">exp_id</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="qo_press_expid" name="qo_press_expid" placeholder="expid">
+				</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="qo_press_rate" name="qo_press_rate" placeholder="实验压力配比(无需百分号%)">
+				</div>
+			</div>
+			<div class="form-group">
 				<div class="col-sm-offset-1 col-sm-10">
-					<div class="col-sm-offset-1 col-sm-10">
+					<div class="col-sm-offset-4 col-sm-4">
 						<label class="btn btn-primary btn-lg btn-block" id="add_qo_task">添加队列</label>
 					</div>
 				</div>
@@ -85,8 +91,10 @@
 				<thead>
 					<tr>
 						<td style="width: 30px;">ID</td>
-						<td style="">CreateTime</td>
+						<td>CreateTime</td>
 						<td>StartTime</td>
+						<td style="width: 100px;">press_expid</td>
+						<td style="width: 100px;">press_rate</td>						
 						<td style="width: 100px;">Status</td>
 						<td style="width: 70px;">TestItem</td>
 						<td style="width: 100px;">User</td>
@@ -95,20 +103,35 @@
 				</thead>
 				<tbody style="cursor: pointer;" id="reqBody">
 					{% for item in task_list %}
-					<tr>
+					<tr class="get_data" >
 						<td style="width: 20px;">{{ item.id }}</td>
 						<td>{{ item.create_time }}</td>
 						<td>{{ item.start_time }}</td>
+						<td>{{ item.press_expid }}</td>
+						<td>{{ item.press_rate }}</td>
 						<td style="width: 100px;">
 							<a href="/qo_task_detail_{{ item.id }}.html">
 								{% ifequal item.status 0 %}
-								<font color="gray">Waiting</font>{% endifequal %} {% ifequal item.status 1 %}
-								<font color="cream">Ready</font>{% endifequal %} {% ifequal item.status 2 %}
-								<font color="green">Running</font>{% endifequal %} {% ifequal item.status 3 %}
-								<font color="red">Error</font>{% endifequal %} {% ifequal item.status 4 %}
-								<font color="blue">Finished</font>{% endifequal %} {% ifequal item.status 5 %}
-								<font color="orange">Canceled</font>{% endifequal %} {% ifequal item.status 6 %}
-								<font color="orange">Canceling</font>{% endifequal %}
+								<font color="gray">Waiting</font>
+								{% endifequal %} 
+								{% ifequal item.status 1 %}
+								<font color="cream">Ready</font>
+								{% endifequal %} 
+								{% ifequal item.status 2 %}
+								<font color="green">Running</font>
+								{% endifequal %} 
+								{% ifequal item.status 3 %}
+								<font color="red">Error</font>
+								{% endifequal %} 
+								{% ifequal item.status 4 %}
+								<font color="blue">Finished</font>
+								{% endifequal %} 
+								{% ifequal item.status 5 %}
+								<font color="orange">Canceled</font>
+								{% endifequal %} 
+								{% ifequal item.status 6 %}
+								<font color="orange">Canceling</font>
+								{% endifequal %}
 							</a>
 						</td>
 						{% ifequal item.testitem 1 %}
@@ -117,6 +140,19 @@
 						<td style="width: 70px;">Null</td>
 						{% endifequal%}
 						<td style="width: 100px;">{{ item.user }}</td>
+						<td style="display: none;">{{ item.testsvn }}</td>
+						<td style="display: none;">{{ item.basesvn }}</td>						
+						<td style="display: none;">{{ item.newconfip }}</td>
+						<td style="display: none;">{{ item.newconfuser }}</td>
+						<td style="display: none;">{{ item.newconfpassw }}</td>
+						<td style="display: none;">{{ item.newconfpath }}</td>
+						<td style="display: none;">{{ item.newdataip }}</td>
+						<td style="display: none;">{{ item.newdatauser }}</td>
+						<td style="display: none;">{{ item.newdatapassw }}</td>
+						<td style="display: none;">{{ item.newdatapath }}</td>
+						<td style="display: none;">{{ item.press_qps }}</td>
+						<td style="display: none;">{{ item.press_time }}</td>
+						
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -261,25 +297,34 @@
 	//getData
 	$('.get_data').dblclick(function() {
 		var linelst = $(this).children();
-		reqtype = $(linelst[1]).text();
-		hostip = "http://" + $(linelst[2]).text();
-		direction = $(linelst[3]).text();
-		reqtext = $(linelst[4]).text();
-		result = $(linelst[5]).text();
-		isfromzh = $(linelst[6]).text();
-		$('#inputHost').val(hostip);
-		$('#reqtype').val(reqtype);
-		$('#lan_sel').val(direction);
-		$('#reqtext').val(reqtext);
-		if(isfromzh == 'fromzh') {
-			$('#inlineRadio2').attr("checked", 'checked');
-			$('#inlineRadio1').attr("checked", false);
-		} else {
-			$('#inlineRadio1').attr("checked", 'checked');
-			$('#inlineRadio2').attr("checked", false);
-		}
-		$('#result').val(result);
-		$('#debugInfo').val('');
+		press_expid = $(linelst[3]).text();
+		press_rate = $(linelst[4]).text();		
+		testsvn = $(linelst[8]).text();
+		basesvn = $(linelst[9]).text();
+		newconfip = $(linelst[10]).text();
+		newconfuser = $(linelst[11]).text();
+		newconfpassw = $(linelst[12]).text();
+		newconfpath = $(linelst[13]).text();
+		newdataip = $(linelst[14]).text();
+		newdatauser = $(linelst[15]).text();
+		newdatapassw = $(linelst[16]).text();
+		newdatapath = $(linelst[17]).text();
+		press_qps = $(linelst[18]).text();
+		press_time = $(linelst[19]).text();		
+		$('#qo_testsvn').val(testsvn);
+		$('#qo_basesvn').val(basesvn);
+		$('#new_conf_ip').val(newconfip);
+		$('#new_conf_user').val(newconfuser);
+		$('#new_conf_pass').val(newconfpassw);
+		$('#new_conf_path').val(newconfpath);
+		$('#new_data_ip').val(newdataip);
+		$('#new_data_user').val(newdatauser);
+		$('#new_data_pass').val(newdatapassw);
+		$('#new_data_path').val(newdatapath);
+		$('#qo_qps').val(press_qps);
+		$('#qo_press_time').val(press_time);
+		$('#qo_press_rate').val(press_rate);
+		$('#qo_press_expid').val(press_expid);
 	})
 
 	$('#lan_filter').change(function() {

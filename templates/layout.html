@@ -22,7 +22,7 @@
     <link href="{% static "css/dashboard.css" %}" rel="stylesheet">
 
     <script src="{% static "js/ie-emulation-modes-warning.js" %}"></script>
-
+				
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     [if lt IE 9]
       <script src="{% static "js/html5shiv.min.js" %}"></script>
@@ -42,7 +42,7 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-3 col-md-1 sidebar">
           {% for item in business_lst %}	
           <ul class="nav nav-sidebar">
           	<li class="business-title">{{item.businame}}</li>
@@ -54,7 +54,7 @@
           </ul>
           {% endfor %}
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">         
+        <div class="col-sm-9 col-sm-offset-3 col-md-11 col-md-offset-1 main">         
           {% block content%}{% endblock %}
         </div>
       </div>
@@ -68,6 +68,7 @@
     <script src="{% static "bootstrap-3.3.7-dist/js/bootstrap.min.js" %}"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{% static "js/ie10-viewport-bug-workaround.js" %}"></script>
+    <script type="text/javascript" src="{% static "jquery.watermark.min.js" %}"></script>
     <script>
 			$('.appclick').click(function(){
 				$(this).parent().addClass('active').siblings().removeClass('active')

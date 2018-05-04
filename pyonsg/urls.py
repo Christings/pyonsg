@@ -54,5 +54,8 @@ urlpatterns = [
     re_path(r'^qo_req$',webqo.qo_req),
     # webqo
     re_path(r'^qw_automation$',webqw.qw_automation),
+    re_path(r'^qw_task_detail_(?P<task_id>\d+).html$',webqo.qo_task_detail),
+    re_path(r'^qw_task_readd$',webqo.qo_task_readd),
+    re_path(r'^qw_task_cancel',webqo.qo_task_cancel),
     re_path(r'^qw_req$',webqw.qw_req),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
