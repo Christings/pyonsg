@@ -10,17 +10,17 @@ import time,json
 
 def qw_req(request):
 	if request.method == 'GET':
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
+		business_lst = layout.Business.objects.all()
+		app_lst = layout.Application.objects.all()
 		return render(request, 'qw_req.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Webqw','app_name':"webqw请求调试"})
 
 
 def qw_task_cancel(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	try:
 		re_add_task_d = request.POST.get('task_id')
@@ -31,11 +31,11 @@ def qw_task_cancel(request):
 	return HttpResponse(json.dumps(ret))
 
 def qw_task_readd(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	re_add_task_d = request.POST.get('task_id')
 	try:
@@ -60,22 +60,22 @@ def qw_task_readd(request):
 
 
 def qw_task_detail(request,task_id):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	task_detail = models.webqwqps.objects.filter(id=task_id)
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
 	return render(request, 'qw_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'Webqw', 'app_name': "webqw性能对比自动化",'topic':'任务详情','task_detail': task_detail})
 
 def qw_automation(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	if request.method == 'GET':
 		task_list = models.webqwqps.objects.order_by('id')[::-1]
 		business_lst = layout.Business.objects.all()
@@ -95,17 +95,26 @@ def qw_automation(request):
 		newdatapath = str_dos2unix(request.POST.get('new_data_path'))
 		press_qps = str_dos2unix(request.POST.get('qw_qps'))
 		press_time = str_dos2unix(request.POST.get('qw_press_time'))
+		press_expid = str_dos2unix(request.POST.get('qw_press_expid'))
+		press_rate = str_dos2unix(request.POST.get('qw_press_rate'))
+		print("press_expid",type(press_expid))
+		print("press_rate",type(press_rate))
 		if press_qps=="":
 			press_qps=1000
 		if press_time=="":
 			press_time=15
+		if press_expid=="":
+			press_expid=0
+		if press_rate=="":
+			press_rate=0
 		print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
 		try:
-			models.webqwqps.objects.create(create_time=get_now_time(), user='zhangjingjun', testitem=1, testsvn=test_svn, basesvn=base_svn,
+			models.webqwqps.objects.create(create_time=get_now_time(), user=user_id, testitem=1, testsvn=test_svn, basesvn=base_svn,
 								newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
 								newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
-								newdatapassw=newdatapassw, newdatapath=newdatapath,press_qps=press_qps, press_time=press_time)
+								newdatapassw=newdatapassw, newdatapath=newdatapath, press_qps=press_qps, press_time=press_time,press_expid=press_expid,press_rate=press_rate)
 		except Exception as e:
+			print(e)
 			ret['error'] = 'error:'+str(e)
 			ret['status'] = False
 		return HttpResponse(json.dumps(ret))
@@ -120,3 +129,5 @@ def get_now_time():
 
 def str_dos2unix(input):
     return input.replace('\r\n', '\n').replace(' ', '')
+
+
