@@ -377,7 +377,7 @@ def home(request):
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
-	user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+
 	if (ptoken != ""):#login request callback
 		message = urllib.parse.unquote(ptoken)
 		child = subprocess.Popen(['/usr/bin/php', '/search/odin/daemon/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
@@ -399,6 +399,7 @@ def home(request):
 		now_time = time.time()
 		print('now_time:',now_time)
 		if (uid != "" and now_time - login_time < 60):
+			user_app_lst = models.UserToApp.objects.filter(user_name_id=uid)
 			response = render(request, 'layout.html', {'uid_id': uid,'user_app_lst':user_app_lst, 'business_lst':business_lst,'app_lst':app_lst})
 			if ('uid' not in request.COOKIES):
 				response.set_cookie("uid", uid)
@@ -412,6 +413,7 @@ def home(request):
 			print("should be login, but not login")
 			uid = ""
 		if (uid != ""):
+			user_app_lst = models.UserToApp.objects.filter(user_name_id=uid)
 			response = render(request, 'layout.html', {'business_lst':business_lst,'app_lst':app_lst,'uid_id': uid,'user_app_lst':user_app_lst})
 		else:
 			response = None
