@@ -206,12 +206,19 @@ def sys_admin(request):
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
+
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
 	utoapp = models.UserToApp.objects.all()
 	user_lst = models.UserInfo.objects.all()
-
-	return render(request, 'sys_admin.html',{'business_lst': business_lst, 'app_lst': app_lst,'user_lst':user_lst,'utoapp':utoapp,'businame': 'sysadmin', 'app_name': "系统管理"})
+	user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+	app_id_lst = list()
+	for appid in user_app_lst:
+		app_id_lst.append(appid.app_id_id)
+	if 9 in app_id_lst:
+		return render(request, 'sys_admin.html',{'business_lst': business_lst,'user_id':user_id, 'app_lst': app_lst,'user_lst':user_lst,'user_app_lst':user_app_lst,'utoapp':utoapp,'businame': 'sysadmin', 'app_name': "系统管理"})
+	else:
+		return render(request, 'no_limit.html',{'business_lst': business_lst, 'user_id': user_id, 'app_lst': app_lst, 'user_app_lst':user_app_lst,'businame': 'sysadmin', 'app_name': "系统管理"})
 
 
 
@@ -220,47 +227,20 @@ def sys_admin(request):
 def fy_automation(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-		user = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-	business_lst = models.Business.objects.all()
-	app_lst = models.Application.objects.all()
-	return render(request, 'fy_automation.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"翻译性能对比自动化"})
-
-
-# allj request
-def fy_req_allj(request):
-
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-	if request.method == 'GET':
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
-
-		query=""
-		resp = requests.post('http://ywhub01.fy.sjs.ted:12000/alltrans_json', data=query)
-		print(resp.text)
-		return render(request, 'fy_req_allj.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "alltrans_josn请求调试"})
-	# else:
-	# 	return render(request, 'fy_req_allj.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "JSON请求调试"})
-
-# json request
-def fy_req_json(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
-	req_lst = models.ReqInfo.objects.all()
-	timea =models.ReqInfo.objects.all().values()
-	# for item in timea:
-	# 	print(item)
-	return render(request, 'fy_req_json.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Translate','app_name':"Alltrans_json请求调试"})
+	user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+	app_id_lst = list()
+	for appid in user_app_lst:
+		app_id_lst.append(appid.app_id_id)
+	if 4 in app_id_lst:
+		return render(request, 'fy_automation.html', {'business_lst': business_lst,'user_id':user_id,'user_app_lst':user_app_lst,'app_lst': app_lst,'businame':'Translate','app_name':"翻译性能对比自动化"})
+	else:
+		return render(request, 'no_limit.html',{'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译性能对比自动化"})
+
 
 # xml request
 def del_xml_line(request):
@@ -293,7 +273,6 @@ def xml_req_save(request):
 	result = request.POST.get('result')
 	reqtype = request.POST.get('reqtype')
 	try:
-		# models.ReqInfo.objects.create(host_ip=inputHost,trans_direct=lan_sel,isfromzh=fromto,req_text=reqtext,result=result,user_fk_id=user_id)
 		models.ReqInfo.objects.create(host_ip=inputHost, trans_direct=lan_sel, isfromzh=fromto, req_text=reqtext,result=result, user_fk_id=user_id,reqtype=reqtype)
 		ret['inputHost']=inputHost
 		ret['lan_sel']=lan_sel
@@ -369,31 +348,21 @@ def fy_req_xml(request):
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
-
 	try:
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
-		# req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
-		timea =models.ReqInfo.objects.all().values()
+		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+		app_id_lst = list()
+		for appid in user_app_lst:
+			app_id_lst.append(appid.app_id_id)
 	except Exception as e:
 		print(e)
 		pass
-	return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"XML请求调试"})
-
-
-
-# index
-def index(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-	business_lst = models.Business.objects.all()
-	app_lst = models.Application.objects.all()
-	return render(request,'layout.html',{'business_lst':business_lst,'app_lst':app_lst})
-
+	if 3 in app_id_lst:
+		return render(request, 'fy_req_xml.html', {'business_lst': business_lst,'user_id':user_id,'user_app_lst':user_app_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"请求调试"})
+	else:
+		return render(request, 'no_limit.html',{'business_lst': business_lst, 'user_id': user_id,'user_app_lst':user_app_lst, 'req_lst': req_lst, 'app_lst': app_lst,'businame': 'Translate', 'app_name': "请求调试"})
 
 
 def home(request):
@@ -408,6 +377,7 @@ def home(request):
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
+	user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
 	if (ptoken != ""):#login request callback
 		message = urllib.parse.unquote(ptoken)
 		child = subprocess.Popen(['/usr/bin/php', '/search/odin/daemon/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
@@ -429,7 +399,7 @@ def home(request):
 		now_time = time.time()
 		print('now_time:',now_time)
 		if (uid != "" and now_time - login_time < 60):
-			response = render(request, 'layout.html', {'uid': uid,'business_lst':business_lst,'app_lst':app_lst})
+			response = render(request, 'layout.html', {'uid_id': uid,'user_app_lst':user_app_lst, 'business_lst':business_lst,'app_lst':app_lst})
 			if ('uid' not in request.COOKIES):
 				response.set_cookie("uid", uid)
 		else:
@@ -442,7 +412,7 @@ def home(request):
 			print("should be login, but not login")
 			uid = ""
 		if (uid != ""):
-			response = render(request, 'layout.html', {'business_lst':business_lst,'app_lst':app_lst,'uid': uid})
+			response = render(request, 'layout.html', {'business_lst':business_lst,'app_lst':app_lst,'uid_id': uid,'user_app_lst':user_app_lst})
 		else:
 			response = None
 	if (response == None):

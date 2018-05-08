@@ -34,17 +34,11 @@ urlpatterns = [
     re_path(r'^sys_app_edit$',trans.sys_app_edit),
     re_path(r'^sys_user_app$',trans.sys_user_app),
     re_path(r'^user_app_del$',trans.user_app_del),
-    # xml
-    re_path(r'^index$',trans.index),
+    # xml,json,allj,fy_automation
     re_path(r'^fy_req$',trans.fy_req_xml),
     re_path(r'^xml_req$',trans.xml_req),
     re_path(r'^xml_req_save$',trans.xml_req_save),
     re_path(r'^del_xml_line$',trans.del_xml_line),
-    # json
-    re_path(r'^fy_req_json$',trans.fy_req_json),
-    # allj
-    re_path(r'^fy_req_allj$',trans.fy_req_allj),
-    # fy_automation
     re_path(r'^fy_automation$',trans.fy_automation),
     # webqo
     re_path(r'^qo_automation$',webqo.qo_automation),
@@ -52,6 +46,7 @@ urlpatterns = [
     re_path(r'^qo_task_readd$',webqo.qo_task_readd),
     re_path(r'^qo_task_cancel',webqo.qo_task_cancel),
     re_path(r'^qo_req$',webqo.qo_req),
+    re_path(r'^logout$',webqo.logout),
     # webqw
     re_path(r'^qw_automation$',webqw.qw_automation),
     re_path(r'^qw_task_detail_(?P<task_id>\d+).html$',webqw.qw_task_detail),

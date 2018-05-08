@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}  {% block content %}
+<ol class="breadcrumb">
+	<li>{{businame}}</li>
+	<li class="active">{{app_name}}</li>
+	<li style="color: red;"><span id="error_xml"></span></li>
+</ol>
+<div class="row">
+	<h3>无权限，请联系申请</h3>
+</div>
+
+{% endblock %}

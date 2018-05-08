@@ -37,6 +37,17 @@
         <div class="navbar-header">
           <a class="navbar-brand" href="index">Sogou Test</a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+          	{% if user_id %}
+            <li><a>{{user_id}}</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% else %}
+            <li><a>{{user_id}}</a></li>
+            <li><a href="https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl=">Login</a></li>
+            {% endif %}
+          </ul>
+        </div>
       </div>
     </nav>
 
@@ -48,7 +59,11 @@
           	<li class="business-title">{{item.businame}}</li>
           	{% for app in app_lst %}
             	{% ifequal app.busi_id item.id %}
-            	<li><a class="appclick" app_id="{{app.id}}"href="{{app.urlname}}">{{app.appname}}</a></li>
+            		{% for user_app in user_app_lst %}
+            			{% ifequal app.id user_app.app_id_id %}
+            			<li><a class="appclick" app_id="{{app.id}}"href="{{app.urlname}}">{{app.appname}}</a></li>
+            			{% endifequal %}
+            		{% endfor %}
             	{% endifequal %}	
 						{% endfor %}
           </ul>

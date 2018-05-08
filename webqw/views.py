@@ -9,10 +9,22 @@ import time,json
 
 
 def qw_req(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	if request.method == 'GET':
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()
-		return render(request, 'qw_req.html', {'business_lst': business_lst,'app_lst': app_lst,'businame':'Webqw','app_name':"webqw请求调试"})
+		user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
+		app_id_lst = list()
+		for appid in user_app_lst:
+			app_id_lst.append(appid.app_id_id)
+		if 8 in app_id_lst:
+			return render(request, 'qw_req.html', {'business_lst': business_lst,'user_id':user_id,'user_app_lst':user_app_lst, 'app_lst': app_lst,'businame':'Webqw','app_name':"webqw请求调试"})
+		else:
+			return render(request, 'no_limit.html',{'business_lst': business_lst,'user_id':user_id,'user_app_lst':user_app_lst, 'app_lst': app_lst,'businame':'Webqw','app_name':"webqw请求调试"})
 
 
 def qw_task_cancel(request):
@@ -68,7 +80,7 @@ def qw_task_detail(request,task_id):
 	task_detail = models.webqwqps.objects.filter(id=task_id)
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
-	return render(request, 'qw_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'businame': 'Webqw', 'app_name': "webqw性能对比自动化",'topic':'任务详情','task_detail': task_detail})
+	return render(request, 'qw_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'user_id':user_id, 'businame': 'Webqw', 'app_name': "webqw性能对比自动化",'topic':'任务详情','task_detail': task_detail})
 
 def qw_automation(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
@@ -80,7 +92,14 @@ def qw_automation(request):
 		task_list = models.webqwqps.objects.order_by('id')[::-1]
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()
-		return render(request, 'qw_automation.html',{'business_lst': business_lst,'app_lst': app_lst,'businame':'Webqw','app_name':"webqw性能对比自动化",'task_list': task_list})
+		user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
+		app_id_lst = list()
+		for appid in user_app_lst:
+			app_id_lst.append(appid.app_id_id)
+		if 7 in app_id_lst:
+			return render(request, 'qw_automation.html',{'business_lst': business_lst,'user_id':user_id,'user_app_lst':user_app_lst, 'app_lst': app_lst,'businame':'Webqw','app_name':"webqw性能对比自动化",'task_list': task_list})
+		else:
+			return render(request, 'no_limit.html',{'business_lst': business_lst,'user_app_lst':user_app_lst, 'user_id': user_id, 'app_lst': app_lst, 'businame': 'Webqw','app_name': "webqw性能对比自动化"})
 	elif request.method== 'POST':
 		ret = {'status': True, 'errro': None, 'data': None}
 		test_svn = str_dos2unix(request.POST.get('qw_testsvn'))
@@ -107,7 +126,7 @@ def qw_automation(request):
 			press_expid=0
 		if press_rate=="":
 			press_rate=0
-		print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
+		# print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
 		try:
 			models.webqwqps.objects.create(create_time=get_now_time(), user=user_id, testitem=1, testsvn=test_svn, basesvn=base_svn,
 								newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
@@ -129,5 +148,13 @@ def get_now_time():
 
 def str_dos2unix(input):
     return input.replace('\r\n', '\n').replace(' ', '')
+
+def logout(request):
+    response = redirect('https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl=')
+    if ('uid' in request.COOKIES):
+        response.delete_cookie("uid")
+    return response
+
+
 
 
