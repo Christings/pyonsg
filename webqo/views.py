@@ -80,7 +80,8 @@ def qo_task_detail(request,task_id):
 	task_detail = models.webqoqps.objects.filter(id=task_id)
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
-	return render(request, 'qo_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'user_id':user_id, 'businame': 'Webqo', 'app_name': "webqo性能对比自动化",'topic':'任务详情','task_detail': task_detail})
+	user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
+	return render(request, 'qo_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'user_id':user_id,'user_app_lst':user_app_lst,  'businame': 'Webqo', 'app_name': "webqo性能对比自动化",'topic':'任务详情','task_detail': task_detail})
 
 def qo_automation(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
