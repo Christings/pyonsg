@@ -11,15 +11,16 @@
 		<table class="table table-hover" id="reqData">
 			<thead>
 				<tr>
-					<td style="width: 100px;">ID</td>
+					<td style="width: 50px;">ID</td>
 					<td style="">CreateTime</td>
 					<td>StartTime</td>
 					<td style="">Test QPS</td>
 					<td style="">Press Time</td>
 					<td style="">Press Expid</td>
 					<td style="">Press Rate</td>
+					<td style="">Testtag</td>
 					<td style="">Status</td>
-					<td>TestItem</td>
+					<td style="display: none;">TestItem</td>
 					<td>User</td>
 					<td style="">Ctrl</td>
 				</tr>
@@ -33,6 +34,7 @@
 					<td>{{task_detail.0.press_time}}min</td>
 					<td>{{task_detail.0.press_expid}}</td>
 					<td>{{task_detail.0.press_rate}}%</td>
+					<td class="tabletd">{{task_detail.0.testtag}}</td>
 					<td class="tabletd">
 						{% ifequal task_detail.0.status 0 %}
 						<font color="gray">Waiting</font>{% endifequal %} {% ifequal task_detail.0.status 1 %}
@@ -44,9 +46,9 @@
 						<font color="orange">Canceling</font>{% endifequal %}
 					</td>
 					{% ifequal task_detail.0.testitem 1 %}
-					<td class="tabletd">cost</td>
+					<td class="tabletd" style="display: none;">cost</td>
 					{% else %}
-					<td class="tabletd">Null</td>
+					<td class="tabletd" style="display: none;">Null</td>
 					{% endifequal%}
 					<td class="tabletd">{{task_detail.0.user}}</td>
 					<td class="tabletd">
@@ -58,12 +60,14 @@
 				</tr>
 			</tbody>
 		</table>
+		<div id="showDiv"></div>
 	</div>
+	
 </div>
 <div class="row">
 	<div class="col-sm-12">
 		<div class="alert alert-info" role="alert">Cost Status</div>
-		<table class="table table-hover" id="reqData">
+		<table class="table">
 			<thead>
 				<tr>
 					<td style="">Test</td>
@@ -84,7 +88,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<div class="alert alert-info" role="alert">SVN Info</div>
-		<table class="table table-hover" id="reqData">
+		<table class="table">
 			<thead>
 				<tr>
 					<td style="">Test SVN</td>
@@ -101,31 +105,7 @@
 		</table>
 	</div>
 </div>
-<!--
-<div class="row">
-	<div class="col-sm-12">
-		<div class="alert alert-info" role="alert">QPS Info</div>
-		<table class="table table-hover" id="reqData">
-			<thead>
-				<tr>
-					<td style="">Test QPS</td>
-					<td style="">Press Time</td>
-					<td style="">press Expid</td>
-					<td style="">press Rate</td>
-				</tr>
-			</thead>
-			<tbody id="reqBody">
-				<tr req_id="{{task_detail.id}}" class="get_data">
-					<td>{{task_detail.0.press_qps}}</td>
-					<td>{{task_detail.0.press_time}}min</td>
-					<td>{{task_detail.0.press_expid}}</td>
-					<td>{{task_detail.0.press_rate}}%</td>
-				</tr>
-			</tbody>
 
-		</table>
-	</div>
-</div>-->
 
 <div class="row">
 	<div class="col-sm-12">
@@ -191,5 +171,35 @@
 				},
 			});
 	})
+	
+		//table hover
+	$(function() {
+		function showBox(obj, box) {
+			var timer = null;
+			$(obj).on("mouseover", function(e) {
+				clearTimeout(timer);
+				var clientX = e.clientX;
+				var clientY = e.clientY;
+				var y = clientY + 20;
+				var txt = $(this).text();
+				timer = setTimeout(function() {
+					$(box).css("left", clientX).css("top", y);
+					if(txt == "") {
+						$(box).hide();
+					} else {
+						$(box).show();
+						$(box).html(txt);
+					}
+				}, 300);
+			});
+			$(obj).on("mouseout", function() {
+				clearTimeout(timer);
+				$(box).hide();
+			});
+		}
+		showBox("#reqData > tbody td", "#showDiv");
+	});
+	
+	
 </script>
 {% endblock %}

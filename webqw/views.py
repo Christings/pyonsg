@@ -63,6 +63,7 @@ def qw_task_readd(request):
 		task_detail_todic['cost_test'] = ""
 		task_detail_todic['cost_base'] = ""
 		task_detail_todic['runningIP'] = ""
+		task_detail_todic['user'] = user_id
 		models.webqwqps.objects.create(**task_detail_todic)
 	except Exception as e:
 		print(e)
@@ -77,10 +78,12 @@ def qw_task_detail(request,task_id):
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
+	#user_id="zhangjingjun"
 	task_detail = models.webqwqps.objects.filter(id=task_id)
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
-	return render(request, 'qw_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'user_id':user_id, 'businame': 'Webqw', 'app_name': "webqw性能对比自动化",'topic':'任务详情','task_detail': task_detail})
+	user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
+	return render(request, 'qw_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'user_id':user_id,'user_app_lst':user_app_lst,  'businame': 'Webqw', 'app_name': "webqw性能对比自动化",'topic':'任务详情','task_detail': task_detail})
 
 def qw_automation(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
@@ -88,6 +91,7 @@ def qw_automation(request):
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
+	# user_id="zhangjingjun"
 	if request.method == 'GET':
 		task_list = models.webqwqps.objects.order_by('id')[::-1]
 		business_lst = layout.Business.objects.all()
@@ -116,6 +120,7 @@ def qw_automation(request):
 		press_time = str_dos2unix(request.POST.get('qw_press_time'))
 		press_expid = str_dos2unix(request.POST.get('qw_press_expid'))
 		press_rate = str_dos2unix(request.POST.get('qw_press_rate'))
+		testtag = str_dos2unix(request.POST.get('testtag'))
 		print("press_expid",type(press_expid))
 		print("press_rate",type(press_rate))
 		if press_qps=="":
@@ -131,7 +136,8 @@ def qw_automation(request):
 			models.webqwqps.objects.create(create_time=get_now_time(), user=user_id, testitem=1, testsvn=test_svn, basesvn=base_svn,
 								newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
 								newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
-								newdatapassw=newdatapassw, newdatapath=newdatapath, press_qps=press_qps, press_time=press_time,press_expid=press_expid,press_rate=press_rate)
+								newdatapassw=newdatapassw, newdatapath=newdatapath, press_qps=press_qps, press_time=press_time,press_expid=press_expid,press_rate=press_rate,
+								testtag=testtag)
 		except Exception as e:
 			print(e)
 			ret['error'] = 'error:'+str(e)
@@ -148,12 +154,6 @@ def get_now_time():
 
 def str_dos2unix(input):
     return input.replace('\r\n', '\n').replace(' ', '')
-
-def logout(request):
-    response = redirect('https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl=')
-    if ('uid' in request.COOKIES):
-        response.delete_cookie("uid")
-    return response
 
 
 

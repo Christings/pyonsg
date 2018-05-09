@@ -73,11 +73,12 @@ def qo_task_readd(request):
 
 
 def qo_task_detail(request,task_id):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id="zhangjingjun"
 	task_detail = models.webqoqps.objects.filter(id=task_id)
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
@@ -90,6 +91,7 @@ def qo_automation(request):
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
+	# user_id="zhangjingjun"
 	if request.method == 'GET':
 		task_list = models.webqoqps.objects.order_by('id')[::-1]
 		business_lst = layout.Business.objects.all()

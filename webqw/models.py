@@ -26,3 +26,6 @@ class webqwqps(models.Model):
     cost_base = models.TextField(default="")
     press_qps = models.IntegerField()
     press_time = models.IntegerField()
+    press_expid = models.IntegerField()
+    press_rate = models.FloatField()
+    testtag = models.CharField(max_length=500, default="")
