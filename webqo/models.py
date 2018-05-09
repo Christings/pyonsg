@@ -28,3 +28,4 @@ class webqoqps(models.Model):
     press_time = models.IntegerField()
     press_expid = models.IntegerField()
     press_rate = models.FloatField()
+    testtag = models.CharField(max_length=500, default="")

@@ -7,18 +7,25 @@
 <div class="row">
 	<div class="col-md-6">
 		<form class="form-horizontal" action="" method="post" id="form_qo_addtask">
+			
+			<label class="col-sm-1 control-label">Basesvn</label>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<textarea class="form-control" rows="5" style="resize: none;" name="qo_basesvn" id="qo_basesvn" placeholder='job.ini[main.svn]'></textarea>
+				</div>
+			</div>	
 			<label class="col-sm-1 control-label">Testsvn</label>
 			<div class="form-group">
 				<div class="col-sm-12">
 					<textarea class="form-control" rows="5" style="resize: none;" name="qo_testsvn" id="qo_testsvn" placeholder='job.ini[main.svn]'></textarea>
 				</div>
 			</div>
-			<label class="col-sm-1 control-label">Basesvn</label>
 			<div class="form-group">
-				<div class="col-sm-12">
-					<textarea class="form-control" rows="5" style="resize: none;" name="qo_basesvn" id="qo_basesvn" placeholder='job.ini[main.svn]'></textarea>
+				<label class="col-sm-1 control-label">testtag</label>
+				<div class="col-sm-11">
+					<input type="text" class="form-control" id="testtag" name="testtag" placeholder="branch多次提交可此处备注区分">
 				</div>
-			</div>			
+			</div>
 			<div class="form-group">
 				<label class="col-sm-1 control-label">newcfg</label>
 				<div class="col-sm-4">
@@ -61,10 +68,10 @@
 			<div class="form-group">
 				<label class="col-sm-1 control-label">presscfg</label>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="qo_qps" name="qo_qps" placeholder="press qps">
+					<input type="text" class="form-control" id="qo_qps" name="qo_qps" placeholder="press qps默认1000">
 				</div>
 				<div class="col-sm-4">
-					<input type="text" class="form-control" id="qo_press_time" name="qo_press_time" placeholder="press time">
+					<input type="text" class="form-control" id="qo_press_time" name="qo_press_time" placeholder="press time默认15min">
 				</div>
 			</div>
 			<div class="form-group">
@@ -96,12 +103,13 @@
 						<td style="width: 30px;">ID</td>
 						<td>CreateTime</td>
 						<td>StartTime</td>
-						<td style="width: 100px;">Expid</td>
-						<td style="width: 100px;">Rate</td>						
+						<td style="width: 80px;">Expid</td>
+						<td style="width: 80px;">Rate</td>						
 						<td style="width: 100px;">Status</td>
-						<td style="width: 70px;">TestItem</td>
+						<td style="display: none;">TestItem</td>
 						<td style="width: 100px;">User</td>
 						<td style="display: none;">Ctrl</td>
+						<td style="width: 100px;">Testtag</td>
 					</tr>
 				</thead>
 				<tbody style="cursor: pointer;" id="reqBody">
@@ -138,9 +146,9 @@
 							</a>
 						</td>
 						{% ifequal item.testitem 1 %}
-						<td style="width: 70px;">cost</td>
+						<td style="width: 70px;display: none;">cost</td>
 						{% else %}
-						<td style="width: 70px;">Null</td>
+						<td style="width: 70px;display: none;">Null</td>
 						{% endifequal%}
 						<td style="width: 100px;">{{ item.user }}</td>
 						<td style="display: none;">{{ item.testsvn }}</td>
@@ -155,6 +163,7 @@
 						<td style="display: none;">{{ item.newdatapath }}</td>
 						<td style="display: none;">{{ item.press_qps }}</td>
 						<td style="display: none;">{{ item.press_time }}</td>
+						<td class="tabletd" >{{ item.testtag }}</td>
 						
 					</tr>
 					{% endfor %}
@@ -313,7 +322,8 @@
 		newdatapassw = $(linelst[16]).text();
 		newdatapath = $(linelst[17]).text();
 		press_qps = $(linelst[18]).text();
-		press_time = $(linelst[19]).text();		
+		press_time = $(linelst[19]).text();	
+		testtag = $(linelst[20]).text();
 		$('#qo_testsvn').val(testsvn);
 		$('#qo_basesvn').val(basesvn);
 		$('#new_conf_ip').val(newconfip);
@@ -328,6 +338,7 @@
 		$('#qo_press_time').val(press_time);
 		$('#qo_press_rate').val(press_rate);
 		$('#qo_press_expid').val(press_expid);
+		$('#testtag').val(testtag);
 	})
 
 	$('#lan_filter').change(function() {
