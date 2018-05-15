@@ -41,14 +41,16 @@ urlpatterns = [
     re_path(r'^del_xml_line$',trans.del_xml_line),
     re_path(r'^fy_automation$',trans.fy_automation),
     # webqo
-    re_path(r'^qo_automation$',webqo.qo_automation),
+    re_path(r'^qo_automation(?P<page_id>\d*)$',webqo.qo_automation),
+    re_path(r'^qo_automation_add',webqo.qo_automation_add),
     re_path(r'^qo_task_detail_(?P<task_id>\d+).html$',webqo.qo_task_detail),
     re_path(r'^qo_task_readd$',webqo.qo_task_readd),
     re_path(r'^qo_task_cancel',webqo.qo_task_cancel),
     re_path(r'^qo_req$',webqo.qo_req),
     re_path(r'^logout$',webqo.logout),
     # webqw
-    re_path(r'^qw_automation$',webqw.qw_automation),
+    re_path(r'^qw_automation(?P<page_id>\d*)$',webqw.qw_automation),
+    re_path(r'^qw_automation_add$',webqw.qw_automation_add),
     re_path(r'^qw_task_detail_(?P<task_id>\d+).html$',webqw.qw_task_detail),
     re_path(r'^qw_task_readd$',webqw.qw_task_readd),
     re_path(r'^qw_task_cancel',webqw.qw_task_cancel),

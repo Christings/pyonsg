@@ -61,7 +61,7 @@
             	{% ifequal app.busi_id item.id %}
             		{% for user_app in user_app_lst %}
             			{% ifequal app.id user_app.app_id_id %}
-            			<li><a class="appclick" app_id="{{app.id}}"href="{{app.urlname}}">{{app.appname}}</a></li>
+            			<li><a class="appclick" app_id="{{app.id}}" href="{{app.urlname}}">{{app.appname}}</a></li>
             			{% endifequal %}
             		{% endfor %}
             	{% endifequal %}	
