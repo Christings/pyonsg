@@ -5,8 +5,33 @@
 	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">
+	<div class="row placeholders">
+        <div class="col-xs-6 col-sm-4 placeholder iftext">        	
+        	<textarea class="form-control" rows="4" style="resize: none;" id="search_result" name="search_result"></textarea>
+        	<h4>SogoSearch</h4>
+        </div>
+        <div class="col-xs-6 col-sm-4 placeholder">
+        	<textarea class="form-control" rows="4" style="resize: none;" id="baidu_result" name="baidu_result"></textarea>
+        	<h4>Baidu</h4>
+        </div>
+        <div class="col-xs-6 col-sm-4 placeholder">
+        	<textarea class="form-control" rows="4" style="resize: none;" id="google_result" name="google_result"></textarea>
+        	<h4>Google</h4>
+        </div>
+    </div>
+    <div class="row placeholders">
+    	<div class="col-xs-6 col-sm-4 placeholder">
+        	<textarea class="form-control" rows="4" style="resize: none;" id="qq_result" name="qq_result"></textarea>
+        	<h4>QQ</h4>
+    	</div>
+    	<div class="col-xs-6 col-sm-4 placeholder">
+     		<textarea class="form-control" rows="4" style="resize: none;" id="youdao_result" name="youdao_result"></textarea>
+     		<h4>Youdao</h4>
+  		</div>
+   	
+    </div>
 	<div class="col-md-5">
-		<div style="position:absolute; height:700px; overflow:auto">
+		<div style="position:absolute; height:400px; overflow:auto">
 			<table class="table table-hover" id="reqData">
 				<thead>
 					<tr>
@@ -78,7 +103,6 @@
 							</select>
 						</td>
 						<td>Request</td>
-						<td>Result</td>
 						<td style="">Ctrl</td>
 					</tr>
 				</thead>
@@ -90,7 +114,6 @@
 						<td class="tabletd">{% formatIp item.host_ip %}</td>
 						<td class="tabletd" style="">{{item.trans_direct}}</td>
 						<td class="tabletd">{{item.req_text}}</td>
-						<td class="tabletd">{{item.result}}</td>
 						<td class="hide">{{item.isfromzh}}</td>
 						<td class="tabletd" style="">
 							<button class="del_line">DEL</button>
@@ -213,20 +236,6 @@
 				</div>
 			</div>
 		</form>
-		<div class="form-horizontal">
-			<div class="form-group">
-				<label class="col-sm-1 control-label">Result</label>
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="4" style="resize: none;" id="result" name="req_result"></textarea>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-1 control-label">OutInfo</label>
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="15" style="resize: none;" id="debugInfo"></textarea>
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
 
@@ -280,12 +289,17 @@
 
 	//request
 	$('#request_xml').click(function() {
+		$('#search_result').val("")
+		$('#baidu_result').val("")
+		$('#google_result').val("")
+		$('#youdao_result').val("")
+		$('#qq_result').val("")
 		var reqtext = $('#reqtext').val()
 		var inputHost = $('#inputHost').val()
 		if(reqtext != "" && inputHost != "") {
 			$.ajax({
 				type: "POST",
-				url: "/xml_req",
+				url: "/fy_bbk_req",
 				async: true,
 				traditional: true,
 				data: $('#form_xml').serialize(),
@@ -296,19 +310,68 @@
 							resultSplit=(obj.transResult).split('|||');
 							result_str=""
 							for(i=0;i<resultSplit.length;i++){
-								console.log(i)
 								result_str+=(resultSplit[i]+'\r\n')
-								console.log(resultSplit[i])
 							}
 							debugInfo_str="返回信息：\r\n"+obj.debugInfo +'\r\n'+"请求串:\r\n"+obj.requestStr
 						}else{
-							result_str=obj.transResult
-							
+							result_str=obj.transResult						
 							debugInfo_str="Debug信息：\r\n"+obj.debugInfo+'\r\n'+ "请求串:\r\n"+ obj.requestStr
 						}
-						$('#result').val(result_str)
+						$('#search_result').val(result_str)						
 						$('#debugInfo').val(debugInfo_str);
 						$('#error_xml').text('');
+						//baidu
+						var bd_result_str=obj.bd_result;
+						var baidu_result="";
+						if (bd_result_str.indexOf("|||")>0){
+							var bd_result_split = bd_result_str.split('|||');
+							for(i=0;i<bd_result_split.length;i++){
+								baidu_result+=(bd_result_split[i]+'\r\n');
+							}
+						}else{
+							baidu_result=bd_result_str;
+						}
+						$('#baidu_result').val(baidu_result)
+						//google
+						var gg_result_str=obj.gg_result;
+						var google_result="";
+						if (gg_result_str.indexOf("|||")>0){
+							var gg_result_split = gg_result_str.split('|||');
+							for(i=0;i<gg_result_split.length;i++){
+								google_result+=(gg_result_split[i]+'\r\n');
+							}
+						}else{
+							google_result=gg_result_str;
+						}
+						$('#google_result').val(google_result)
+						
+						//qq
+						var qq_result_str=obj.qq_result;
+						var qq_result="";
+						if (qq_result_str.indexOf("|||")>0){
+							var qq_result_split = qq_result_str.split('|||');
+							for(i=0;i<qq_result_split.length;i++){
+								qq_result+=(qq_result_split[i]+'\r\n');
+							}
+						}else{
+							qq_result=qq_result_str;
+						}
+						$('#qq_result').val(qq_result)
+						
+						//youdao
+						var yd_result_str=obj.yd_result;
+						var youdao_result="";
+						if (yd_result_str.indexOf("|||")>0){
+							var yd_result_split = yd_result_str.split('|||');
+							for(i=0;i<yd_result_split.length;i++){
+								youdao_result+=(yd_result_split[i]+'\r\n');
+							}
+						}else{
+							youdao_result=yd_result_str;
+						}
+						$('#youdao_result').val(youdao_result)
+						
+						
 					} else {
 						$('#error_xml').text(obj.error);
 					}
@@ -389,8 +452,7 @@
 		hostip = "http://"+$(linelst[2]).text();
 		direction = $(linelst[3]).text();
 		reqtext = $(linelst[4]).text();
-		result = $(linelst[5]).text();
-		isfromzh = $(linelst[6]).text();
+		isfromzh = $(linelst[5]).text();
 		$('#inputHost').val(hostip);
 		$('#reqtype').val(reqtype);
 		$('#lan_sel').val(direction);
@@ -402,13 +464,11 @@
 			$('#inlineRadio1').attr("checked", 'checked');
 			$('#inlineRadio2').attr("checked", false);
 		}
-		$('#result').val(result);
 		$('#debugInfo').val('');
 	})
 
 	$('#lan_filter').change(function() {
 		var sel_lang = $(this).val();
-		console.log(sel_lang)
 		if(sel_lang == 'all') {
 			$('#reqBody').children().each(function() {
 				$(this).removeClass('hide');

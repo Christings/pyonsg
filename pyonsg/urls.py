@@ -40,6 +40,8 @@ urlpatterns = [
     re_path(r'^xml_req_save$',trans.xml_req_save),
     re_path(r'^del_xml_line$',trans.del_xml_line),
     re_path(r'^fy_automation$',trans.fy_automation),
+    re_path(r'^fy_bbk$',trans.fy_bbk),
+    re_path(r'^fy_bbk_req$',trans.fy_bbk_req),
     # webqo
     re_path(r'^qo_automation(?P<page_id>\d*)$',webqo.qo_automation),
     re_path(r'^qo_automation_add',webqo.qo_automation_add),

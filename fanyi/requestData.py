@@ -84,6 +84,90 @@ language_dict = {
                         'bn' : '孟加拉语',
 }
 
+
+bd_language_dict = {
+                        'auto' : '自动检测',
+                        'zh' : '中文',
+                        'en' : 'en',
+                        'yue' : 'yue',
+#                        'wyw' : '文言文',
+                        'ja' : 'jp',
+                        'ko' : 'kor',
+                        'fr' : 'fra',
+                        'es': 'spa',
+                        'th' : 'th',
+                        'ar' : 'ara',
+                        'ru' : 'ru',
+                        'pt' : 'pt',
+                        'de' : 'de',
+                        'it' : 'it',
+                        'el' : 'el',
+                        'nl' : 'nl',
+                        'pl' : 'pl',
+                        'bg' : 'bul',
+                        'et' : 'est',
+                        'da' : 'dan',
+                        'fi' : 'fin',
+                        'cs' : 'cs',
+                        'ro' : 'rom',
+                        'sl' : 'slo',
+                        'sv' : 'swe',
+                        'hu' : 'hu',
+#                        'cht':'繁体中文',
+                        'vi' : 'vie',
+}
+
+gg_language_dict = {
+                        'en':'en',
+                        'fr':'fr',
+                        'ru':'ru',
+                        'ko':'ko',
+                        'ja':'ja',
+                        'ar':'ar',
+                        'de':'de',
+                        'pt':'pt',
+                        'es':'es',
+                        'hu':'hu',
+                        'it':'it',
+                        'pl':'pl',
+                        'cs':'cs',
+                        'nl':'nl',
+                        'da':'da',
+                        'fi':'fi',
+                        'tr':'tr',
+                        'sv':'sv',
+}
+
+
+yd_language_dict = {
+                        'en':'en',
+                        'fr':'fr',
+                        'ru':'ru',
+                        'ko':'ko',
+                        'ja':'ja',
+                        'es':'es',
+                        'pt':'pt',
+}
+
+qq_language_dict = {
+                        'en':'en',
+                        'ja':'jp',
+                        'ko':'kr',
+                        'de':'de',
+                        'fr':'fr',
+                        'es':'es',
+                        'it':'it',
+                        'tr':'tr',
+                        'ru':'ru',
+                        'pt':'pt',
+                        'vi':'vi',
+                        'id':'id',
+                        'ms':'ms',
+                        'th':'th',
+                        'auto':'自动检测',
+}
+
+
 def parseAlljRes(xml_str):
     resparse = json.loads(xml_str)
     result = resparse['trans_result']
@@ -107,6 +191,7 @@ def parseXmlRes(xml_str):
     try:
         root=ElementTree.fromstring(xml_str)
     except Exception as e:
+        print(e)
         result_dic['wrongres']='wrongres:'+str(e)
         return result_dic
     for node in root.findall('parent:Body',ns):

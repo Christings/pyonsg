@@ -115,7 +115,7 @@ def qw_automation_add(request):
 	if press_qps == "":
 		press_qps = 1000
 	if press_time == "":
-		press_time = 15
+		press_time = 30
 	if press_expid == "":
 		press_expid = 0
 	if press_rate == "":
