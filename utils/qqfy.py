@@ -38,8 +38,9 @@ class Qqfy:
 
 	def buildSign(self,**req_dict):
 		reqstr=''
+		req_key_list=sorted(req_dict.keys())
 		#sec_key='Gu5t9xGARNpq86cd98joQYCN3EXAMPLE'
-		for key in req_dict:
+		for key in req_key_list:
 			reqstr+=(key+'='+str(req_dict[key])+'&')
 		reqstr=(reqstr[0:-1])
 		srcstr='GETtmt.tencentcloudapi.com/?'+reqstr
@@ -68,7 +69,6 @@ class Qqfy:
 		urlstr=urlstr[0:-1]
 		sufix='https://tmt.tencentcloudapi.com/?'
 		#sufix='GETtmt.api.qcloud.com/v2/index.php?'
-		print(sufix+urlstr)
 		resp = requests.get(sufix+urlstr)
 		return json.loads(resp.text)
 
