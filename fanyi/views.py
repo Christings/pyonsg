@@ -433,7 +433,7 @@ def fy_bbk(request):
 	except Exception as e:
 		print(e)
 		pass
-	if 9 in app_id_lst:
+	if 10 in app_id_lst:
 		return render(request, 'fy_bbk.html', {'business_lst': business_lst,'user_id':user_id,'user_app_lst':user_app_lst,'req_lst':req_lst,'app_lst': app_lst,'businame':'Translate','app_name':"翻译比比看"})
 	else:
 		return render(request, 'no_limit.html',{'business_lst': business_lst, 'user_id': user_id,'user_app_lst':user_app_lst, 'req_lst': req_lst, 'app_lst': app_lst,'businame': 'Translate', 'app_name': "翻译比比看"})
