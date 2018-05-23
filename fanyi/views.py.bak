@@ -2,10 +2,11 @@ from django.shortcuts import render,HttpResponse,redirect
 from fanyi import models
 from fanyi import requestData
 from fanyi.models import UserInfo
+from utils import baidufy
 from utils import baidufy_t
-from utils import googlefy_t
-from utils import youdaofy_t
-from utils import qqfy_t
+from utils import googlefy
+from utils import youdaofy
+from utils import qqfy
 import json,requests,time,subprocess,urllib.parse
 # Create your views here.
 
@@ -266,6 +267,7 @@ def fy_bbk_req(request):
 	lan_sel = request.POST.get('lan_sel')
 	fromto = request.POST.get('inlineRadioOptions')
 	reqtext = request.POST.get('reqtext')
+	query = requestData.getUniNum(reqtext)
 	if fromto == 'tozh':
 		fromlan = lan_sel
 		tolan = 'zh-CHS'
@@ -282,6 +284,8 @@ def fy_bbk_req(request):
 			resp = requests.post(inputHost + '/' + reqtype, data=xmldata.encode('utf-8'))
 			result = requestData.parseXmlRes(resp.text)
 			ret['transResult'] = result['transRes']
+			ret['debugInfo'] = result['DebugInfo'].replace('<br>', '')
+			ret['requestStr'] = xmldata
 			ret['reqtype'] = 'xml'
 		elif reqtype == 'alltrans_json':
 			prefixq = '''{"to_lang": "''' + tolan + '''"''' + ''',"from_lang": "''' + fromlan + '''''''"''' + ''',"uuid": "74ad13f3-891c-45f6-99ef-f6de63173a20","sendback": "title"''' + ''',"trans_frag": ['''
@@ -299,38 +303,146 @@ def fy_bbk_req(request):
 				alljquery = prefixq + suffix
 			resp = requests.post(inputHost + '/' + reqtype, data=alljquery.encode('utf-8'))
 			ret['transResult'] = requestData.parseAlljRes(resp.text)
+			ret['debugInfo'] = resp.text
+			ret['requestStr'] = alljquery
 			ret['reqtype'] = 'alltrans_json'
 		else:
 			ret['error'] = "Error:未知的请求类型"
 			ret['status'] = False
 
-		threads = []
 		# Baidu
-		t_bd = baidufy_t.bdThread(target=baidufy_t.getResult_bd, args=(fromlan, tolan, reqtext))
-		threads.append(t_bd)
-		# google
-		t_gg = googlefy_t.ggThread(target=googlefy_t.getResult_gg, args=(fromlan, tolan, reqtext))
-		threads.append(t_gg)
+		t = baidufy_t.bdThread(baidufy_t.getResult_bd, (fromlan, tolan, reqtext), baidufy_t.getResult_bd.__name__)
+		t.start()
+		t.join()
+		ret['bd_result'] = t.get_result()
+		print(ret['bd_result'])
+		# Baidu
+		# if fromlan == 'zh-CHS':
+		# 	fromlan_bd = 'zh'
+		# 	if tolan in requestData.bd_language_dict:
+		# 		tolan_bd = requestData.bd_language_dict[tolan]
+		# 	else:
+		# 		tolan_bd = 'notsupport'
+		# else:
+		# 	if fromlan in requestData.bd_language_dict:
+		# 		fromlan_bd = requestData.bd_language_dict[fromlan]
+		# 	else:
+		# 		fromlan_bd = 'auto'
+		# 	tolan_bd = 'zh'
+		# bd_result=""
+		# if tolan_bd == 'notsupport':
+		# 	ret['bd_result'] = 'dst not support'
+		# else:
+		# 	bd_req_list = reqtext.split('\r\n')
+		# 	temlength = 1
+		# 	for bd_req in bd_req_list:
+		# 		try:
+		# 			baidu_result = baidufy.Badufy()
+		# 			bdres = baidu_result.getResult(fromlan_bd, tolan_bd, bd_req)
+		# 			if len(bd_req_list)==temlength:
+		# 				bd_result += bdres['trans_result'][0]['dst']
+		# 			else:
+		# 				bd_result += (bdres['trans_result'][0]['dst'] + "|||")
+		# 			temlength+=1
+		# 		except Exception as e:
+		# 			ret['bd_result'] = 'request error' + str(e)
+		# 	ret['bd_result'] = bd_result
+
+		#google
+		# if fromlan == 'zh-CHS':
+		# 	fromlan_gg = 'zh-CN'
+		# 	if tolan in requestData.gg_language_dict:
+		# 		tolan_gg = requestData.gg_language_dict[tolan]
+		# 	else:
+		# 		tolan_gg = 'notsupport'
+		# else:
+		# 	if fromlan in requestData.gg_language_dict:
+		# 		fromlan_gg = requestData.gg_language_dict[fromlan]
+		# 	else:
+		# 		fromlan_gg = 'auto'
+		# 	tolan_gg = 'zh-CN'
+		# gg_result=""
+		# if tolan_gg == 'notsupport':
+		# 	ret['gg_result'] = 'dst not support'
+		# else:
+		# 	gg_req_list = reqtext.split('\r\n')
+		# 	temlength = 1
+		# 	for gg_req in gg_req_list:
+		# 		try:
+		# 			google_result = googlefy.Googlefy()
+		# 			ggres = google_result.TranslateByGgapi(gg_req,fromlan_gg, tolan_gg)
+		# 			if len(gg_req_list)==temlength:
+		# 				gg_result += ggres['data']['translations'][0]['translatedText']
+		# 			else:
+		# 				gg_result += (ggres['data']['translations'][0]['translatedText'] + "|||")
+		# 			temlength+=1
+		# 		except Exception as e:
+		# 			ret['gg_result'] = 'request error' + str(e)
+		# 	ret['gg_result'] = gg_result
+
 		# QQ
-		t_qq = qqfy_t.qqThread(target=qqfy_t.getResult_qq, args=(fromlan, tolan, reqtext))
-		threads.append(t_qq)
-		# youdao
-		t_yd = youdaofy_t.ydThread(target=youdaofy_t.getResult_yd, args=(fromlan, tolan, reqtext))
-		threads.append(t_yd)
+		if fromlan == 'zh-CHS':
+			fromlan_qq = 'zh'
+			if tolan in requestData.qq_language_dict:
+				tolan_qq = requestData.qq_language_dict[tolan]
+			else:
+				tolan_qq = 'notsupport'
+		else:
+			if fromlan in requestData.qq_language_dict:
+				fromlan_qq = requestData.qq_language_dict[fromlan]
+			else:
+				fromlan_qq = 'auto'
+			tolan_qq = 'zh'
+		qq_result = ""
+		if tolan_qq == 'notsupport':
+			ret['qq_result'] = 'dst not support'
+		else:
+			qq_req_list = reqtext.split('\r\n')
+			temlength = 1
+			for qq_req in qq_req_list:
+				try:
+					tnt_result = qqfy.Qqfy()
+					qqres = tnt_result.TranslateByQQ(fromlan_qq, qq_req, tolan_qq)
+					if len(qq_req_list) == temlength:
+						qq_result += qqres['Response']['TargetText']
+					else:
+						qq_result += (qqres['Response']['TargetText'] + "|||")
+					temlength += 1
+				except Exception as e:
+					ret['qq_result'] = 'request error' + str(e)
+			ret['qq_result'] = qq_result
 
-		for thead_id in range(len(threads)):
-			threads[thead_id].start()
-
-		print('abcd')
-		# for thead_id in range(len(threads)):
-		# 	threads[thead_id].join()
-
-		ret['bd_result'] = threads[0].join()
-		ret['gg_result'] = threads[1].join()
-		ret['qq_result'] = threads[2].join()
-		ret['yd_result'] = threads[3].join()
-
-
+		#youdao
+		if fromlan == 'zh-CHS':
+			fromlan_yd = 'zh-CHS'
+			if tolan in requestData.yd_language_dict:
+				tolan_yd = requestData.yd_language_dict[tolan]
+			else:
+				tolan_yd = 'notsupport'
+		else:
+			if fromlan in requestData.yd_language_dict:
+				fromlan_yd = requestData.yd_language_dict[fromlan]
+			else:
+				fromlan_yd = 'auto'
+			tolan_yd = 'zh-CHS'
+		yd_result=""
+		if tolan_yd == 'notsupport':
+			ret['yd_result'] = 'dst not support'
+		else:
+			yd_req_list = reqtext.split('\r\n')
+			temlength = 1
+			for yd_req in yd_req_list:
+				try:
+					youdao_result = youdaofy.Youdaofy()
+					ydres = youdao_result.getResult(fromlan_yd, tolan_yd, yd_req)
+					if len(yd_req_list)==temlength:
+						yd_result += ydres['translation'][0]
+					else:
+						yd_result += (ydres['translation'][0] + "|||")
+					temlength+=1
+				except Exception as e:
+					ret['yd_result'] = 'request error' + str(e)
+			ret['yd_result'] = yd_result
 
 		ret['fromlan'] = fromlan
 		ret['tolan'] = tolan
