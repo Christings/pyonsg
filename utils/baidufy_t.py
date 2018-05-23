@@ -44,7 +44,7 @@ class bdThread(Thread):
 		return self._return
 
 def getResult_bd(fromlan,tolan,query):
-	time.sleep(2)
+	fy_begin = time.time()
 	if fromlan == 'zh-CHS':
 		fromlan_bd = 'zh'
 		if tolan in requestData.bd_language_dict:
@@ -89,6 +89,9 @@ def getResult_bd(fromlan,tolan,query):
 					temlength += 1
 				except Exception as e:
 					bd_result = 'request error' + str(e)
+		fy_end=time.time()
+		fy_cost = fy_end-fy_begin
+		print('bd_cost',fy_cost)
 		ret_result=bd_result
 	print('from bd')
 	return ret_result

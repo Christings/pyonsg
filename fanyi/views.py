@@ -272,9 +272,8 @@ def fy_bbk_req(request):
 	else:
 		fromlan = 'zh-CHS'
 		tolan = lan_sel
-	output = 'host={_host},reqtype={_reqtype},from_lang={_fromlan},to_lang={_tolan},query={_query}'.format(
-		_host=inputHost, _reqtype=reqtype, _fromlan=fromlan, _tolan=tolan, _query=reqtext)
-
+	# output = 'host={_host},reqtype={_reqtype},from_lang={_fromlan},to_lang={_tolan},query={_query}'.format(_host=inputHost, _reqtype=reqtype, _fromlan=fromlan, _tolan=tolan, _query=reqtext)
+	sg_begin=time.time()
 	try:
 		if reqtype == 'xml':
 			xmldata = '''<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v2="http://api.microsofttranslator.com/V2"><soapenv:Header/><soapenv:Body><v2:Translate><v2:appId></v2:appId><v2:debug>true</v2:debug><v2:text>{_reqtext}</v2:text><v2:from>{_fromlan}</v2:from><v2:to>{_tolan}</v2:to><v2:contentType>text/plain</v2:contentType><v2:category>general</v2:category></v2:Translate></soapenv:Body></soapenv:Envelope>'''.format(
@@ -303,7 +302,8 @@ def fy_bbk_req(request):
 		else:
 			ret['error'] = "Error:未知的请求类型"
 			ret['status'] = False
-
+		sg_end=time.time()
+		other_begin=time.time()
 		threads = []
 		# Baidu
 		t_bd = baidufy_t.bdThread(target=baidufy_t.getResult_bd, args=(fromlan, tolan, reqtext))
@@ -321,22 +321,19 @@ def fy_bbk_req(request):
 		for thead_id in range(len(threads)):
 			threads[thead_id].start()
 
-		print('abcd')
-		# for thead_id in range(len(threads)):
-		# 	threads[thead_id].join()
-
 		ret['bd_result'] = threads[0].join()
 		ret['gg_result'] = threads[1].join()
 		ret['qq_result'] = threads[2].join()
 		ret['yd_result'] = threads[3].join()
-
-
-
+		other_end = time.time()
 		ret['fromlan'] = fromlan
 		ret['tolan'] = tolan
 		ret['lan_sel'] = lan_sel
 		ret['host'] = inputHost
-
+		sg_cost=sg_end-sg_begin
+		other_cost = other_end-other_begin
+		print('sg_cost',sg_cost)
+		print('other_cost',other_cost)
 	except Exception as e:
 		print(e)
 		ret['error'] = "Error:" + str(e)

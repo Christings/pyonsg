@@ -44,7 +44,7 @@ class ydThread(Thread):
 		return self._return
 
 def getResult_yd(fromlan,tolan,query):
-	time.sleep(2)
+	fy_begin = time.time()
 	if fromlan == 'zh-CHS':
 		fromlan_yd = 'zh-CHS'
 		if tolan in requestData.yd_language_dict:
@@ -88,7 +88,9 @@ def getResult_yd(fromlan,tolan,query):
 				except Exception as e:
 					yd_result = 'request error' + str(e)
 		ret_result=yd_result
-	print('from yd')
+	fy_end = time.time()
+	fy_cost = fy_end - fy_begin
+	print('yd_cost', fy_cost)
 	return ret_result
 
 
