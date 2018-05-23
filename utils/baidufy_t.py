@@ -89,11 +89,10 @@ def getResult_bd(fromlan,tolan,query):
 					temlength += 1
 				except Exception as e:
 					bd_result = 'request error' + str(e)
-		fy_end=time.time()
-		fy_cost = fy_end-fy_begin
-		print('bd_cost',fy_cost)
-		ret_result=bd_result
-	print('from bd')
+		ret_result = bd_result
+	fy_end=time.time()
+	fy_cost = fy_end-fy_begin
+	print('bd_cost',fy_cost)
 	return ret_result
 
 def sign(self,query):
