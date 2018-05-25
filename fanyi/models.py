@@ -49,6 +49,8 @@ class Host(models.Model):
     ip = models.GenericIPAddressField(db_index=True,unique=True)
     user = models.CharField(max_length=500, default="")
     passw = models.CharField(max_length=500, default="")
+    status = models.IntegerField(default=0)
+    runningPID = models.CharField(max_length=20, default="")
 
 
 

@@ -6,7 +6,8 @@ from utils import baidufy_t
 from utils import googlefy_t
 from utils import youdaofy_t
 from utils import qqfy_t
-import json,requests,time,subprocess,urllib.parse
+
+import json,requests,time,subprocess,urllib.parse,os
 # Create your views here.
 
 # admin
@@ -235,11 +236,20 @@ def start_monitor_ip(request):
 	ret = {'status': True, 'error': None, 'data': None}
 	req_id = request.POST.get('line_id')
 	try:
-		running_case = models.FyMonitor.objects.filter(h_id=req_id,status=1)
-		if running_case:
-			pass
-		else:
-			models.FyMonitor.objects.create(create_time=get_now_time(),user=user_id,status=1,h_id=req_id)
+		running_pid = models.Host.objects.filter(id=req_id,status=1).values('runningPID')
+		for item in running_pid:
+			if item['runningPID'] != "":
+				os.popen('kill -9 %s' % item['runningPID'])
+			else:
+				close_all_id = models.FyMonitor.objects.filter(status=1,h_id=req_id).values('id')
+				for close_id in close_all_id:
+					models.FyMonitor.objects.filter(id=close_id['id'],h_id=req_id).update(status=0)
+				models.FyMonitor.objects.create(create_time=get_now_time(), user=user_id, status=1, h_id=req_id)
+				running_case_id = models.FyMonitor.objects.filter(status=1,h_id=req_id).values('id')
+				for run_id in running_case_id:
+					print(run_id['id'])
+					child = subprocess.Popen(['/usr/local/bin/python3', '/search/odin/daemon/pyonsg/utils/monitor.py', int(run_id['id'])], shell=False)
+					models.Host.objects.filter(id=req_id).update(runningPID=child.pid)
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
