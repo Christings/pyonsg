@@ -34,7 +34,6 @@ class UserToApp(models.Model):
 
 class FyMonitor(models.Model):
     create_time = models.CharField(max_length=50, default="")
-    start_time = models.CharField(max_length=50, default="")
     end_time = models.CharField(max_length=50, default="")
     user = models.CharField(max_length=50)
     status = models.IntegerField(default=0)

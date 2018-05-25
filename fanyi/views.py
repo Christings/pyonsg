@@ -210,7 +210,6 @@ def sys_admin(request):
 		user_id = request.COOKIES['uid']
 	except:
 		return redirect(login_url)
-
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
 	utoapp = models.UserToApp.objects.all()
@@ -240,8 +239,7 @@ def start_monitor_ip(request):
 		if running_case:
 			pass
 		else:
-			models.FyMonitor.objects.create(create_time=get_now_time,user=user_id,status=1,h_id=req_id)
-
+			models.FyMonitor.objects.create(create_time=get_now_time(),user=user_id,status=1,h_id=req_id)
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
@@ -263,7 +261,7 @@ def del_host_ip(request):
 		ret['error'] = "Error:" + str(e)
 	return HttpResponse(json.dumps(ret))
 
-def montor_host_add(request):
+def monitor_host_add(request):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	# try:
 	# 	user_id = request.COOKIES['uid']

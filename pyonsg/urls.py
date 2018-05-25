@@ -44,7 +44,7 @@ urlpatterns = [
     re_path(r'^fy_bbk_req$',trans.fy_bbk_req),
     # nvi_montor
     re_path(r'^nvidia_smi$',trans.nvidia_smi),
-    re_path(r'^montor_host_add$',trans.montor_host_add),
+    re_path(r'^monitor_host_add$',trans.monitor_host_add),
     re_path(r'^del_host_ip',trans.del_host_ip),
     re_path(r'^start_monitor_ip',trans.start_monitor_ip),
     # webqo
