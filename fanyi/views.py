@@ -247,7 +247,7 @@ def start_monitor_ip(request):
 		running_case_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).values('id')
 		for run_id in running_case_id:
 			child = subprocess.Popen(['/usr/local/bin/python3', '/search/odin/daemon/pyonsg/utils/monitor.py', str(run_id['id'])], shell=False)
-			models.Host.objects.filter(id=req_id).update(runningPID=child.pid)
+			models.Host.objects.filter(id=req_id).update(runningPID=child.pid,status=1)
 
 	except Exception as e:
 		ret['status'] = False
