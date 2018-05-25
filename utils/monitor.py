@@ -42,16 +42,19 @@ def gpu_info():
         child.expect(pexpect.EOF)
         gpuinfo = (child.before).decode('utf-8')
         gpu_lst = gpuinfo.strip().split('\r\n')
-        print(gpuinfo)
         g_mem=gpu_lst[0].split()[8].split('MiB')[0]
         g_used=gpu_lst[0].split()[12].split('%')[0]
         timedata = datetime.now().strftime('[Date.UTC(%Y,%m,%d,%H,%M,%S)')
-        db = pymysql.connect(database_host, database_user, database_pass, database_data)
         gpumeminfo = timedata+","+g_mem+'],\n'
         gpumemused = timedata+","+g_used+'],\n'
+        db = pymysql.connect(database_host, database_user, database_pass, database_data)
         cursor = db.cursor()
-        sql = "UPDATE %s set gpumem=CONCAT(gpumeminfo, '%s'),gpumemused=CONCAT(gpumemused, '%s') where id=%d;" % (database_table, gpumeminfo, gpumemused,monitor_id)
-
+        sql = "UPDATE %s set gpumem=CONCAT(gpumem, '%s'),gpumemused=CONCAT(gpumemused, '%s') where id=%d;" % (database_table, gpumeminfo, gpumemused,monitor_id)
+        cursor.execute(sql)
+        try:
+            db.commit()
+        except:
+            db.rollback()
         time.sleep(5)
 
 
