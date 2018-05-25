@@ -226,6 +226,69 @@ def sys_admin(request):
 
 
 #nvidia
+def start_monitor_ip(request):
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except Exception as e:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	ret = {'status': True, 'error': None, 'data': None}
+	req_id = request.POST.get('line_id')
+	try:
+		running_case = models.FyMonitor.objects.filter(h_id=req_id,status=1)
+		if running_case:
+			pass
+		else:
+			models.FyMonitor.objects.create(create_time=get_now_time,user=user_id,status=1,h_id=req_id)
+
+	except Exception as e:
+		ret['status'] = False
+		ret['error'] = "Error:" + str(e)
+	return HttpResponse(json.dumps(ret))
+
+def del_host_ip(request):
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except Exception as e:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	ret = {'status': True, 'error': None, 'data': None}
+	req_id = request.POST.get('line_id')
+	try:
+		models.Host.objects.filter(id=req_id).delete()
+	except Exception as e:
+		ret['status'] = False
+		ret['error'] = "Error:" + str(e)
+	return HttpResponse(json.dumps(ret))
+
+def montor_host_add(request):
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	ret = {'status': True, 'errro': None, 'data': None}
+	ip = request.POST.get('monitorip')
+	monitor_user = request.POST.get('monitoruser')
+	monitor_passw = request.POST.get('monitorpassw')
+	print(ip,monitor_user,monitor_passw)
+	try:
+		nameisExist = models.Host.objects.filter(ip=ip)
+		if nameisExist.exists() == False:
+			models.Host.objects.create(ip=ip,user=monitor_user,passw=monitor_passw)
+		else:
+			ret['error'] = "Error:ip已存在，请勿重新添加"
+			ret['status'] = False
+	except Exception as e:
+		ret['error'] = "Error:" + str(e)
+		print(e)
+		ret['status'] = False
+	return HttpResponse(json.dumps(ret))
+
+
 def nvidia_smi(request):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	# try:
@@ -238,10 +301,8 @@ def nvidia_smi(request):
 		app_lst = models.Application.objects.all()
 		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
-		gpu_info = models.fy_monitor.objects.filter(user=user_id)
-		for item in gpu_info:
-			print(item.gpumem)
-
+		gpu_info = models.FyMonitor.objects.filter(user=user_id)
+		host_list = models.Host.objects.all()
 		app_id_lst = list()
 		for appid in user_app_lst:
 			app_id_lst.append(appid.app_id_id)
@@ -251,7 +312,7 @@ def nvidia_smi(request):
 	if 11 in app_id_lst:
 		return render(request, 'fy_nvi_smi.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看",'gpu_info':gpu_info})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看",'gpu_info':gpu_info,'host_list':host_list})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
@@ -567,3 +628,6 @@ def home(request):
 		return redirect(login_url)
 	return response
 
+def get_now_time():
+	timeArray = time.localtime()
+	return time.strftime("%Y-%m-%d %H:%M:%S", timeArray)

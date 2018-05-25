@@ -42,7 +42,11 @@ urlpatterns = [
     re_path(r'^fy_automation$',trans.fy_automation),
     re_path(r'^fy_bbk$',trans.fy_bbk),
     re_path(r'^fy_bbk_req$',trans.fy_bbk_req),
+    # nvi_montor
     re_path(r'^nvidia_smi$',trans.nvidia_smi),
+    re_path(r'^montor_host_add$',trans.montor_host_add),
+    re_path(r'^del_host_ip',trans.del_host_ip),
+    re_path(r'^start_monitor_ip',trans.start_monitor_ip),
     # webqo
     re_path(r'^qo_automation(?P<page_id>\d*)$',webqo.qo_automation),
     re_path(r'^qo_automation_add',webqo.qo_automation_add),

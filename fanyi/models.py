@@ -4,6 +4,7 @@ from django.db import models
 class Business(models.Model):
 	businame = models.CharField(max_length=64)
 
+
 class Application(models.Model):
 	appname = models.CharField(max_length=64)
 	urlname = models.CharField(max_length=64)
@@ -12,7 +13,6 @@ class Application(models.Model):
 
 class UserInfo(models.Model):
 	user_name = models.CharField(max_length=64,unique=True)
-
 
 
 class ReqInfo(models.Model):
@@ -25,13 +25,14 @@ class ReqInfo(models.Model):
 	c_time = models.DateTimeField(auto_now=True)
 	reqtype = models.CharField(max_length=20)
 
+
 class UserToApp(models.Model):
 	user_name = models.ForeignKey(to='UserInfo',to_field='user_name',on_delete=models.CASCADE)
 	app_id = models.ForeignKey(to='Application', to_field='id',on_delete=models.CASCADE)
 
 
 
-class fy_monitor(models.Model):
+class FyMonitor(models.Model):
     create_time = models.CharField(max_length=50, default="")
     start_time = models.CharField(max_length=50, default="")
     end_time = models.CharField(max_length=50, default="")
@@ -42,3 +43,14 @@ class fy_monitor(models.Model):
     monitorpassw = models.CharField(max_length=500, default="")
     gpumem = models.TextField(default="")
     gpumemused = models.TextField(default="")
+    h = models.ForeignKey(to="Host", to_field='id', on_delete=models.CASCADE)
+
+
+class Host(models.Model):
+    ip = models.GenericIPAddressField(db_index=True,unique=True)
+    user = models.CharField(max_length=500, default="")
+    passw = models.CharField(max_length=500, default="")
+
+
+
+
