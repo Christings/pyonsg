@@ -5,6 +5,7 @@ import threading
 import pymysql
 import sys
 import time
+import signal
 
 database_host="10.134.110.163"
 database_data="sogotest"
@@ -37,6 +38,7 @@ def ssh_command(user, host, password, command):
 
 #gpu mem
 def gpu_info():
+    leave_num = 0
     while True:
         child = ssh_command("root", "10.153.51.60", "sogourank@2016", "nvidia-smi | grep 250W")
         child.expect(pexpect.EOF)
@@ -55,9 +57,14 @@ def gpu_info():
             db.commit()
         except:
             db.rollback()
+        leave_num += 1
         time.sleep(5)
 
 
+def sig_handler(sig, frame):
+    sys.exit()
+
+signal.signal(10, sig_handler)
 
 if __name__ == '__main__':
     try:
