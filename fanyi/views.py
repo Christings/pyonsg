@@ -240,8 +240,8 @@ def stop_monitor_ip(request):
 		running_pid = models.Host.objects.filter(id=req_id,status=1).values('runningPID')
 		if running_pid:
 			for item in running_pid:
-				os.popen('kill -9 %s' % item['runningPID'])
-				#os.kill(int(item['runningPID']))
+				#os.popen('kill -9 %s' % item['runningPID'])
+				os.kill(item['runningPID'], signal.SIGUSR1)
 		models.Host.objects.filter(id=req_id).update(runningPID="", status=0)
 		models.FyMonitor.objects.filter(status=1, h_id=req_id).update(status=0)
 	except Exception as e:
@@ -264,7 +264,8 @@ def start_monitor_ip(request):
 		running_pid = models.Host.objects.filter(id=req_id,status=1).values('runningPID')
 		if running_pid:
 			for item in running_pid:
-				os.popen('kill -9 %s' % item['runningPID'])
+				#os.popen('kill -9 %s' % item['runningPID'])
+				os.kill(item['runningPID'], signal.SIGUSR1)
 		close_all_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).values('id')
 		for close_id in close_all_id:
 			models.FyMonitor.objects.filter(id=close_id['id'], h_id=req_id).update(status=0)
