@@ -438,7 +438,7 @@ $(document).ready(function() {
 		var line_id = $(this).parent().parent().attr('host_id');
 		$.ajax({
 			type: "POST",
-			url: "stop_monitor_ip",
+			url: "stop_monitor",
 			async: true,
 			data: {
 				'line_id': line_id

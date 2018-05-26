@@ -6,6 +6,7 @@ from utils import baidufy_t
 from utils import googlefy_t
 from utils import youdaofy_t
 from utils import qqfy_t
+import signal
 
 import json,requests,time,subprocess,urllib.parse,os
 # Create your views here.
@@ -240,6 +241,7 @@ def stop_monitor_ip(request):
 		if running_pid:
 			for item in running_pid:
 				os.popen('kill -9 %s' % item['runningPID'])
+				#os.kill(int(item['runningPID']))
 		models.Host.objects.filter(id=req_id).update(runningPID="", status=0)
 		models.FyMonitor.objects.filter(status=1, h_id=req_id).update(status=0)
 	except Exception as e:

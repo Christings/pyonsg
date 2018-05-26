@@ -47,7 +47,7 @@ urlpatterns = [
     re_path(r'^monitor_host_add$',trans.monitor_host_add),
     re_path(r'^del_host_ip',trans.del_host_ip),
     re_path(r'^start_monitor_ip',trans.start_monitor_ip),
-    re_path(r'^stop_monitor_ip',trans.start_monitor_ip),
+    re_path(r'^stop_monitor',trans.stop_monitor_ip),
     # webqo
     re_path(r'^qo_automation(?P<page_id>\d*)$',webqo.qo_automation),
     re_path(r'^qo_automation_add',webqo.qo_automation_add),
