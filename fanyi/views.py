@@ -226,6 +226,29 @@ def sys_admin(request):
 
 
 #nvidia
+def stop_monitor_ip(request):
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except Exception as e:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	ret = {'status': True, 'error': None, 'data': None}
+	req_id = request.POST.get('line_id')
+	try:
+		running_pid = models.Host.objects.filter(id=req_id,status=1).values('runningPID')
+		if running_pid:
+			for item in running_pid:
+				os.popen('kill -9 %s' % item['runningPID'])
+		models.Host.objects.filter(id=req_id).update(runningPID="", status=0)
+		models.FyMonitor.objects.filter(status=1, h_id=req_id).update(status=0)
+	except Exception as e:
+		ret['status'] = False
+		ret['error'] = "Error:" + str(e)
+	return HttpResponse(json.dumps(ret))
+
+
+
 def start_monitor_ip(request):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	# try:

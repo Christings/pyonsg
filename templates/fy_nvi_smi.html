@@ -46,7 +46,7 @@
 							<button class="startMonitor" style="color: green;">START</button>							
 							{% endifequal%}
 							{% ifequal item.status 1 %}
-							<button class="startMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>							
+							<button class="stopMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>							
 							{% endifequal%}
 							<button class="del_line">DEL</button>
 						</td>
@@ -414,6 +414,31 @@ $(document).ready(function() {
 		$.ajax({
 			type: "POST",
 			url: "start_monitor_ip",
+			async: true,
+			data: {
+				'line_id': line_id
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			}
+		});
+
+	})
+	
+	//stop Monitor
+	$('.stopMonitor').click(function() {
+		var line_id = $(this).parent().parent().attr('host_id');
+		$.ajax({
+			type: "POST",
+			url: "stop_monitor_ip",
 			async: true,
 			data: {
 				'line_id': line_id
