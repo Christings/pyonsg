@@ -64,7 +64,7 @@ def gpu_info():
 def sig_handler(sig, frame):
     sys.exit()
 
-signal.signal(10, sig_handler)
+signal.signal(signal.SIGTERM, sig_handler)
 
 if __name__ == '__main__':
     try:
