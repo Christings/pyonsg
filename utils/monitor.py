@@ -68,7 +68,8 @@ signal.signal(10, sig_handler)
 
 if __name__ == '__main__':
     try:
-        t1 = threading.Thread(target=gpu_info)
-        t1.start()
+        # t1 = threading.Thread(target=gpu_info)
+        # t1.start()
+        gpu_info()
     except Exception as e:
         print(str(e))
