@@ -43,12 +43,13 @@
 						<td class="tabletd" style="width: 50px;">{{item.passw}}</td>
 						<td class="tabletd" style="">
 							{% ifequal item.status 0 %}
-							<button class="startMonitor" style="color: green;">START</button>							
+							<button class="startMonitor" style="color: green;">START</button>
+							<button class="del_line">DEL</button>
 							{% endifequal%}
 							{% ifequal item.status 1 %}
-							<button class="stopMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>							
-							{% endifequal%}
-							<button class="del_line">DEL</button>
+							<button class="stopMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>	
+							
+							{% endifequal%}							
 						</td>
 					</tr>
 					{% endfor %}
