@@ -227,7 +227,22 @@ def sys_admin(request):
 
 
 #nvidia
-tasklist={}
+def del_one_monitor(request):
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except Exception as e:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	ret = {'status': True, 'error': None, 'data': None}
+	req_id = request.POST.get('monitor_id')
+	try:
+		models.FyMonitor.objects.filter(id=req_id).delete()
+	except Exception as e:
+		ret['status'] = False
+		ret['error'] = "Error:" + str(e)
+	return HttpResponse(json.dumps(ret))
+
 def stop_monitor_ip(request):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	# try:

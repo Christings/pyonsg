@@ -44,7 +44,7 @@
 						<td style="">Ctrl</td>
 					</tr>
 				</thead>
-				<tbody style="cursor: pointer;" id="reqBody">
+				<tbody style="cursor: pointer;">
 					{% for item in host_list %}
 					<tr host_id="{{item.id}}" class="get_host">
 						<td class="tabletd" style="">{{item.ip}}</td>
@@ -88,12 +88,12 @@
 						<td class="tabletd" style="">{{item.id}}</td>
 						<td class="tabletd" style="">{{item.create_time}}</td>
 						<td class="tabletd">{{item.end_time}}</td>
-						<td class="tabletd" style="">{{item.monitor}}</td>
+						<td class="tabletd" style="">{{item.monitorip}}</td>
 						<td class="tabletd">{{item.user}}</td>
 						{% ifequal item.status 0 %}
 						<td class="tabletd" style="color: red;">Stopped</td>
 						<td class="tabletd">
-							<button class="del_">DEL</button>
+							<button class="del_one_monitor">DEL</button>
 						</td>
 						{% endifequal%}
 						{% ifequal item.status 1 %}
@@ -288,7 +288,32 @@
 		showBox("#reqData > tbody td", "#showDiv");
 	});
 
-//start Monitor
+	//del one monitor
+	$('.del_one_monitor').click(function() {
+		var monitor_id = $(this).parent().parent().attr('req_id');
+		$.ajax({
+			type: "POST",
+			url: "del_one_monitor",
+			async: true,
+			data: {
+				'monitor_id': monitor_id
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			}
+		});
+
+	})
+	
+	//start Monitor
 	$('.startMonitor').click(function() {
 		var line_id = $(this).parent().parent().attr('host_id');
 		$.ajax({
@@ -387,23 +412,5 @@
 		$('#debugInfo').val('');
 	})
 
-	$('#lan_filter').change(function() {
-		var sel_lang = $(this).val();
-		if(sel_lang == 'all') {
-			$('#reqBody').children().each(function() {
-				$(this).removeClass('hide');
-			})
-		} else {
-			$('#reqBody').children().each(function() {
-				var line_lang = $(this).attr('lang_type');
-				if(sel_lang != line_lang) {
-					$(this).addClass('hide');
-				} else {
-					$(this).removeClass('hide');
-				}
-			})
-
-		}
-	})
 </script>
 {% endblock %}
