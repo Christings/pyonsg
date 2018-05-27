@@ -244,7 +244,7 @@ def stop_monitor_ip(request):
 				#os.popen('kill -9 %s' % item['runningPID'])
 				os.kill(int(item['runningPID']), signal.SIGTERM)
 		models.Host.objects.filter(id=req_id).update(runningPID="", status=0)
-		models.FyMonitor.objects.filter(status=1, h_id=req_id).update(status=0)
+		models.FyMonitor.objects.filter(status=1, h_id=req_id).update(status=0,end_time=get_now_time())
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
@@ -333,7 +333,7 @@ def nvidia_smi(request):
 		app_lst = models.Application.objects.all()
 		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
-		gpu_info = models.FyMonitor.objects.filter(user=user_id)
+		gpu_info = models.FyMonitor.objects.all()
 		host_list = models.Host.objects.all()
 		app_id_lst = list()
 		for appid in user_app_lst:

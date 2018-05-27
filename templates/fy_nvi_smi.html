@@ -6,24 +6,33 @@
 	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">	
-	<div class="col-md-5">
+	<div class="col-md-4">
 		<div>			
 			<form class="form-horizontal" action="" method="post" id="form_monitor">			
 				<div class="form-group">
-					<label class="col-sm-1 control-label">HOST</label>
-					<div class="col-sm-3">
-						<input type="text" class="form-control" id="monitorip" placeholder="ip" >
-					</div>
-					<div class="col-sm-3">
-						<input type="text" class="form-control" id="monitoruser" placeholder="user" >
-					</div>
-					<div class="col-sm-3">
-						<input type="text" class="form-control" id="monitorpassw" placeholder="passwd" >
-					</div>
-					<div class=" col-sm-2">
-							<label class="btn btn-default" id="add_host">添加</label>
-					</div>
+				<label class="col-sm-2 control-label">IPaddress</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="monitorip" placeholder="ip" >
 				</div>
+				</div>
+				<div class="form-group">
+				<label class="col-sm-2 control-label">Username</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="monitoruser" placeholder="username" >
+				</div>
+				</div>
+				<div class="form-group">
+				<label class="col-sm-2 control-label">Password</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="monitorpassw" placeholder="password" >
+				</div>
+				</div>
+				<div class="form-group">
+				<div class=" col-sm-3">
+					<label class="btn btn-default" id="add_host">添加</label>
+				</div>
+				</div>
+				
 			</form>
 			<div class="form-group">
 				<table class="table table-hover" id="reqData">
@@ -31,7 +40,7 @@
 					<tr>
 						<td style="width: 100px;">IP</td>
 						<td style="width: 50px;">user</td>
-						<td style="width: 100px;">password</td>
+						<td>password</td>
 						<td style="">Ctrl</td>
 					</tr>
 				</thead>
@@ -39,16 +48,15 @@
 					{% for item in host_list %}
 					<tr host_id="{{item.id}}" class="get_host">
 						<td class="tabletd" style="">{{item.ip}}</td>
-						<td class="tabletd" style="width: 50px;">{{item.user}}</td>
-						<td class="tabletd" style="width: 50px;">{{item.passw}}</td>
+						<td class="tabletd" >{{item.user}}</td>
+						<td class="tabletd" >{{item.passw}}</td>
 						<td class="tabletd" style="">
 							{% ifequal item.status 0 %}
 							<button class="startMonitor" style="color: green;">START</button>
 							<button class="del_line">DEL</button>
 							{% endifequal%}
 							{% ifequal item.status 1 %}
-							<button class="stopMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>	
-							
+							<button class="stopMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>								
 							{% endifequal%}							
 						</td>
 					</tr>
@@ -60,34 +68,39 @@
 		</div>				
 		<div id="showDiv"></div>
 	</div>
-	<div class="col-md-7">
+	<div class="col-md-8">
 		<div>
 			<table class="table table-hover" id="reqData">
 				<thead>
 					<tr>
-						<td style="">Time</td>
-						<td style="">Type</td>
-						<td>Host</td>
-						<td style="">
-							<select id="lan_filter" name="lan_filter" class="form-control" style="cursor: pointer;height: 30px;padding: 3px 6px;">
-							</select>
-						</td>
-						<td>Request</td>
-						<td style="">Ctrl</td>
+						<td style="width: 40px;">ID</td>
+						<td style="">StartTime</td>
+						<td>EndTime</td>
+						<td style="">IP</td>
+						<td>User</td>
+						<td style="width: 100px;">Stauts</td>
+						<td style="width: 80px;">Ctrl</td>
 					</tr>
 				</thead>
 				<tbody style="cursor: pointer;" id="reqBody">
-					{% for item in req_lst %}
-					<tr req_id="{{item.id}}" class="get_data" lang_type="{{item.trans_direct}}">
-						<td class="tabletd" style="">{% formatTime item.c_time %}</td>
-						<td style="">{{item.reqtype}}</td>
-						<td class="tabletd">{% formatIp item.host_ip %}</td>
-						<td class="tabletd" style="">{{item.trans_direct}}</td>
-						<td class="tabletd">{{item.req_text}}</td>
-						<td class="hide">{{item.isfromzh}}</td>
-						<td class="tabletd" style="">
-							<button class="del_line">DEL</button>
+					{% for item in gpu_info %}
+					<tr req_id="{{item.id}}">
+						<td class="tabletd" style="">{{item.id}}</td>
+						<td class="tabletd" style="">{{item.create_time}}</td>
+						<td class="tabletd">{{item.end_time}}</td>
+						<td class="tabletd" style="">{{item.monitor}}</td>
+						<td class="tabletd">{{item.user}}</td>
+						{% ifequal item.status 0 %}
+						<td class="tabletd" style="color: red;">Stopped</td>
+						<td class="tabletd">
+							<button class="del_">DEL</button>
 						</td>
+						{% endifequal%}
+						{% ifequal item.status 1 %}
+						<td class="tabletd" style="color: green;">Running</td>
+						<td class="tabletd">							
+						</td>
+						{% endifequal%}
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -95,144 +108,10 @@
 			</table>
 		</div>
 	</div>
-	<!--<div class="col-md-8">
-        <div id="container" style="width: 100%; height: 400px; margin: 0 auto"></div>
-        <div id="container2" style="width: 100%; height: 400px; margin: 0 auto"></div>
-	</div>-->
 </div>
 
 {% endblock %} {% block js %}
-<script src="{% static "js/highcharts.js" %}"></script>
-{% if gpu_info %}
-<script>
-$(document).ready(function() {  
-   var chart = {
-      type: 'spline'      
-   }; 
-   var title = {
-      text: 'GPU 内存使用量折线图'   
-   };
-   var subtitle = {
-      text: ''
-   };
-   var xAxis = {
-      type: 'datetime',
-      dateTimeLabelFormats: { // don't display the dummy year
-         month: '%e. %b',
-         year: '%b'
-      },
-      title: {
-         text: 'Date'
-      }
-   };
-   var yAxis = {
-      title: {
-         text: 'GPU Men Used (m)'
-      },
-      min: 0
-   };
-   var tooltip = {
-      headerFormat: '<b>{series.name}</b><br>',
-      pointFormat: '{point.x:%e. %b}: {point.y:.2f} M'
-   };
-   var plotOptions = {
-      spline: {
-         marker: {
-            enabled: true
-         }
-      }
-   };
-   var series= [{
-         name: 'GPU Mem Used',
-            // Define the data points. All series have a dummy year
-            // of 1970/71 in order to be compared on the same x axis. Note
-            // that in JavaScript, months start at 0 for January, 1 for February etc.
-         data: [
-        {% for item in gpu_info %}
-			{{ item.gpumem }}
-		{% endfor %}
-             
-         ]
-     }
-   ];     
-      
-   var json = {};
-   json.chart = chart;
-   json.title = title;
-   json.subtitle = subtitle;
-   json.tooltip = tooltip;
-   json.xAxis = xAxis;
-   json.yAxis = yAxis;  
-   json.series = series;
-   json.plotOptions = plotOptions;
-   $('#container').highcharts(json);
-   
-   
-   var chart2 = {
-      type: 'spline'      
-   }; 
-   var title2 = {
-      text: 'GPU 内存使用率折线图'   
-   };
-   var subtitle2 = {
-      text: ''
-   };
-   var xAxis2 = {
-      type: 'datetime',
-      dateTimeLabelFormats: { // don't display the dummy year
-         month: '%e. %b',
-         year: '%b'
-      },
-      title: {
-         text: 'Date'
-      }
-   };
-   var yAxis2 = {
-      title: {
-         text: 'GPU Men Used (m)'
-      },
-      min: 0
-   };
-   var tooltip2 = {
-      headerFormat: '<b>{series.name}</b><br>',
-      pointFormat: '{point.x:%e. %b}: {point.y:.2f} M'
-   };
-   var plotOptions2 = {
-      spline: {
-         marker: {
-            enabled: true
-         }
-      }
-   };
-   var series2= [{
-         name: 'GPU Mem Used',
-            // Define the data points. All series have a dummy year
-            // of 1970/71 in order to be compared on the same x axis. Note
-            // that in JavaScript, months start at 0 for January, 1 for February etc.
-         data: [
-         	 {% for item in gpu_info %}
-			{{ item.gpumemused }}
-			{% endfor %}
-       
-         ]
-     }
-   ];
-   
-   
-   var json2 = {};
-   json2.chart = chart2;
-   json2.title = title2;
-   json2.subtitle = subtitle2;
-   json2.tooltip = tooltip2;
-   json2.xAxis = xAxis2;
-   json2.yAxis = yAxis2;  
-   json2.series = series2;
-   json2.plotOptions = plotOptions2;
-   $('#container2').highcharts(json2);
-  
-});
-</script>
-{% endif %}
+
 <script>
 	//add_host
 	$('#add_host').click(function() {
