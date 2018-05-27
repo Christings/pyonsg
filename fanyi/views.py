@@ -275,7 +275,7 @@ def start_monitor_ip(request):
 		for run_id in running_case_id:
 			#child = subprocess.Popen(['/usr/local/bin/python3', '/search/odin/daemon/pyonsg/utils/monitor.py', str(run_id['id']),req_id], shell=False)
 			#models.Host.objects.filter(id=req_id).update(runningPID=child.pid,status=1)
-			os.popen('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s' % (str(run_id['id']),req_id),shell=False)
+			os.system('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s' % (str(run_id['id']),req_id))
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
