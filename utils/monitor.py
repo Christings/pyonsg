@@ -73,9 +73,10 @@ if __name__ == '__main__':
         # t1 = threading.Thread(target=gpu_info)
         # t1.start()
         subpid = os.getpid()
+        print(subpid)
         db = pymysql.connect(database_host, database_user, database_pass, database_data)
         cursor = db.cursor()
-        sql = "UPDATE %s set runningPID='%s',status=1 where id=%d;" % ("fanyi_host", subpid, host_id)
+        sql = "UPDATE fanyi_host set runningPID='%s',status=1 where id=%d;" % ( subpid, host_id)
         cursor.execute(sql)
         try:
             db.commit()
