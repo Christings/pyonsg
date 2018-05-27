@@ -227,6 +227,7 @@ def sys_admin(request):
 
 
 #nvidia
+tasklist={}
 def stop_monitor_ip(request):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	# try:
@@ -272,9 +273,9 @@ def start_monitor_ip(request):
 		models.FyMonitor.objects.create(create_time=get_now_time(), user=user_id, status=1, h_id=req_id)
 		running_case_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).values('id')
 		for run_id in running_case_id:
-			child = subprocess.Popen(['/usr/local/bin/python3', '/search/odin/daemon/pyonsg/utils/monitor.py', str(run_id['id'])], shell=False)
-			models.Host.objects.filter(id=req_id).update(runningPID=child.pid,status=1)
-
+			#child = subprocess.Popen(['/usr/local/bin/python3', '/search/odin/daemon/pyonsg/utils/monitor.py', str(run_id['id']),req_id], shell=False)
+			#models.Host.objects.filter(id=req_id).update(runningPID=child.pid,status=1)
+			os.popen('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s' % (str(run_id['id']),req_id))
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
