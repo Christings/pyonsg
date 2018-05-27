@@ -271,8 +271,8 @@ def start_monitor_ip(request):
 		close_all_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).values('id')
 		for close_id in close_all_id:
 			models.FyMonitor.objects.filter(id=close_id['id'], h_id=req_id).update(status=0)
-		models.FyMonitor.objects.create(create_time=get_now_time(), user=user_id, status=1, h_id=req_id)
-		running_case_id = models.FyMonitor.objects.filter(status=1, monitorip=monitor_ip.ip, h_id=req_id).first()
+		models.FyMonitor.objects.create(create_time=get_now_time(),monitorip=monitor_ip.ip, user=user_id, status=1, h_id=req_id)
+		running_case_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).first()
 		os.system('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s' % (str(running_case_id.id),req_id))
 	except Exception as e:
 		ret['status'] = False
