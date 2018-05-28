@@ -227,9 +227,8 @@
 				console.log(obj.status)
 				if(obj.status) {
 					setTimeout(function(){
-						location.reload();
+						window.location.reload();
 						}, 500);
-					//location.reload();
 				} else {
 					$('#error_xml').text(obj.error);
 				}
