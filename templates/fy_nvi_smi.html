@@ -1,5 +1,4 @@
-
-{% extends 'layout.html' %}{% load static %} {% load tag_tools %} {% block content %}
+{% extends 'layout.html' %}{% load static %}{% block content %}
 <ol class="breadcrumb">
 	<li>{{businame}}</li>
 	<li class="active">{{app_name}}</li>
@@ -12,19 +11,19 @@
 				<div class="form-group">
 				<label class="col-sm-2 control-label">IPaddress</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="monitorip" placeholder="ip" >
+					<input type="text" class="form-control" id="monitorip" name="monitorip" placeholder="ip" >
 				</div>
 				</div>
 				<div class="form-group">
 				<label class="col-sm-2 control-label">Username</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="monitoruser" placeholder="username" >
+					<input type="text" class="form-control" id="monitoruser" name="monitoruser" placeholder="username" >
 				</div>
 				</div>
 				<div class="form-group">
 				<label class="col-sm-2 control-label">Password</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="monitorpassw" placeholder="password" >
+					<input type="text" class="form-control" id="monitorpassw" name="monitorpassw" placeholder="password" >
 				</div>
 				</div>
 				<div class="form-group">
@@ -52,6 +51,7 @@
 						<td class="tabletd" >{{item.passw}}</td>
 						<td class="tabletd" style="">
 							{% ifequal item.status 0 %}
+							<label class="btn btn-default" id="add_host">添加</label>
 							<button class="startMonitor" style="color: green;">START</button>
 							<button class="del_line">DEL</button>
 							{% endifequal%}
@@ -155,111 +155,6 @@
 		}
 	})
 
-	//request
-	$('#request_xml').click(function() {
-		$('#search_result').val("")
-		$('#baidu_result').val("")
-		$('#google_result').val("")
-		$('#youdao_result').val("")
-		$('#qq_result').val("")
-		var reqtext = $('#reqtext').val()
-		var inputHost = $('#inputHost').val()
-		if(reqtext != "" && inputHost != "") {
-			$.ajax({
-				type: "POST",
-				url: "/fy_bbk_req",
-				async: true,
-				traditional: true,
-				data: $('#form_xml').serialize(),
-				dataType: 'JSON',
-				success: function(obj) {
-					if(obj.status) {
-						if(obj.reqtype=='alltrans_json'){
-							resultSplit=(obj.transResult).split('|||');
-							result_str=""
-							for(i=0;i<resultSplit.length;i++){
-								result_str+=(resultSplit[i]+'\r\n')
-							}
-							debugInfo_str="返回信息：\r\n"+obj.debugInfo +'\r\n'+"请求串:\r\n"+obj.requestStr
-						}else{
-							result_str=obj.transResult						
-							debugInfo_str="Debug信息：\r\n"+obj.debugInfo+'\r\n'+ "请求串:\r\n"+ obj.requestStr
-						}
-						$('#search_result').val(result_str)						
-						$('#debugInfo').val(debugInfo_str);
-						$('#error_xml').text('');
-						//baidu
-						var bd_result_str=obj.bd_result;
-						var baidu_result="";
-						if (bd_result_str.indexOf("|||")>0){
-							var bd_result_split = bd_result_str.split('|||');
-							for(i=0;i<bd_result_split.length;i++){
-								baidu_result+=(bd_result_split[i]+'\r\n');
-							}
-						}else{
-							baidu_result=bd_result_str;
-						}
-						$('#baidu_result').val(baidu_result)
-						//google
-						var gg_result_str=obj.gg_result;
-						var google_result="";
-						if (gg_result_str.indexOf("|||")>0){
-							var gg_result_split = gg_result_str.split('|||');
-							for(i=0;i<gg_result_split.length;i++){
-								google_result+=(gg_result_split[i]+'\r\n');
-							}
-						}else{
-							google_result=gg_result_str;
-						}
-						$('#google_result').val(google_result)
-						
-						//qq
-						var qq_result_str=obj.qq_result;
-						var qq_result="";
-						if (qq_result_str.indexOf("|||")>0){
-							var qq_result_split = qq_result_str.split('|||');
-							for(i=0;i<qq_result_split.length;i++){
-								qq_result+=(qq_result_split[i]+'\r\n');
-							}
-						}else{
-							qq_result=qq_result_str;
-						}
-						$('#qq_result').val(qq_result)
-						
-						//youdao
-						var yd_result_str=obj.yd_result;
-						var youdao_result="";
-						if (yd_result_str.indexOf("|||")>0){
-							var yd_result_split = yd_result_str.split('|||');
-							for(i=0;i<yd_result_split.length;i++){
-								youdao_result+=(yd_result_split[i]+'\r\n');
-							}
-						}else{
-							youdao_result=yd_result_str;
-						}
-						$('#youdao_result').val(youdao_result)
-						
-						
-					} else {
-						$('#error_xml').text(obj.error);
-					}
-				},
-				error: function() {
-
-				},
-			});
-			$('#error_xml').text('');
-		} else {
-			if(reqtext == '') {
-				$('#error_xml').text('Request不可为空');
-			} else if(inputHost == '') {
-				$('#error_xml').text('Host不可为空');
-			} else {
-				$('#error_xml').text('未知错误');
-			}
-		}
-	})
-
 	//table hover
 	$(function() {
 		function showBox(obj, box) {
@@ -315,13 +210,15 @@
 	
 	//start Monitor
 	$('.startMonitor').click(function() {
+		
 		var line_id = $(this).parent().parent().attr('host_id');
+		console.log(line_id)
 		$.ajax({
 			type: "POST",
 			url: "start_monitor_ip",
 			async: true,
 			data: {
-				'line_id': line_id
+				'line_id': line_id,
 			},
 			dataType: 'JSON',
 			success: function(obj) {
@@ -346,7 +243,7 @@
 			url: "stop_monitor",
 			async: true,
 			data: {
-				'line_id': line_id
+				'line_id': line_id,
 			},
 			dataType: 'JSON',
 			success: function(obj) {
@@ -388,29 +285,5 @@
 		});
 
 	})
-
-	//getData
-	$('.get_data').dblclick(function() {
-		var linelst = $(this).children();
-		reqtype = $(linelst[1]).text();
-		hostip = "http://"+$(linelst[2]).text();
-		direction = $(linelst[3]).text();
-		reqtext = $(linelst[4]).text();
-		isfromzh = $(linelst[5]).text();
-		console.log(isfromzh)
-		$('#inputHost').val(hostip);
-		$('#reqtype').val(reqtype);
-		$('#lan_sel').val(direction);
-		$('#reqtext').val(reqtext);
-		if(isfromzh == 'fromzh') {
-			$('#inlineRadio2').prop("checked",true);
-			$('#inlineRadio1').removeAttr("checked");
-		} else {
-			$('#inlineRadio2').removeAttr("checked");
-			$('#inlineRadio1').prop("checked",true);			
-		}
-		$('#debugInfo').val('');
-	})
-
 </script>
 {% endblock %}
