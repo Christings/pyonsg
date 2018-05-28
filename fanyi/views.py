@@ -350,7 +350,7 @@ def nvidia_smi(request):
 		app_lst = models.Application.objects.all()
 		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
-		gpu_info = models.FyMonitor.objects.all()
+		gpu_info = models.FyMonitor.objects.all().values('id','create_time', 'end_time', 'monitorip', 'user', 'status')
 		host_list = models.Host.objects.all()
 		for item in host_list:
 			print(item)
