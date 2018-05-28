@@ -40,6 +40,7 @@
 						<td style="width: 100px;">IP</td>
 						<td style="width: 50px;">user</td>
 						<td>password</td>
+						<td class="tabletd" >status</td>
 						<td style="">Ctrl</td>
 					</tr>
 				</thead>
@@ -49,12 +50,13 @@
 						<td class="tabletd" style="">{{item.ip}}</td>
 						<td class="tabletd" >{{item.user}}</td>
 						<td class="tabletd" >{{item.passw}}</td>
-						<td class="tabletd" style="">
+						<td class="tabletd" >{{item.status}}</td>
+						<td style="">
 							{% ifequal item.status 0 %}
-							<label class="btn btn-default startMonitor">START</label>
 							<button class="startMonitor" style="color: green;">START</button>
 							<button class="del_line">DEL</button>
 							{% endifequal%}
+
 							{% ifequal item.status 1 %}
 							<button class="stopMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>								
 							{% endifequal%}							
@@ -222,8 +224,12 @@
 			},
 			dataType: 'JSON',
 			success: function(obj) {
+				console.log(obj.status)
 				if(obj.status) {
-					location.reload();
+					setTimeout(function(){
+						location.reload();
+						}, 500);
+					//location.reload();
 				} else {
 					$('#error_xml').text(obj.error);
 				}

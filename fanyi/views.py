@@ -276,6 +276,7 @@ def start_monitor_ip(request):
 	user_id = 'zhangjingjun'
 	ret = {'status': True, 'error': None, 'data': None}
 	req_id = request.POST.get('line_id')
+	print(req_id)
 	try:
 		running_pid = models.Host.objects.filter(id=req_id,status=1).values('runningPID')
 		monitor_ip = models.Host.objects.filter(id=req_id).first()
@@ -288,10 +289,11 @@ def start_monitor_ip(request):
 			models.FyMonitor.objects.filter(id=close_id['id'], h_id=req_id).update(status=0)
 		models.FyMonitor.objects.create(create_time=get_now_time(),monitorip=monitor_ip.ip, user=user_id, status=1, h_id=req_id)
 		running_case_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).first()
-		os.system('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s' % (str(running_case_id.id),req_id))
+		os.system('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s &' % (str(running_case_id.id),req_id))
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
+	print(str(ret))
 	return HttpResponse(json.dumps(ret))
 
 def del_host_ip(request):
@@ -350,12 +352,13 @@ def nvidia_smi(request):
 		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
 		gpu_info = models.FyMonitor.objects.all()
 		host_list = models.Host.objects.all()
+		for item in host_list:
+			print(item)
 		app_id_lst = list()
 		for appid in user_app_lst:
 			app_id_lst.append(appid.app_id_id)
 	except Exception as e:
 		print(e)
-		pass
 	if 11 in app_id_lst:
 		return render(request, 'fy_nvi_smi.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
