@@ -316,10 +316,12 @@ def start_monitor_ip(request):
 		models.FyMonitor.objects.create(create_time=get_now_time(),monitorip=monitor_ip.ip, user=user_id, status=1, h_id=req_id)
 		running_case_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).first()
 		os.system('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s &' % (str(running_case_id.id),req_id))
+		time.sleep(1)
 		new_running_ip = models.Host.objects.filter(id=req_id).first()
 		if new_running_ip.runningPID=='':
 			ret['status'] = False
-			models.FyMonitor.objects.filter(id=running_case_id).update(status=2)
+			ret['error'] = "Error:start error"
+			models.FyMonitor.objects.filter(id=running_case_id.id).update(status=2)
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
