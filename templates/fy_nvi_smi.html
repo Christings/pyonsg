@@ -114,6 +114,11 @@
 						<td class="tabletd">							
 						</td>
 						{% endifequal%}
+						{% ifequal item.status 2 %}
+						<td class="tabletd">
+							<button class="del_one_monitor">DEL</button>
+						</td>
+						{% endifequal%}
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -242,9 +247,10 @@
 			success: function(obj) {
 				console.log(obj.status)
 				if(obj.status) {
-					setTimeout(function(){
-						window.location.reload();
-						}, 500);
+					location.reload();
+//					setTimeout(function(){
+//						window.location.reload();
+//						}, 500);
 				} else {
 					$('#error_xml').text(obj.error);
 				}
