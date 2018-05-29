@@ -266,40 +266,21 @@ def stop_monitor_ip(request):
 		ret['error'] = "Error:" + str(e)
 	return HttpResponse(json.dumps(ret))
 
-def fy_nvi_iplist(request,task_id,page_id):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
-	if page_id == '':
-		page_id = 1
+def get_nvi_data(request):
+	ret = {'status': True, 'error': None, 'gpumem': None,'gpumemused':None}
+	fy_nvi_id = request.POST.get('line_id')
+	print(fy_nvi_id)
 	try:
-		business_lst = models.Business.objects.all()
-		app_lst = models.Application.objects.all()
-		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
-		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
-		gpu_info = models.FyMonitor.objects.filter(h_id=task_id).values('id', 'create_time', 'end_time', 'monitorip', 'user',
-														 'status').order_by('id')[::-1]
-		current_page = page_id
-		current_page = int(current_page)
-		page_obj = pagination.Page(current_page, len(gpu_info), 15, 9)
-		data = gpu_info[page_obj.start:page_obj.end]
-		page_str = page_obj.page_str("/fy_nvi_iplist_%s" % task_id)
-		host_list = models.Host.objects.all()
-		for item in host_list:
-			print(item)
-		app_id_lst = list()
-		for appid in user_app_lst:
-			app_id_lst.append(appid.app_id_id)
+		nvi_data_info = models.FyMonitor.objects.filter(id=fy_nvi_id).first()
+		ret['gpumem'] = nvi_data_info.gpumem
+		ret['gpumemused'] = nvi_data_info.gpumemused
 	except Exception as e:
-		print(e)
-	if 11 in app_id_lst:
-		return render(request, 'fy_nvi_smi.html',
-					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看",
-					   'gpu_info': gpu_info, 'host_list': host_list, 'li': data, 'page_str': page_str})
+		ret['status'] = False
+		ret['error'] = "Error:" + str(e)
+	print(json.dumps(ret))
+	return HttpResponse(json.dumps(ret))
+
+
 
 
 def nvi_task_detail(request,task_id):
@@ -344,7 +325,6 @@ def start_monitor_ip(request):
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
-	print(str(ret))
 	return HttpResponse(json.dumps(ret))
 
 def del_host_ip(request):
@@ -388,8 +368,40 @@ def monitor_host_add(request):
 		ret['status'] = False
 	return HttpResponse(json.dumps(ret))
 
+def fy_nvi_iplist(request,task_id,page_id):
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	if page_id == '':
+		page_id = 1
+	try:
+		business_lst = models.Business.objects.all()
+		app_lst = models.Application.objects.all()
+		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
+		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+		gpu_info = models.FyMonitor.objects.filter(h_id=task_id).values('id', 'create_time', 'end_time', 'monitorip', 'user',
+														 'status').order_by('id')[::-1]
+		current_page = page_id
+		current_page = int(current_page)
+		page_obj = pagination.Page(current_page, len(gpu_info), 10, 9)
+		data = gpu_info[page_obj.start:page_obj.end]
+		page_str = page_obj.page_str("/fy_nvi_iplist_%s_" % task_id)
 
-def nvidia_smi(request,page_id):
+		app_id_lst = list()
+		for appid in user_app_lst:
+			app_id_lst.append(appid.app_id_id)
+	except Exception as e:
+		print(e)
+
+	return render(request, 'fy_nvi_iplist.html',
+					  {'business_lst': business_lst, 'user_id': user_id,'user_app_lst':user_app_lst,
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看",
+					   'gpu_info': gpu_info, 'li': data, 'page_str': page_str})
+
+def nvidia_smi(request,task_id='',page_id=1):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	# try:
 	# 	user_id = request.COOKIES['uid']
@@ -398,20 +410,25 @@ def nvidia_smi(request,page_id):
 	user_id = 'zhangjingjun'
 	if page_id == '':
 		page_id=1
+	print('task_id',task_id)
+
 	try:
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
 		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
-		gpu_info = models.FyMonitor.objects.all().values('id','create_time', 'end_time', 'monitorip', 'user', 'status').order_by('id')[::-1]
+		if task_id=='':
+			gpu_info = models.FyMonitor.objects.all().values('id','create_time', 'end_time', 'monitorip', 'user', 'status').order_by('id')[::-1]
+		else:
+			gpu_info = models.FyMonitor.objects.filter(h_id=task_id).values('id', 'create_time', 'end_time', 'monitorip', 'user',
+															 'status').order_by('id')[::-1]
 		current_page = page_id
 		current_page = int(current_page)
 		page_obj = pagination.Page(current_page, len(gpu_info), 15, 9)
 		data = gpu_info[page_obj.start:page_obj.end]
-		page_str = page_obj.page_str("/nvidia_smi")
+		page_str = page_obj.page_str("/nvidia_smi_%s_" % task_id)
 		host_list = models.Host.objects.all()
-		for item in host_list:
-			print(item)
+
 		app_id_lst = list()
 		for appid in user_app_lst:
 			app_id_lst.append(appid.app_id_id)
@@ -425,6 +442,7 @@ def nvidia_smi(request,page_id):
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
 					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看"})
+
 
 
 #bbk
