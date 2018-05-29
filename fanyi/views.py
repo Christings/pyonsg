@@ -6,6 +6,7 @@ from utils import baidufy_t
 from utils import googlefy_t
 from utils import youdaofy_t
 from utils import qqfy_t
+from utils import pagination
 import signal
 
 import json,requests,time,subprocess,urllib.parse,os
@@ -266,6 +267,21 @@ def stop_monitor_ip(request):
 	return HttpResponse(json.dumps(ret))
 
 
+def nvi_task_detail(request,task_id):
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id="zhangjingjun"
+	task_detail = models.FyMonitor.objects.filter(id=task_id)
+	business_lst = models.Business.objects.all()
+	app_lst = models.Application.objects.all()
+	user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+	return render(request, 'nvi_task_detail.html',
+				  {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
+				   'businame': 'Translate', 'app_name': "翻译显存监控", 'topic': '监控详情', 'task_detail': task_detail})
+
 
 def start_monitor_ip(request):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
@@ -338,19 +354,26 @@ def monitor_host_add(request):
 	return HttpResponse(json.dumps(ret))
 
 
-def nvidia_smi(request):
+def nvidia_smi(request,page_id):
 	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	# try:
 	# 	user_id = request.COOKIES['uid']
 	# except:
 	# 	return redirect(login_url)
 	user_id = 'zhangjingjun'
+	if page_id == '':
+		page_id=1
 	try:
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
 		req_lst = models.ReqInfo.objects.filter(user_fk_id=user_id)
 		user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
-		gpu_info = models.FyMonitor.objects.all().values('id','create_time', 'end_time', 'monitorip', 'user', 'status')
+		gpu_info = models.FyMonitor.objects.all().values('id','create_time', 'end_time', 'monitorip', 'user', 'status').order_by('id')[::-1]
+		current_page = page_id
+		current_page = int(current_page)
+		page_obj = pagination.Page(current_page, len(gpu_info), 15, 9)
+		data = gpu_info[page_obj.start:page_obj.end]
+		page_str = page_obj.page_str("/nvidia_smi")
 		host_list = models.Host.objects.all()
 		for item in host_list:
 			print(item)
@@ -362,7 +385,7 @@ def nvidia_smi(request):
 	if 11 in app_id_lst:
 		return render(request, 'fy_nvi_smi.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看",'gpu_info':gpu_info,'host_list':host_list})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看",'gpu_info':gpu_info,'host_list':host_list,'li':data,'page_str':page_str})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
