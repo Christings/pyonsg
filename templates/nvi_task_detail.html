@@ -69,7 +69,7 @@ $(document).ready(function() {
       type: 'spline'      
    }; 
    var title = {
-      text: 'GPU 内存使用量折线图'   
+      text: 'GPU 内存使用量'   
    };
    var subtitle = {
       text: ''
@@ -102,7 +102,7 @@ $(document).ready(function() {
       }
    };
    var series= [{
-         name: 'GPU Mem Used',
+         name: 'GPU Mem Used (m)',
             // Define the data points. All series have a dummy year
             // of 1970/71 in order to be compared on the same x axis. Note
             // that in JavaScript, months start at 0 for January, 1 for February etc.
@@ -129,7 +129,7 @@ $(document).ready(function() {
       type: 'spline'      
    }; 
    var title2 = {
-      text: 'GPU 内存使用率折线图'   
+      text: 'GPU 内存使用率'   
    };
    var subtitle2 = {
       text: ''
@@ -146,7 +146,7 @@ $(document).ready(function() {
    };
    var yAxis2 = {
       title: {
-         text: 'GPU Men Used (m)'
+         text: 'GPU Mem Used (%)'
       },
       min: 0
    };
@@ -162,7 +162,7 @@ $(document).ready(function() {
       }
    };
    var series2= [{
-         name: 'GPU Mem Used',
+         name: 'GPU Mem Used (%)',
             // Define the data points. All series have a dummy year
             // of 1970/71 in order to be compared on the same x axis. Note
             // that in JavaScript, months start at 0 for January, 1 for February etc.

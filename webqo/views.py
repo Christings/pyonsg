@@ -80,10 +80,10 @@ def qo_task_detail(request,task_id):
 	except:
 		return redirect(login_url)
 	# user_id="zhangjingjun"
-	task_detail = models.webqoqps.objects.filter(id=task_id)
-	business_lst = models.Business.objects.all()
-	app_lst = models.Application.objects.all()
-	user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+	task_detail = layout.webqoqps.objects.filter(id=task_id)
+	business_lst = layout.Business.objects.all()
+	app_lst = layout.Application.objects.all()
+	user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
 	return render(request, 'qo_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'user_id':user_id,'user_app_lst':user_app_lst,  'businame': 'Webqo', 'app_name': "webqo性能对比自动化",'topic':'任务详情','task_detail': task_detail})
 
 def qo_automation_add(request):

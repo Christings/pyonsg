@@ -50,6 +50,7 @@ urlpatterns = [
     re_path(r'^stop_monitor$',trans.stop_monitor_ip),
     re_path(r'^del_one_monitor$',trans.del_one_monitor),
     re_path(r'^nvi_task_detail_(?P<task_id>\d+).html$',trans.nvi_task_detail),
+    re_path(r'^fy_nvi_iplist_(?P<task_id>\d+)(?P<page_id>\d+).html$',trans.fy_nvi_iplist),
     # webqo
     re_path(r'^qo_automation(?P<page_id>\d*)$',webqo.qo_automation),
     re_path(r'^qo_automation_add',webqo.qo_automation_add),

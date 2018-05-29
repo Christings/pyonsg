@@ -6,70 +6,6 @@
 </ol>
 <div class="row">	
 	<div class="col-md-4">
-		<div>			
-			<form class="form-horizontal" action="" method="post" id="form_monitor">			
-				<div class="form-group">
-				<label class="col-sm-2 control-label">IPaddress</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="monitorip" name="monitorip" placeholder="ip" >
-				</div>
-				</div>
-				<div class="form-group">
-				<label class="col-sm-2 control-label">Username</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="monitoruser" name="monitoruser" placeholder="username" >
-				</div>
-				</div>
-				<div class="form-group">
-				<label class="col-sm-2 control-label">Password</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" id="monitorpassw" name="monitorpassw" placeholder="password" >
-				</div>
-				</div>
-				<div class="form-group">
-				<div class=" col-sm-3">
-					<label class="btn btn-default" id="add_host">添加</label>
-				</div>
-				</div>
-				
-			</form>
-			<div class="form-group">
-				<table class="table table-hover" id="reqData">
-				<thead>
-					<tr>
-						<td style="width: 100px;">IP</td>
-						<td style="width: 50px;">user</td>
-						<td>password</td>
-						<td style="">Ctrl</td>
-					</tr>
-				</thead>
-				<tbody style="cursor: pointer;">
-					{% for item in host_list %}
-					<tr host_id="{{item.id}}" class="get_host">
-						<td class="tabletd" style="">{{item.ip}}</td>
-						<td class="tabletd" >{{item.user}}</td>
-						<td class="tabletd" >{{item.passw}}</td>						
-						<td style="">
-							{% ifequal item.status 0 %}
-							<button class="startMonitor" style="color: green;">START</button>
-							<button class="del_line">DEL</button>
-							{% endifequal%}
-
-							{% ifequal item.status 1 %}
-							<button class="stopMonitor" style="color: red;">STOP&nbsp;&nbsp;</button>								
-							{% endifequal%}							
-						</td>
-						<td><a href="fy_nvi_iplist_{{item.id}}.html">More</a></td>
-					</tr>
-					{% endfor %}
-				</tbody>
-
-			</table>
-			</div>
-		</div>				
-		<div id="showDiv"></div>
-	</div>
-	<div class="col-md-8">
 		<div>
 			<table class="table table-hover" id="reqData">
 				<thead>
@@ -120,7 +56,11 @@
 				     {{page_str}}
 				</ul>
 			</nav>
-		</div>
+		</div>		
+		<div id="showDiv"></div>
+	</div>
+	<div class="col-md-8">
+		
 	</div>
 </div>
 
