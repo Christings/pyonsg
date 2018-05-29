@@ -95,10 +95,13 @@
 						<td class="tabletd">
 							<a href="nvi_task_detail_{{item.id}}.html">
 								{% ifequal item.status 0 %}
-								<font color="red">Stopped</font>
+								<font color="green">Stopped</font>
 								{% endifequal %} 
 								{% ifequal item.status 1 %}
 								<font color="cream">Running</font>
+								{% endifequal %}
+								{% ifequal item.status 2 %}
+								<font color="red">Error</font>
 								{% endifequal %}
 							</a>
 						</td>
