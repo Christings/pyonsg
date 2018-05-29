@@ -80,7 +80,7 @@ def qo_task_detail(request,task_id):
 	except:
 		return redirect(login_url)
 	# user_id="zhangjingjun"
-	task_detail = layout.webqoqps.objects.filter(id=task_id)
+	task_detail = models.webqoqps.objects.filter(id=task_id)
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
 	user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
