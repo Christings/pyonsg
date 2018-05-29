@@ -65,12 +65,10 @@ def sys_app_edit(request):
 	b_id = request.POST.get('b_id')
 	app_name = request.POST.get('a_name')
 	url_name = request.POST.get('url_name')
-	print(a_id)
 	try:
 		nameisExist = models.Application.objects.filter(id=a_id)
 		if nameisExist.exists() == True:
 			urlisExist = models.Application.objects.filter(urlname=url_name).exclude(id=a_id)
-			print(urlisExist.exists())
 			if urlisExist.exists() == True:
 				ret['error'] = "Error:url已存在"
 				ret['status'] = False
@@ -144,7 +142,6 @@ def sys_busi_edit(request):
 	ret = {'status': True, 'errro': None, 'data': None}
 	b_id = request.POST.get('bid')
 	businame = request.POST.get('business_name')
-	print(b_id,businame)
 	try:
 		nameisExist = models.Business.objects.filter(id=b_id)
 		if nameisExist.exists() == True:
@@ -269,7 +266,6 @@ def stop_monitor_ip(request):
 def get_nvi_data(request):
 	ret = {'status': True, 'error': None, 'gpumem': None,'gpumemused':None}
 	fy_nvi_id = request.POST.get('line_id')
-	print(fy_nvi_id)
 	try:
 		nvi_data_info = models.FyMonitor.objects.filter(id=fy_nvi_id).first()
 		ret['gpumem'] = nvi_data_info.gpumem
@@ -277,7 +273,6 @@ def get_nvi_data(request):
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
-	print(json.dumps(ret))
 	return HttpResponse(json.dumps(ret))
 
 
@@ -308,7 +303,6 @@ def start_monitor_ip(request):
 	user_id = 'zhangjingjun'
 	ret = {'status': True, 'error': None, 'data': None}
 	req_id = request.POST.get('line_id')
-	print(req_id)
 	try:
 		running_pid = models.Host.objects.filter(id=req_id,status=1).values('runningPID')
 		monitor_ip = models.Host.objects.filter(id=req_id).first()
@@ -321,7 +315,8 @@ def start_monitor_ip(request):
 			models.FyMonitor.objects.filter(id=close_id['id'], h_id=req_id).update(status=0)
 		models.FyMonitor.objects.create(create_time=get_now_time(),monitorip=monitor_ip.ip, user=user_id, status=1, h_id=req_id)
 		running_case_id = models.FyMonitor.objects.filter(status=1, h_id=req_id).first()
-		os.system('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s &' % (str(running_case_id.id),req_id))
+		exec_status = os.system('/usr/local/bin/python3 /search/odin/daemon/pyonsg/utils/monitor.py %s %s &' % (str(running_case_id.id),req_id))
+		print('exec_start',exec_status)
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
@@ -354,7 +349,6 @@ def monitor_host_add(request):
 	ip = request.POST.get('monitorip')
 	monitor_user = request.POST.get('monitoruser')
 	monitor_passw = request.POST.get('monitorpassw')
-	print(ip,monitor_user,monitor_passw)
 	try:
 		nameisExist = models.Host.objects.filter(ip=ip)
 		if nameisExist.exists() == False:
@@ -410,7 +404,6 @@ def nvidia_smi(request,task_id='',page_id=1):
 	user_id = 'zhangjingjun'
 	if page_id == '':
 		page_id=1
-	print('task_id',task_id)
 
 	try:
 		business_lst = models.Business.objects.all()
@@ -705,7 +698,6 @@ def home(request):
 	except Exception as e:
 		pass
 	if ('uid' not in request.COOKIES and ptoken is ""):
-		print("no login and not login")
 		return redirect(login_url)
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
@@ -720,7 +712,6 @@ def home(request):
 			uid = json_data['uid']
 			login_time = int(json_data['ts'])/1000 #s
 			userStatus = models.UserInfo.objects.filter(user_name=uid)
-			print(userStatus.exists())
 			if userStatus.exists()==False:
 				insertInfo = UserInfo(user_name=uid)
 				insertInfo.save()
@@ -729,20 +720,17 @@ def home(request):
 			uid = ""
 			login_time = 0
 		now_time = time.time()
-		print('now_time:',now_time)
 		if (uid != "" and now_time - login_time < 60):
 			user_app_lst = models.UserToApp.objects.filter(user_name_id=uid)
 			response = render(request, 'layout.html', {'uid_id': uid,'user_app_lst':user_app_lst, 'business_lst':business_lst,'app_lst':app_lst})
 			if ('uid' not in request.COOKIES):
 				response.set_cookie("uid", uid)
 		else:
-			print("maybe uid[%s] is empty or now_time[%d] - login_time[%d] >= 60" % (uid, now_time, login_time))
 			response = None
 	elif ('uid' in request.COOKIES):#already login
 		try:
 			uid = request.COOKIES['uid']
 		except:
-			print("should be login, but not login")
 			uid = ""
 		if (uid != ""):
 			user_app_lst = models.UserToApp.objects.filter(user_name_id=uid)
@@ -750,7 +738,6 @@ def home(request):
 		else:
 			response = None
 	if (response == None):
-		print("response is none")
 		return redirect(login_url)
 	return response
 
