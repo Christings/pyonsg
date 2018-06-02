@@ -17,6 +17,7 @@ from django.contrib import admin
 from fanyi import views as trans
 from webqo import views as webqo
 from webqw import views as webqw
+from wiki import views as wiki
 from django.urls import path,re_path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -67,4 +68,9 @@ urlpatterns = [
     re_path(r'^qw_task_readd$',webqw.qw_task_readd),
     re_path(r'^qw_task_cancel',webqw.qw_task_cancel),
     re_path(r'^qw_req$',webqw.qw_req),
+    # wiki
+    re_path(r'^add_blog$',wiki.add_blog),
+    re_path(r'^save_blog$',wiki.save_blog),
+    re_path(r'^wiki_list(?P<page_id>\d*)$',wiki.wiki_list),
+    re_path(r'^wiki_detail_(?P<task_id>\d+)$',wiki.wiki_detail),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -14,11 +14,11 @@ import json,requests,time,subprocess,urllib.parse,os
 
 # admin
 def user_app_del(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	user_app_id = request.POST.get('user_app_id')
 	try:
@@ -34,11 +34,11 @@ def user_app_del(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_user_app(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	username = request.POST.get('username')
 	app_lst = request.POST.getlist('app_lst')
@@ -55,11 +55,11 @@ def sys_user_app(request):
 
 
 def sys_app_edit(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	a_id = request.POST.get('app_id')
 	b_id = request.POST.get('b_id')
@@ -84,11 +84,11 @@ def sys_app_edit(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_app_del(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	app_id = request.POST.get('app_id')
 	try:
@@ -110,11 +110,11 @@ def sys_app_del(request):
 
 
 def sys_app_add(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	busi_id = request.POST.get('busi_sel')
 	app_name = request.POST.get('app_name')
@@ -134,11 +134,11 @@ def sys_app_add(request):
 
 
 def sys_busi_edit(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	b_id = request.POST.get('bid')
 	businame = request.POST.get('business_name')
@@ -156,11 +156,11 @@ def sys_busi_edit(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_del_busi(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	busi_id = request.POST.get('busi_id')
 	try:
@@ -183,11 +183,12 @@ def sys_del_busi(request):
 
 
 def sys_add_busi(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
 	ret = {'status': True, 'errro': None, 'data': None}
 	businame = request.POST.get('business_name')
 	try:
@@ -205,11 +206,12 @@ def sys_add_busi(request):
 	return HttpResponse(json.dumps(ret))
 
 def sys_admin(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
 	business_lst = models.Business.objects.all()
 	app_lst = models.Application.objects.all()
 	utoapp = models.UserToApp.objects.all()

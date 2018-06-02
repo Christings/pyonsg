@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'fanyi',
     'webqo',
     'webqw',
+    'wiki',
 ]
 
 MIDDLEWARE = [

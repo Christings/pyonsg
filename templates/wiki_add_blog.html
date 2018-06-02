@@ -1,0 +1,148 @@
+{% extends 'layout.html' %} {% load static %} {% block content %}
+<ol class="breadcrumb">
+	<li>{{businame}}</li>
+	<li>{{app_name}}</li>
+	<li class="active">{{topic}}</li>
+	<li style="color: red;"><span id="error_xml"></span></li>
+</ol>
+<div class="row">
+	<div class="col-sm-8">
+		<div class="form-group">
+			<form class="form-horizontal" method="post" id="markdown_form">
+				<input name="title" type="text" class="form-control" placeholder="标题" />
+				<hr/>
+				<textarea name="summary" class="form-control" style="resize: none;" rows="2" placeholder="摘要"></textarea>
+				<hr />
+				<textarea name="content"  data-provide="markdown" rows="18" id="editor"  ></textarea>
+  				<hr />
+  				<input name="wikitag" type="text" class="form-control" placeholder="Tag1-Tag2-Tag3" />
+				<hr/>
+				<label class="btn btn-default" id="add_blog">发布</label>
+				<label class="btn btn-default" id="add_blog">保存草稿</label>
+			</form>
+		</div>
+	</div>
+	<div class="col-sm-4">
+		<div class="form-group">
+			
+		</div>
+	</div>
+
+</div>
+<div class="row">
+	<div class="col-sm-12">
+	</div>
+</div>
+
+{% endblock %} {% block js %}
+<script src="{% static "js/markdown.js" %}"></script>
+<script src="{% static "js/to-markdown.js" %}"></script>
+<script src="{% static "js/bootstrap-markdown.js" %}"></script>
+<script src="{% static "js/bootstrap-markdown.zh.js" %}"></script>
+<script>
+	(function ($) { $.fn.markdown.messages.zh = { 'Bold': "粗体", 'Italic': "斜体", 'Heading': "标题", 'URL/Link': "链接", 'Image': "图片", 'List': "列表", 'Unordered List': "无序列表", 'Ordered List': "有序列表", 'Code': "代码", 'Quote': "引用", 'Preview': "预览", 'strong text': "粗体", 'emphasized text': "强调", 'heading text': "标题", 'enter link description here': "输入链接说明", 'Insert Hyperlink': "URL地址", 'enter image description here': "输入图片说明", 'Insert Image Hyperlink': "图片URL地址", 'enter image title here': "在这里输入图片标题", 'list text here': "这里是列表文本", 'code text here': "这里输入代码", 'quote here': "这里输入引用文本" }; }(jQuery));
+
+	$("#editor").markdown({
+		autofocus: true,
+		language: 'zh',
+	});
+	$('#add_blog').click(function(){
+		$.ajax({
+			type: "POST",
+			url: "/save_blog",
+			async: true,
+			traditional: true,
+			data: $('#markdown_form').serialize(),
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			},
+		});
+	})
+	//cancel task
+	$('#cancel_task').click(function() {
+		var task_id = $(this).attr('task_id');
+		$.ajax({
+			type: "POST",
+			url: "/qo_task_cancel",
+			async: true,
+			traditional: true,
+			data: {
+				'task_id': task_id,
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			},
+		});
+	})
+
+	//restart task
+	$('#restart_task').click(function() {
+		var task_id = $(this).attr('task_id');
+		$.ajax({
+			type: "POST",
+			url: "/qo_task_readd",
+			async: true,
+			traditional: true,
+			data: {
+				'task_id': task_id,
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					//location.reload();
+					window.location.href = '/qo_automation';
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			},
+		});
+	})
+
+	//table hover
+	$(function() {
+		function showBox(obj, box) {
+			var timer = null;
+			$(obj).on("mouseover", function(e) {
+				clearTimeout(timer);
+				var clientX = e.clientX;
+				var clientY = e.clientY;
+				var y = clientY + 20;
+				var txt = $(this).text();
+				timer = setTimeout(function() {
+					$(box).css("left", clientX).css("top", y);
+					if(txt == "") {
+						$(box).hide();
+					} else {
+						$(box).show();
+						$(box).html(txt);
+					}
+				}, 300);
+			});
+			$(obj).on("mouseout", function() {
+				clearTimeout(timer);
+				$(box).hide();
+			});
+		}
+		showBox("#reqData > tbody td", "#showDiv");
+	});
+</script>
+{% endblock %}

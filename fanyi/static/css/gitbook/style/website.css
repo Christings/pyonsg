@@ -1,0 +1,11 @@
+.page-inner {
+    max-width: 1000px !important;
+}
+
+.book-summary ul.summary li a, .book-summary ul.summary li span {
+    padding: 4px 10px;
+}
+
+.markdown-section pre>code {
+    white-space: pre-wrap;
+}
