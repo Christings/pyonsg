@@ -14,6 +14,10 @@
         			<h3 class="panel-title">
         				<a href="/wiki_detail_{{item.id}}" style="cursor: pointer;">{{item.wikititle}}</a>
         				<span class="badge" style="float: right;">{{item.update_time}}</span>
+                        <span class="badge" style="float: right;"><a style="color: aliceblue" href="/edit_blog?id={{item.id}}&flag=edit">[编辑]</a></span>
+                        {% ifequal item.status 0 %}
+                        <span class="badge" style="float: right;color:cornflowerblue">[草稿]</span>
+                        {% endifequal %}
         			</h3>
       			</div>
       			<div class="panel-body">
@@ -30,8 +34,17 @@
 	</div>
 	
 	<div class="col-sm-4">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search_content" placeholder="Search for...">
+                <span class="input-group-btn">
+                    <label class="btn btn-default" id="go_search" >Go!</label>
+                </span>
+            </div>
+        </div>
 		<div class="form-group">
 			<span class="label label-success" style="font-size: 15px;cursor: pointer;line-height: 40px;" ><a href="/wiki_list?tag=all" style="text-decoration: none;">&nbsp;All&nbsp;</a></span>
+            <span class="label label-success" style="font-size: 15px;cursor: pointer;line-height: 40px;" ><a href="/wiki_list?status=0" style="text-decoration: none;">&nbsp;所有草稿&nbsp;</a></span>
 			{% for tag in taglist %}
 				<span class="label label-info" style="font-size: 15px;cursor: pointer;line-height: 40px;" ><a href="/wiki_list?tag={{tag}}" style="text-decoration: none;">{{tag}}</a></span>			
 			{% endfor %}
@@ -54,13 +67,14 @@
 		autofocus: true,
 		language: 'zh',
 	});
-	$('#add_blog').click(function(){
+	$('#go_search').click(function(){
+        var search_content = $('#search_content').val()
 		$.ajax({
-			type: "POST",
-			url: "/save_blog",
+			type: "GET",
+			url: "/wiki_list",
 			async: true,
 			traditional: true,
-			data: $('#markdown_form').serialize(),
+			data: {'search_content':search_content},
 			dataType: 'JSON',
 			success: function(obj) {
 				if(obj.status) {
@@ -74,83 +88,5 @@
 			},
 		});
 	})
-	//cancel task
-	$('#cancel_task').click(function() {
-		var task_id = $(this).attr('task_id');
-		$.ajax({
-			type: "POST",
-			url: "/qo_task_cancel",
-			async: true,
-			traditional: true,
-			data: {
-				'task_id': task_id,
-			},
-			dataType: 'JSON',
-			success: function(obj) {
-				if(obj.status) {
-					location.reload();
-				} else {
-					$('#error_xml').text(obj.error);
-				}
-			},
-			error: function() {
-
-			},
-		});
-	})
-
-	//restart task
-	$('#restart_task').click(function() {
-		var task_id = $(this).attr('task_id');
-		$.ajax({
-			type: "POST",
-			url: "/qo_task_readd",
-			async: true,
-			traditional: true,
-			data: {
-				'task_id': task_id,
-			},
-			dataType: 'JSON',
-			success: function(obj) {
-				if(obj.status) {
-					//location.reload();
-					window.location.href = '/qo_automation';
-				} else {
-					$('#error_xml').text(obj.error);
-				}
-			},
-			error: function() {
-
-			},
-		});
-	})
-
-	//table hover
-	$(function() {
-		function showBox(obj, box) {
-			var timer = null;
-			$(obj).on("mouseover", function(e) {
-				clearTimeout(timer);
-				var clientX = e.clientX;
-				var clientY = e.clientY;
-				var y = clientY + 20;
-				var txt = $(this).text();
-				timer = setTimeout(function() {
-					$(box).css("left", clientX).css("top", y);
-					if(txt == "") {
-						$(box).hide();
-					} else {
-						$(box).show();
-						$(box).html(txt);
-					}
-				}, 300);
-			});
-			$(obj).on("mouseout", function() {
-				clearTimeout(timer);
-				$(box).hide();
-			});
-		}
-		showBox("#reqData > tbody td", "#showDiv");
-	});
 </script>
 {% endblock %}

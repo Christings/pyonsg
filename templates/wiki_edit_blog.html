@@ -6,23 +6,23 @@
 	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">
-	<div class="col-sm-9">
+	<div class="col-sm-8">
 		<div class="form-group">
 			<form class="form-horizontal" method="post" id="markdown_form">
-				<input name="title" id="title" type="text" class="form-control" placeholder="标题" />
+                <input name="edit_id" id="edit_id" type="text" style="display: none" value="{{edit_content.0.id}}" />
+				<input name="title" id="title" type="text" class="form-control" placeholder="标题" value="{{edit_content.0.wikititle}}" />
 				<hr/>
-				<textarea name="summary" id="summary" class="form-control" style="resize: none;" rows="1" placeholder="摘要"></textarea>
+				<textarea name="summary" id="summary" class="form-control" style="resize: none;" rows="1" placeholder="摘要">{{edit_content.0.wikisummary}}</textarea>
 				<hr />
-				<textarea name="content"   data-provide="markdown" rows="18" id="editor"  ></textarea>
+				<textarea name="content"   data-provide="markdown" rows="18" id="editor">{{edit_content.0.wikicontent}}</textarea>
   				<hr />
-  				<input name="wikitag" id="wikitag" type="text" class="form-control" placeholder="Tag1-Tag2-Tag3" />
+  				<input name="wikitag" id="wikitag" type="text" class="form-control" placeholder="Tag1-Tag2-Tag3" value="{{edit_content.0.wikitag}}" />
 				<hr/>
-				<label class="btn btn-default" id="add_blog">发布</label>
-				<label class="btn btn-default" id="save_draft">保存草稿</label>
+				<label class="btn btn-default" id="edit_blog">更新</label>
 			</form>
 		</div>
 	</div>
-	<div class="col-sm-3">
+	<div class="col-sm-4">
 		<div class="form-group">
 			
 		</div>
@@ -46,28 +46,30 @@
 		autofocus: true,
 		language: 'zh',
 	});
-    //save a draft
-    $('#save_draft').click(function(){
+	$('#edit_blog').click(function(){
         var title = $('#title').val()
         var summary = $('#summary').val()
         var content = $('#editor').val()
-        var wikitag = $('#wikitag').val()        
+        var wikitag = $('#wikitag').val()
+        var edit_id = $('#edit_id').val()
+        if(title != "" && summary != "" && content != "" && wikitag != "" && edit_id != "" ){
 		$.ajax({
 			type: "POST",
 			url: "/save_blog",
 			async: true,
 			traditional: true,
 			data: {
+                'edit_id':edit_id,
                 'title':title,
                 'summary':summary,
                 'content':content,
                 'wikitag':wikitag,
-                'flag':'draft',
+                'flag':'update',
             },
 			dataType: 'JSON',
 			success: function(obj) {
 				if(obj.status) {
-					location.reload();
+					window.location.href='/add_blog'
 				} else {
 					$('#error_xml').text(obj.error);
 				}
@@ -75,43 +77,10 @@
 			error: function() {
 
 			},
-		});
-	})
-    //add a wiki
-	$('#add_blog').click(function(){
-        var title = $('#title').val()
-        var summary = $('#summary').val()
-        var content = $('#editor').val()
-        var wikitag = $('#wikitag').val()
-        if (title != "" && summary != "" && content != "" && wikitag != ""){
-            $.ajax({
-			type: "POST",
-			url: "/save_blog",
-			async: true,
-			traditional: true,
-			data: {
-                'title':title,
-                'summary':summary,
-                'content':content,
-                'wikitag':wikitag,
-                'flag':'add',
-            },
-			dataType: 'JSON',
-			success: function(obj) {
-				if(obj.status) {
-					location.reload();
-				} else {
-					$('#error_xml').text(obj.error);
-				}
-			},
-			error: function() {
-
-			},
-		});
-        }else{
-            $('#error_xml').text("标题，摘要，内容，标签都为必填")
+		});}else{
+            $('#error_xml').text("标题，摘要，内容，标签都为必填")        
         }
-		
+        
 	})
 </script>
 {% endblock %}

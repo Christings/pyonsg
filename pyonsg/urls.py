@@ -70,6 +70,7 @@ urlpatterns = [
     re_path(r'^qw_req$',webqw.qw_req),
     # wiki
     re_path(r'^add_blog$',wiki.add_blog),
+    re_path(r'^edit_blog$',wiki.edit_blog),
     re_path(r'^save_blog$',wiki.save_blog),
     re_path(r'^wiki_list(?P<page_id>\d*)$',wiki.wiki_list),
     re_path(r'^wiki_detail_(?P<task_id>\d+)$',wiki.wiki_detail),
