@@ -27,7 +27,8 @@ import requests
 
 @register.simple_tag
 def formatImgName(imgName):
-	return imgName.split('_rs.')[0]+'.'+imgName.split('_rs.')
+	newName = imgName.split('_rs.')[0]+'.'+imgName.split('_rs.')[1]
+	return newName
 
 @register.simple_tag
 def formatIp(inip):
@@ -43,6 +44,6 @@ def splittags(tags):
 	return tag_lst
 
 if __name__ == '__main__':
-	pass
+	formatImgName('ys_rs.png')
 
 
