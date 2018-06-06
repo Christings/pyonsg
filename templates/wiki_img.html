@@ -27,26 +27,26 @@
 		<div class="row">
 		    <div class="col-sm-6 col-md-1">
 		         <div class="thumbnail">
-		            <img src="/upload/zhangjingjun/QQ截图20180605164923.png" 
+		            <img src="" 
 		             alt="通用的占位符缩略图">
 		         </div>
 		    </div>
 		    <div class="col-sm-6 col-md-1">
 		        <div class="thumbnail">
-		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            <img src="" 
 		            alt="通用的占位符缩略图">
 
 		        </div>
 		    </div>
 		    <div class="col-sm-6 col-md-1">
 		        <div class="thumbnail">
-		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            <img src="" 
 		            alt="通用的占位符缩略图">
 		        </div>
 		    </div>
 		    <div class="col-sm-6 col-md-1">
 		        <div class="thumbnail">
-		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            <img src="" 
 		            alt="通用的占位符缩略图">
 		        </div>
 		    </div>
@@ -58,19 +58,19 @@
 		    </div>
 		    <div class="col-sm-6 col-md-1">
 		        <div class="thumbnail">
-		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            <img src="" 
 		            alt="通用的占位符缩略图">
 		        </div>
 		    </div>
 		    <div class="col-sm-6 col-md-1">
 		        <div class="thumbnail">
-		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            <img src="" 
 		            alt="通用的占位符缩略图">
 		        </div>
 		    </div>
 		    <div class="col-sm-6 col-md-1">
 		        <div class="thumbnail">
-		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            <img src="" 
 		            alt="通用的占位符缩略图">
 		        </div>
 		    </div>
@@ -98,6 +98,7 @@
 	$("#upload_img").click(function(){
 		var upload_file = $("#browse_img")[0].files[0];
 		var filedata = new FormData();
+		$('#error_xml').text("");
 		if(upload_file){
 			filedata.append('file',upload_file)
 			$.ajax({
@@ -110,7 +111,9 @@
 				dataType: 'JSON',
 				success: function(obj) {
 					if(obj.status) {
-						//location.reload();
+						alert('上传成功')
+						location.reload();
+						
 					} else {
 						$('#error_xml').text(obj.error);
 					}
@@ -119,6 +122,7 @@
 	
 				},
 			});
+			
 		}else{
 			$('#error_xml').text("请选择文件");
 			return;

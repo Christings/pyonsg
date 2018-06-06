@@ -20,37 +20,34 @@ def upload_img(request):
 	if obj:
 		try:
 			static_dir = '/search/nginx/html/wiki/upload'
+			# static_dir = 'E:/html/lianxi/img/new/upload'
 			user_dir = os.path.join(static_dir,user_id)
 			if os.path.exists(user_dir)==False:
 				os.mkdir(user_dir)
-			for item in os.listdir(user_dir):
-				if obj.name == item:
-					ret['status'] = False
-					ret['error'] = '已存在相同文件名图片'
-					break
-				else:
-					new_file = os.path.join(user_dir,obj.name)
-					with open(new_file, 'wb') as fw:
-						for chunk in obj.chunks():
-							fw.write(chunk)
-					prefix_name = obj.name.split('.')[0]
-					resize_name = prefix_name+'_rs.'+obj.name.split('.')[1]
-					ori_img = new_file
-					dst_img = os.path.join(user_dir,resize_name)
-					dst_w = 150
-					dst_h = 150
-					save_q = 35
-					resizeImg.resizeImg(ori_img=ori_img, dst_img=dst_img, dst_w=dst_w, dst_h=dst_h, save_q=save_q)
+			if obj.name in os.listdir(user_dir):
+				ret['status'] = False
+				ret['error'] = '已存在相同文件名图片'
+			else:
+				new_file = os.path.join(user_dir,obj.name)
+				with open(new_file, 'wb') as fw:
+					for chunk in obj.chunks():
+						fw.write(chunk)
+				prefix_name = obj.name.split('.')[0]
+				resize_name = prefix_name+'_rs.'+obj.name.split('.')[1]
+				ori_img = new_file
+				dst_img = os.path.join(user_dir,resize_name)
+				dst_w = 150
+				dst_h = 150
+				save_q = 35
+				resizeImg.resizeImg(ori_img=ori_img, dst_img=dst_img, dst_w=dst_w, dst_h=dst_h, save_q=save_q)
 		except Exception as e:
 			ret['status'] = False
 			ret['error'] = "写入异常" + str(e)
 	else:
 		ret['status']=False
 		ret['error']="未收到文件"
-
-
-
 	return HttpResponse(json.dumps(ret))
+
 #wiki img
 def wiki_img(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
