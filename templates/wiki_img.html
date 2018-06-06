@@ -25,15 +25,14 @@
 			</div>
 		</form>
 		<div class="row">
+			{% for item in img_lst%}
 		    <div class="col-sm-6 col-md-1">
-		    	{% for item in img_lst%}
 		         <div class="thumbnail">
 		            <img src="http://10.134.110.163:8080/wiki/upload/{{user_id}}/{{item}}" 
-		             alt="通用的占位符缩略图">
+		             alt="{{item}}">
 		         </div>
-		         {% endfor %}
 		    </div>
-		    
+		    {% endfor %}		    
 		</div>
 	</div>
 
