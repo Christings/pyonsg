@@ -16,7 +16,7 @@
         				<span class="badge" style="float: right;">{{item.update_time}}</span>
                         <span class="badge" style="float: right;"><a style="color: aliceblue" href="/edit_blog?id={{item.id}}&flag=edit">[编辑]</a></span>
                         {% ifequal item.status 0 %}
-                        <span class="badge" style="float: right;color:cornflowerblue">[草稿]</span>
+                        <span class="badge" style="float: right;color:white">[草稿]</span>
                         {% endifequal %}
         			</h3>
       			</div>
@@ -34,14 +34,14 @@
 	</div>
 	
 	<div class="col-sm-4">
-        <div class="form-group">
+        <!--<div class="form-group">
             <div class="input-group">
                 <input type="text" class="form-control" id="search_content" placeholder="Search for...">
                 <span class="input-group-btn">
-                    <label class="btn btn-default" id="go_search" >Go!</label>
+                    <label class="btn btn-default" id="go_search" ><a id="search_for">Go!</a></label>
                 </span>
             </div>
-        </div>
+        </div>-->
 		<div class="form-group">
 			<span class="label label-success" style="font-size: 15px;cursor: pointer;line-height: 40px;" ><a href="/wiki_list?tag=all" style="text-decoration: none;">&nbsp;All&nbsp;</a></span>
             <span class="label label-success" style="font-size: 15px;cursor: pointer;line-height: 40px;" ><a href="/wiki_list?status=0" style="text-decoration: none;">&nbsp;所有草稿&nbsp;</a></span>
@@ -67,26 +67,16 @@
 		autofocus: true,
 		language: 'zh',
 	});
-	$('#go_search').click(function(){
-        var search_content = $('#search_content').val()
-		$.ajax({
-			type: "GET",
-			url: "/wiki_list",
-			async: true,
-			traditional: true,
-			data: {'search_content':search_content},
-			dataType: 'JSON',
-			success: function(obj) {
-				if(obj.status) {
-					location.reload();
-				} else {
-					$('#error_xml').text(obj.error);
-				}
-			},
-			error: function() {
-
-			},
-		});
-	})
+//	$(document).ready(function(){
+//     //点击链接的时候调用
+//    $("#search_for").click(function(){
+// 
+//        //得到input的值
+//        var search_content = $("#search_content").val();
+// 
+//        //设置linkToCart的href的值
+//        $("#search_for").attr("href","/wiki_list?search_content="+search_content);
+//    });
+//  });
 </script>
 {% endblock %}

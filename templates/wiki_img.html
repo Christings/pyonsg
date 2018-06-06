@@ -6,33 +6,74 @@
 	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">
-	<div class="col-sm-9">
-		<div class="form-group">
-			<form class="form-horizontal" method="post" id="markdown_form">
-				<input name="title" id="title" type="text" class="form-control" placeholder="标题" />
-				<hr/>
-				<textarea name="summary" id="summary" class="form-control" style="resize: none;" rows="1" placeholder="摘要"></textarea>
-				<hr />
-				<textarea name="content"   data-provide="markdown" rows="18" id="editor"  ></textarea>
-  				<hr />
-  				<input name="wikitag" id="wikitag" type="text" class="form-control" placeholder="Tag1-Tag2-Tag3" />
-				<hr/>
-				<label class="btn btn-default" id="add_blog">发布</label>
-				<label class="btn btn-default" id="save_draft">保存草稿</label>
-			</form>
-			
-		</div>
-		<div class="form-group">
-		<form class="form-horizontal" method="post" id="markdown_form">
-				<input type="file" id="upload_img" accept="image/gif, image/jpeg, image/png, image/jpg">
+	<div class="col-sm-12">
+		<form class="form-horizontal" action="" method="post" id="form_img" enctype="multipart/form-data">
+			<div class="form-group">
+				<label for="jobData" class="control-label" style="float:left;padding-left:15px;">上传图片</label>
+				<div class="col-sm-10">
+    				<div class="file-container" style="display:inline-block;position:relative;overflow: hidden;vertical-align:middle">
+        				<label class="btn btn-default fileinput-button" style="cursor: pointer;">Browse...</label>
+        				<input type="file" id="browse_img" accept="image/gif, image/jpeg, image/png, image/jpg" style="position:absolute;top:0;left:0;font-size:34px; opacity:0">
+    				</div>
+    				<span id="filename" style="vertical-align: middle">未上传文件</span>  				
+				</div>				
+			</div>
+			<div class="form-group">
+				<div class="col-sm-10">
+				<label class="btn btn-default" id="upload_img">Upload</label>
+				</div>
+			</div>
 		</form>
-		</div>
-	</div>
-	<div class="col-sm-3">
-		<div class="form-group">
-			{% for tag in taglist %}
-				<span class="label label-info taglist" style="font-size: 15px;cursor: pointer;line-height: 40px;" >{{tag}}</span>			
-			{% endfor %}
+		<div class="row">
+		    <div class="col-sm-6 col-md-1">
+		         <div class="thumbnail">
+		            <img src="/upload/zhangjingjun/QQ截图20180605164923.png" 
+		             alt="通用的占位符缩略图">
+		         </div>
+		    </div>
+		    <div class="col-sm-6 col-md-1">
+		        <div class="thumbnail">
+		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            alt="通用的占位符缩略图">
+
+		        </div>
+		    </div>
+		    <div class="col-sm-6 col-md-1">
+		        <div class="thumbnail">
+		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            alt="通用的占位符缩略图">
+		        </div>
+		    </div>
+		    <div class="col-sm-6 col-md-1">
+		        <div class="thumbnail">
+		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            alt="通用的占位符缩略图">
+		        </div>
+		    </div>
+		    <div class="col-sm-6 col-md-1">
+		        <div class="thumbnail">
+		            <img src="http://10.134.110.163:8080/wiki/ysyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy.png" 
+		            alt="aaaa">
+		        </div>
+		    </div>
+		    <div class="col-sm-6 col-md-1">
+		        <div class="thumbnail">
+		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            alt="通用的占位符缩略图">
+		        </div>
+		    </div>
+		    <div class="col-sm-6 col-md-1">
+		        <div class="thumbnail">
+		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            alt="通用的占位符缩略图">
+		        </div>
+		    </div>
+		    <div class="col-sm-6 col-md-1">
+		        <div class="thumbnail">
+		            <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+		            alt="通用的占位符缩略图">
+		        </div>
+		    </div>
 		</div>
 	</div>
 
@@ -54,14 +95,46 @@
 		autofocus: true,
 		language: 'zh',
 	});
-	$("#upload_img").change(function(){
-		var fileinput = $("#upload_img").val();
+	$("#upload_img").click(function(){
+		var upload_file = $("#browse_img")[0].files[0];
+		var filedata = new FormData();
+		if(upload_file){
+			filedata.append('file',upload_file)
+			$.ajax({
+				type:"post",
+				url:"/upload_img",
+				data:filedata,
+				cache:false,
+				processData: false,  
+	            contentType: false,
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						//location.reload();
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+	
+				},
+			});
+		}else{
+			$('#error_xml').text("请选择文件");
+			return;
+		}
+		
+		
+	})
+	$("#browse_img").change(function(){
+		var fileinput = $("#browse_img").val();
+		
 		$("#error_xml").text("");
 		if(!fileinput){
 			$("#error_xml").text("图片不存在");
 			return;
 		}
-		var fl = $("#upload_img")[0].files[0];
+		var fl = $("#browse_img")[0].files[0];
 		var size = fl.size;
 		if( fl.type !== 'image/jpeg' && fl.type !== 'image/png' && fl.type !== 'image/gif'){
 			$("#error_xml").text("非图片类型");
@@ -71,7 +144,7 @@
 			$("#error_xml").text("图片不可以大于1M");
 			return;
 		}
-		
+		$("#filename").html(fl.name);
 	})
 	
 	$(".taglist").click(function(){

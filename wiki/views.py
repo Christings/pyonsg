@@ -2,10 +2,79 @@ from django.shortcuts import render,HttpResponse,redirect
 from fanyi import models as layout
 from wiki import models
 from django.db.models import Q
-import json,time,markdown2
 from utils import pagination
+from utils import resizeImg
+import json,time,markdown2,os
 # Create your views here.
 
+#upload_img
+def upload_img(request):
+	#login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	ret = {'status': True, 'error': None, 'data': None}
+	obj = request.FILES.get('file')
+	if obj:
+		try:
+			user_dir = os.path.join('upload',user_id)
+			if os.path.exists(user_dir)==False:
+				os.mkdir(user_dir)
+			for item in os.listdir(user_dir):
+				if obj.name == item:
+					ret['status'] = False
+					ret['error'] = '已存在相同文件名图片'
+					break
+				else:
+					new_file = os.path.join(user_dir,obj.name)
+					with open(new_file, 'wb') as fw:
+						for chunk in obj.chunks():
+							fw.write(chunk)
+					prefix_name = obj.name.split('.')[0]
+					resize_name = prefix_name+'_rs.'+obj.name.split('.')[1]
+					ori_img = new_file
+					dst_img = os.path.join(user_dir,resize_name)
+					dst_w = 150
+					dst_h = 150
+					save_q = 35
+					resizeImg.resizeImg(ori_img=ori_img, dst_img=dst_img, dst_w=dst_w, dst_h=dst_h, save_q=save_q)
+		except Exception as e:
+			ret['status'] = False
+			ret['error'] = "写入异常" + str(e)
+	else:
+		ret['status']=False
+		ret['error']="未收到文件"
+
+
+
+	return HttpResponse(json.dumps(ret))
+#wiki img
+def wiki_img(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
+	business_lst = layout.Business.objects.all()
+	app_lst = layout.Application.objects.all()
+	req_lst = layout.ReqInfo.objects.filter(user_fk_id=user_id)
+	user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
+	app_id_lst = list()
+	for appid in user_app_lst:
+		app_id_lst.append(appid.app_id_id)
+
+
+	if 14 in app_id_lst:
+		return render(request, 'wiki_img.html',
+					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list"})
+	else:
+		return render(request, 'no_limit.html',
+					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list"})
 
 #wiki detail
 def wiki_detail(request,task_id):
@@ -56,10 +125,8 @@ def wiki_list(request,page_id='1'):
 		app_id_lst = list()
 		for appid in user_app_lst:
 			app_id_lst.append(appid.app_id_id)
-		if search_key is not None:
-			print(111111111)
-			wikilist = models.Wikistore.objects.filter(Q(status=1,wikititle__icontains=search_key)|Q(status=1,wikisummary__icontains=search_key)|Q(status=1,wikicontent__icontains=search_key)|Q(status=1,wikitag__icontains=search_key)|Q(user=user_id,wikititle__icontains=search_key)|Q(user=user_id,wikisummary__icontains=search_key)|Q(user=user_id,wikicontent__icontains=search_key)|Q(user=user_id,wikitag__icontains=search_key)).order_by('update_time')[::-1]
-		elif status =='0':
+
+		if status =='0':
 			wikilist = models.Wikistore.objects.filter(user=user_id,status=0).order_by('update_time')[::-1]
 		elif tag is None or tag=='all':
 			wikilist = models.Wikistore.objects.filter(Q(status=1)|Q(user=user_id)).order_by('update_time')[::-1]
@@ -174,6 +241,16 @@ def add_blog(request):
 		app_id_lst = list()
 		for appid in user_app_lst:
 			app_id_lst.append(appid.app_id_id)
+
+		wikitags = models.Wikistore.objects.filter(Q(status=1) | Q(user=user_id)).values('wikitag')
+		taglist = list()
+		for item in wikitags:
+			if '--' in item['wikitag']:
+				tagsp = item['wikitag'].split('--')
+				taglist += tagsp
+			else:
+				taglist.append(item['wikitag'])
+		taglist = list(set(taglist))
 	except Exception as e:
 		print(e)
 		pass
@@ -181,7 +258,7 @@ def add_blog(request):
 	if 12 in app_id_lst:
 		return render(request, 'wiki_add_blog.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "add blog"})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "add blog",'taglist':taglist})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,

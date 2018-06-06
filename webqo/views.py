@@ -136,12 +136,12 @@ def qo_automation_add(request):
 
 
 def qo_automation(request, page_id):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-	# user_id="zhangjingjun"
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id="zhangjingjun"
 
 	if page_id == '':
 		page_id=1
