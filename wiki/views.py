@@ -64,6 +64,12 @@ def wiki_img(request):
 	for appid in user_app_lst:
 		app_id_lst.append(appid.app_id_id)
 
+	static_dir = '/search/nginx/html/wiki/upload'
+	# static_dir = 'E:/html/lianxi/img/new/upload'
+	user_dir = os.path.join(static_dir, user_id)
+	if os.path.exists(user_dir):
+		img_lst = os.listdir(user_dir)
+		print(img_lst)
 
 	if 14 in app_id_lst:
 		return render(request, 'wiki_img.html',
