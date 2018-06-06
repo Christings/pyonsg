@@ -9,12 +9,12 @@ import json,time,markdown2,os
 
 #upload_img
 def upload_img(request):
-	#login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	# user_id = 'zhangjingjun'
 	ret = {'status': True, 'error': None, 'data': None}
 	obj = request.FILES.get('file')
 	if obj:
@@ -51,11 +51,11 @@ def upload_img(request):
 #wiki img
 def wiki_img(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	# user_id = 'zhangjingjun'
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
 	req_lst = layout.ReqInfo.objects.filter(user_fk_id=user_id)
@@ -86,14 +86,13 @@ def wiki_img(request):
 
 #wiki detail
 def wiki_detail(request,task_id):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
 	try:
-
-		user_id = 'zhangjingjun'
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	# user_id = 'zhangjingjun'
+	try:
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()
 		req_lst = layout.ReqInfo.objects.filter(user_fk_id=user_id)
@@ -111,17 +110,32 @@ def wiki_detail(request,task_id):
 				   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki', 'topic': 'blog', 'app_name': "wiki detail",
 				   'wikidetail':wikidetail,'format_md':format_md})
 
+#del wiki
+def del_wiki(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except Exception as e:
+		return redirect(login_url)
+	#user_id = 'zhangjingjun'
+	ret = {'status': True, 'error': None, 'data': None}
+	req_id = request.POST.get('line_id')
+	try:
+		models.Wikistore.objects.filter(id=req_id).update(status=2)
+	except Exception as e:
+		ret['status'] = False
+		ret['error'] = "Error:" + str(e)
+	return HttpResponse(json.dumps(ret))
+
 #wiki list
 def wiki_list(request,page_id='1'):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	tag = request.GET.get('tag')
 	status = request.GET.get('status')
-	search_key = request.GET.get('search_content')
-	print('search_key',search_key)
 	user_id = 'zhangjingjun'
 	if page_id == '':
 		page_id=1
@@ -137,15 +151,15 @@ def wiki_list(request,page_id='1'):
 		if status =='0':
 			wikilist = models.Wikistore.objects.filter(user=user_id,status=0).order_by('update_time')[::-1]
 		elif tag is None or tag=='all':
-			wikilist = models.Wikistore.objects.filter(Q(status=1)|Q(user=user_id)).order_by('update_time')[::-1]
+			wikilist = models.Wikistore.objects.exclude(status=2).filter(Q(status=1)|Q(user=user_id)).order_by('update_time')[::-1]
 		else:
-			wikilist = models.Wikistore.objects.filter(Q(wikitag__icontains=tag,status=1)|Q(user=user_id,wikitag__icontains=tag)).order_by('update_time')[::-1]
+			wikilist = models.Wikistore.objects.exclude(status=2).filter(Q(wikitag__icontains=tag,status=1)|Q(user=user_id,wikitag__icontains=tag)).order_by('update_time')[::-1]
 		current_page = page_id
 		current_page = int(current_page)
 		page_obj = pagination.Page(current_page, len(wikilist), 5, 9)
 		data = wikilist[page_obj.start:page_obj.end]
 		page_str = page_obj.page_str("/wiki_list")
-		wikitags = models.Wikistore.objects.filter(Q(status=1)|Q(user=user_id)).values('wikitag')
+		wikitags = models.Wikistore.objects.exclude(status=2).filter(Q(status=1)|Q(user=user_id)).values('wikitag')
 		taglist = list()
 		for item in wikitags:
 			if '--' in item['wikitag']:
@@ -171,12 +185,12 @@ def wiki_list(request,page_id='1'):
 
 #save blog
 def save_blog(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	#user_id = 'zhangjingjun'
 	ret = {'status': True, 'error': None, 'data': None}
 	title = request.POST.get('title')
 	summary=request.POST.get('summary')
@@ -201,14 +215,14 @@ def save_blog(request):
 		ret['error']='error:'+str(e)
 	return HttpResponse(json.dumps(ret))
 
-#add blog
+#edit blog
 def edit_blog(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	# user_id = 'zhangjingjun'
 	edit_id = request.GET.get('id')
 	try:
 		business_lst = layout.Business.objects.all()
@@ -219,6 +233,16 @@ def edit_blog(request):
 		for appid in user_app_lst:
 			app_id_lst.append(appid.app_id_id)
 		edit_content = models.Wikistore.objects.filter(id=edit_id).values()
+
+		wikitags = models.Wikistore.objects.exclude(status=2).filter(Q(status=1) | Q(user=user_id)).values('wikitag')
+		taglist = list()
+		for item in wikitags:
+			if '--' in item['wikitag']:
+				tagsp = item['wikitag'].split('--')
+				taglist += tagsp
+			else:
+				taglist.append(item['wikitag'])
+		taglist = list(set(taglist))
 	except Exception as e:
 		print(e)
 		pass
@@ -226,7 +250,7 @@ def edit_blog(request):
 	if 12 in app_id_lst:
 		return render(request, 'wiki_edit_blog.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "edit blog",'edit_content':edit_content})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "edit blog",'edit_content':edit_content,'taglist':taglist})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
@@ -234,12 +258,12 @@ def edit_blog(request):
 
 #add blog
 def add_blog(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	# user_id = 'zhangjingjun'
 
 	try:
 		business_lst = layout.Business.objects.all()
@@ -250,7 +274,7 @@ def add_blog(request):
 		for appid in user_app_lst:
 			app_id_lst.append(appid.app_id_id)
 
-		wikitags = models.Wikistore.objects.filter(Q(status=1) | Q(user=user_id)).values('wikitag')
+		wikitags = models.Wikistore.objects.exclude(status=2).filter(Q(status=1) | Q(user=user_id)).values('wikitag')
 		taglist = list()
 		for item in wikitags:
 			if '--' in item['wikitag']:

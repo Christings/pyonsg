@@ -14,6 +14,7 @@
         			<h3 class="panel-title">
         				<a href="/wiki_detail_{{item.id}}" style="cursor: pointer;">{{item.wikititle}}</a>
         				<span class="badge" style="float: right;">{{item.update_time}}</span>
+        				<span class="badge" style="float: right;"><a style="color: aliceblue;cursor: pointer;" class="del_line" wiki_id={{item.id}}>[删除]</a></span>
                         <span class="badge" style="float: right;"><a style="color: aliceblue" href="/edit_blog?id={{item.id}}&flag=edit">[编辑]</a></span>
                         {% ifequal item.status 0 %}
                         <span class="badge" style="float: right;color:white">[草稿]</span>
@@ -67,6 +68,34 @@
 		autofocus: true,
 		language: 'zh',
 	});
+	//del
+	$('.del_line').click(function() {
+		var line_id = $(this).attr('wiki_id');
+		console.log(line_id)
+		if(confirm('确定删除吗？')){
+			$.ajax({
+			type: "POST",
+			url: "del_wiki",
+			async: true,
+			data: {
+				'line_id': line_id
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			}
+		});
+	}
+	
+
+	})
 //	$(document).ready(function(){
 //     //点击链接的时候调用
 //    $("#search_for").click(function(){

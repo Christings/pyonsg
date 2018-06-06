@@ -19,13 +19,9 @@
 				<hr/>
 				<label class="btn btn-default" id="add_blog">发布</label>
 				<label class="btn btn-default" id="save_draft">保存草稿</label>
+				<label>图片链接前缀http://frontqa.web.sjs.ted:8080/wiki/upload/{{user_id}}/{img_name}<a href="/wiki_img" style="cursor: pointer;">&nbsp;&nbsp;上传图片</a></label>
 			</form>
 			
-		</div>
-		<div class="form-group">
-		<form class="form-horizontal" method="post" id="markdown_form">
-				<input type="file" id="upload_img" accept="image/gif, image/jpeg, image/png, image/jpg">
-		</form>
 		</div>
 	</div>
 	<div class="col-sm-3">
@@ -54,25 +50,6 @@
 		autofocus: true,
 		language: 'zh',
 	});
-	$("#upload_img").change(function(){
-		var fileinput = $("#upload_img").val();
-		$("#error_xml").text("");
-		if(!fileinput){
-			$("#error_xml").text("图片不存在");
-			return;
-		}
-		var fl = $("#upload_img")[0].files[0];
-		var size = fl.size;
-		if( fl.type !== 'image/jpeg' && fl.type !== 'image/png' && fl.type !== 'image/gif'){
-			$("#error_xml").text("非图片类型");
-			return;
-		}
-		if(size>1*1024*1024){
-			$("#error_xml").text("图片不可以大于1M");
-			return;
-		}
-		
-	})
 	
 	$(".taglist").click(function(){
 		var tagtext = $(this).text();

@@ -6,7 +6,7 @@
 	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">
-	<div class="col-sm-8">
+	<div class="col-sm-9">
 		<div class="form-group">
 			<form class="form-horizontal" method="post" id="markdown_form">
                 <input name="edit_id" id="edit_id" type="text" style="display: none" value="{{edit_content.0.id}}" />
@@ -22,9 +22,11 @@
 			</form>
 		</div>
 	</div>
-	<div class="col-sm-4">
+	<div class="col-sm-3">
 		<div class="form-group">
-			
+			{% for tag in taglist %}
+				<span class="label label-info taglist" style="font-size: 15px;cursor: pointer;line-height: 40px;" >{{tag}}</span>			
+			{% endfor %}
 		</div>
 	</div>
 
@@ -46,6 +48,18 @@
 		autofocus: true,
 		language: 'zh',
 	});
+	$(".taglist").click(function(){
+		var tagtext = $(this).text();
+		var pre_tag = $('#wikitag').val();
+		var new_tag="";
+		if(pre_tag==""){
+			new_tag=tagtext;
+		}else{
+			new_tag = pre_tag+"--"+tagtext;
+		}
+		$('#wikitag').val(new_tag);
+	})
+	
 	$('#edit_blog').click(function(){
         var title = $('#title').val()
         var summary = $('#summary').val()
@@ -69,7 +83,7 @@
 			dataType: 'JSON',
 			success: function(obj) {
 				if(obj.status) {
-					window.location.href='/add_blog'
+					window.location.href='/wiki_list'
 				} else {
 					$('#error_xml').text(obj.error);
 				}
