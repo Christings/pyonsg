@@ -29,8 +29,14 @@
 		    <div class="col-sm-6 col-md-1">
 		         <div class="thumbnail">
 		            <img src="http://frontqa.web.sjs.ted:8080/wiki/upload/{{user_id}}/{{item}}" 
-		             alt="{{item}}" title="{{item}}">
+		             alt="{{item}}" title="{{item}}" img_name="{{item}}">
+		             <div class="caption">
+		                <p>
+		                	<label class="btn btn-primary btn-xs del_img" >删除</label>	
+		                </p>
+            		</div>
 		         </div>
+		         
 		    </div>
 		    {% endfor %}		    
 		</div>
@@ -54,6 +60,31 @@
 		autofocus: true,
 		language: 'zh',
 	});
+	//del
+	$('.del_img').click(function() {
+		var img_name = $(this).parent().parent().prev().attr('img_name');
+		if(confirm('确定删除吗？')){
+			$.ajax({
+			type: "POST",
+			url: "del_img",
+			async: true,
+			data: {
+				'img_name': img_name
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			}
+		});
+	}
+	})	
 	$("#upload_img").click(function(){
 		var upload_file = $("#browse_img")[0].files[0];
 		var filedata = new FormData();

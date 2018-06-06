@@ -194,7 +194,6 @@ def sys_add_busi(request):
 	try:
 		nameisExist = models.Business.objects.filter(businame=businame)
 		if nameisExist.exists() == False:
-
 			models.Business.objects.create(businame=businame)
 		else:
 			ret['error'] = "Error:功能已存在"

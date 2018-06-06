@@ -77,4 +77,5 @@ urlpatterns = [
     re_path(r'^wiki_img$',wiki.wiki_img),
     re_path(r'^upload_img$',wiki.upload_img),
     re_path(r'^del_wiki$',wiki.del_wiki),
+    re_path(r'^del_img$',wiki.del_img),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

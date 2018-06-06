@@ -7,6 +7,32 @@ from utils import resizeImg
 import json,time,markdown2,os
 # Create your views here.
 
+#del img
+def del_img(request):
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except Exception as e:
+		return redirect(login_url)
+	#user_id = 'zhangjingjun'
+	ret = {'status': True, 'error': None, 'data': None}
+	img_name = request.POST.get('img_name')
+	try:
+		# static_dir = '/search/nginx/html/wiki/upload'
+		static_dir = 'E:/html/lianxi/img/new/upload'
+		user_dir = os.path.join(static_dir, user_id)
+		file = os.path.join(user_dir, img_name)
+		# print('file',file)
+		if os.path.isfile(file):
+			os.remove(file)
+			big_file = file.split('_rs.')[0]+file.split('_rs.')[1]
+			os.remove(big_file)
+		# print(big_file)
+	except Exception as e:
+		ret['status'] = False
+		ret['error'] = "Error:" + str(e)
+	return HttpResponse(json.dumps(ret))
+
 #upload_img
 def upload_img(request):
 	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
@@ -65,7 +91,7 @@ def wiki_img(request):
 		app_id_lst.append(appid.app_id_id)
 
 	static_dir = '/search/nginx/html/wiki/upload'
-	# static_dir = 'E:/html/lianxi/img/new/upload'
+	#static_dir = 'E:/html/lianxi/img/new/upload'
 	user_dir = os.path.join(static_dir, user_id)
 	img_lst = list()
 	if os.path.exists(user_dir):
