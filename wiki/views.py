@@ -19,7 +19,8 @@ def upload_img(request):
 	obj = request.FILES.get('file')
 	if obj:
 		try:
-			user_dir = os.path.join('upload',user_id)
+			static_dir = '/search/nginx/html/wiki/upload'
+			user_dir = os.path.join(static_dir,user_id)
 			if os.path.exists(user_dir)==False:
 				os.mkdir(user_dir)
 			for item in os.listdir(user_dir):

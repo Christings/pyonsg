@@ -25,7 +25,7 @@ SECRET_KEY = 'vr%0i2l_@e#4l0614x$ma)1)w2g%j+y!e(^z++14)en7m%q_to'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['frontqa.web.sjs.ted','127.0.0.1']
+ALLOWED_HOSTS = ['frontqa.web.sjs.ted','127.0.0.1','10.134.110.163']
 
 
 # Application definition
