@@ -67,14 +67,18 @@ def wiki_img(request):
 	static_dir = '/search/nginx/html/wiki/upload'
 	# static_dir = 'E:/html/lianxi/img/new/upload'
 	user_dir = os.path.join(static_dir, user_id)
+	img_lst = list()
 	if os.path.exists(user_dir):
-		img_lst = os.listdir(user_dir)
+		all_img_lst = os.listdir(user_dir)
+		for img in all_img_lst:
+			if '_rs.' in img:
+				img_lst.append(img)
 		print(img_lst)
 
 	if 14 in app_id_lst:
 		return render(request, 'wiki_img.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list"})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list",'img_lst':img_lst})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
