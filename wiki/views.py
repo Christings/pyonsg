@@ -25,7 +25,7 @@ def del_img(request):
 		# print('file',file)
 		if os.path.isfile(file):
 			os.remove(file)
-			big_file = file.split('_rs.')[0]+file.split('_rs.')[1]
+			big_file = file.split('_rs.')[0]+'.'+file.split('_rs.')[1]
 			os.remove(big_file)
 		# print(big_file)
 	except Exception as e:
