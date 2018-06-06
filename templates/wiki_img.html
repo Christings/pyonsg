@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% load static %} {% block content %}
+{% extends 'layout.html' %} {% load wk_tag_tools %} {% load static %} {% block content %}
 <ol class="breadcrumb">
 	<li>{{businame}}</li>
 	<li>{{app_name}}</li>
@@ -29,7 +29,7 @@
 		    <div class="col-sm-6 col-md-1">
 		         <div class="thumbnail">
 		            <img src="http://frontqa.web.sjs.ted:8080/wiki/upload/{{user_id}}/{{item}}" 
-		             alt="{{item}}" title="{{item}}" img_name="{{item}}">
+		             alt="{{item}}" title="{{item}}" img_name="{{item|formatImgName}}">
 		             <div class="caption">
 		                <p>
 		                	<label class="btn btn-primary btn-xs del_img" >删除</label>	
@@ -41,7 +41,6 @@
 		    {% endfor %}		    
 		</div>
 	</div>
-
 </div>
 <div class="row">
 	<div class="col-sm-12">

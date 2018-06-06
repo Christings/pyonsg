@@ -26,8 +26,8 @@ register = template.Library()
 import requests
 
 @register.simple_tag
-def formatTime(intime):
-	return intime.strftime("%m%d %H:%M")
+def formatImgName(imgName):
+	return imgName.split('_rs.')[0]+'.'+imgName.split('_rs.')
 
 @register.simple_tag
 def formatIp(inip):

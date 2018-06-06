@@ -18,8 +18,8 @@ def del_img(request):
 	ret = {'status': True, 'error': None, 'data': None}
 	img_name = request.POST.get('img_name')
 	try:
-		# static_dir = '/search/nginx/html/wiki/upload'
-		static_dir = 'E:/html/lianxi/img/new/upload'
+		static_dir = '/search/nginx/html/wiki/upload'
+		# static_dir = 'E:/html/lianxi/img/new/upload'
 		user_dir = os.path.join(static_dir, user_id)
 		file = os.path.join(user_dir, img_name)
 		# print('file',file)
@@ -76,12 +76,12 @@ def upload_img(request):
 
 #wiki img
 def wiki_img(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-	# user_id = 'zhangjingjun'
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
 	req_lst = layout.ReqInfo.objects.filter(user_fk_id=user_id)
