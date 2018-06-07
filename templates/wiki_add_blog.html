@@ -116,7 +116,7 @@
 			dataType: 'JSON',
 			success: function(obj) {
 				if(obj.status) {
-					location.reload();
+					window.location.href='/wiki_list';
 				} else {
 					$('#error_xml').text(obj.error);
 				}
