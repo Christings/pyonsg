@@ -12,8 +12,8 @@
                 <input name="edit_id" id="edit_id" type="text" style="display: none" value="{{edit_content.0.id}}" />
 				<input name="title" id="title" type="text" class="form-control" placeholder="标题" value="{{edit_content.0.wikititle}}" />
 				<hr/>
-				<textarea name="summary" id="summary" class="form-control" style="resize: none;" rows="1" placeholder="摘要">{{edit_content.0.wikisummary}}</textarea>
-				<hr />
+				<!--<textarea name="summary" id="summary" class="form-control" style="resize: none;" rows="1" placeholder="摘要">{{edit_content.0.wikisummary}}</textarea>
+				<hr />-->
 				<textarea name="content"   data-provide="markdown" rows="18" id="editor">{{edit_content.0.wikicontent}}</textarea>
   				<hr />
   				<input name="wikitag" id="wikitag" type="text" class="form-control" placeholder="Tag1--Tag2--Tag3" value="{{edit_content.0.wikitag}}" />
@@ -62,7 +62,7 @@
 	
 	$('#edit_blog').click(function(){
         var title = $('#title').val()
-        var summary = $('#summary').val()
+//      var summary = $('#summary').val()
         var content = $('#editor').val()
         var wikitag = $('#wikitag').val()
         var edit_id = $('#edit_id').val()
@@ -75,7 +75,7 @@
 			data: {
                 'edit_id':edit_id,
                 'title':title,
-                'summary':summary,
+//              'summary':summary,
                 'content':content,
                 'wikitag':wikitag,
                 'flag':'update',

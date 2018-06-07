@@ -76,12 +76,12 @@ def upload_img(request):
 
 #wiki img
 def wiki_img(request):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	# user_id = 'zhangjingjun'
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
 	req_lst = layout.ReqInfo.objects.filter(user_fk_id=user_id)
@@ -112,12 +112,12 @@ def wiki_img(request):
 
 #wiki detail
 def wiki_detail(request,task_id):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
-	user_id = 'zhangjingjun'
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
+	# user_id = 'zhangjingjun'
 	try:
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()
@@ -166,11 +166,11 @@ def del_wiki(request):
 
 #wiki list
 def wiki_list(request,page_id='1'):
-	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	# try:
-	# 	user_id = request.COOKIES['uid']
-	# except:
-	# 	return redirect(login_url)
+	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	try:
+		user_id = request.COOKIES['uid']
+	except:
+		return redirect(login_url)
 	tag = request.GET.get('tag')
 	status = request.GET.get('status')
 	user_id = 'zhangjingjun'
@@ -193,7 +193,7 @@ def wiki_list(request,page_id='1'):
 			wikilist = models.Wikistore.objects.exclude(status=2).filter(Q(wikitag__icontains=tag,status=1)|Q(user=user_id,wikitag__icontains=tag)).order_by('update_time')[::-1]
 		current_page = page_id
 		current_page = int(current_page)
-		page_obj = pagination.Page(current_page, len(wikilist), 5, 9)
+		page_obj = pagination.Page(current_page, len(wikilist), 10, 9)
 		data = wikilist[page_obj.start:page_obj.end]
 		page_str = page_obj.page_str("/wiki_list")
 		wikitags = models.Wikistore.objects.exclude(status=2).filter(Q(status=1)|Q(user=user_id)).values('wikitag')
@@ -230,22 +230,22 @@ def save_blog(request):
 	#user_id = 'zhangjingjun'
 	ret = {'status': True, 'error': None, 'data': None}
 	title = request.POST.get('title')
-	summary=request.POST.get('summary')
+	# summary=request.POST.get('summary')
 	content = request.POST.get('content')
 	tags = request.POST.get('wikitag')
 	flag = request.POST.get('flag')
 	try:
 		if flag == 'add':
 			models.Wikistore.objects.create(create_time=get_now_time(),user=user_id,update_user=user_id,
-										update_time=get_now_time(),wikititle=title,wikisummary=summary,wikicontent=content,wikitag=tags,status=1)
+										update_time=get_now_time(),wikititle=title,wikicontent=content,wikitag=tags,status=1)
 		elif flag == 'update':
 			id = request.POST.get('edit_id')
 			models.Wikistore.objects.filter(id=id).update(update_user=user_id,
-											update_time=get_now_time(), wikititle=title, wikisummary=summary,
+											update_time=get_now_time(), wikititle=title,
 											wikicontent=content, wikitag=tags, status=1)
 		elif flag == 'draft':
 			models.Wikistore.objects.create(create_time=get_now_time(), user=user_id, update_user=user_id,
-											update_time=get_now_time(), wikititle=title, wikisummary=summary,
+											update_time=get_now_time(), wikititle=title,
 											wikicontent=content, wikitag=tags, status=0)
 	except Exception as e:
 		ret['status']=False

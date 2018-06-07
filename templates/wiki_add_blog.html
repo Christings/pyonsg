@@ -11,8 +11,8 @@
 			<form class="form-horizontal" method="post" id="markdown_form">
 				<input name="title" id="title" type="text" class="form-control" placeholder="标题" />
 				<hr/>
-				<textarea name="summary" id="summary" class="form-control" style="resize: none;" rows="1" placeholder="摘要"></textarea>
-				<hr />
+				<!--<textarea name="summary" id="summary" class="form-control" style="resize: none;" rows="1" placeholder="摘要"></textarea>
+				<hr />-->
 				<textarea name="content"   data-provide="markdown" rows="18" id="editor"  ></textarea>
   				<hr />
   				<input name="wikitag" id="wikitag" type="text" class="form-control" placeholder="Tag1--Tag2--Tag3" />
@@ -66,7 +66,7 @@
     //save a draft
     $('#save_draft').click(function(){
         var title = $('#title').val()
-        var summary = $('#summary').val()
+//      var summary = $('#summary').val()
         var content = $('#editor').val()
         var wikitag = $('#wikitag').val()        
 		$.ajax({
@@ -97,7 +97,7 @@
     //add a wiki
 	$('#add_blog').click(function(){
         var title = $('#title').val()
-        var summary = $('#summary').val()
+//      var summary = $('#summary').val()
         var content = $('#editor').val()
         var wikitag = $('#wikitag').val()
         if (title != "" && summary != "" && content != "" && wikitag != ""){
@@ -108,7 +108,7 @@
 			traditional: true,
 			data: {
                 'title':title,
-                'summary':summary,
+//              'summary':summary,
                 'content':content,
                 'wikitag':wikitag,
                 'flag':'add',
