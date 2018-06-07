@@ -66,7 +66,7 @@
         var content = $('#editor').val()
         var wikitag = $('#wikitag').val()
         var edit_id = $('#edit_id').val()
-        if(title != "" && summary != "" && content != "" && wikitag != "" && edit_id != "" ){
+        if(title != "" && content != "" && wikitag != "" && edit_id != "" ){
 		$.ajax({
 			type: "POST",
 			url: "/save_blog",

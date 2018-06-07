@@ -100,7 +100,7 @@
 //      var summary = $('#summary').val()
         var content = $('#editor').val()
         var wikitag = $('#wikitag').val()
-        if (title != "" && summary != "" && content != "" && wikitag != ""){
+        if (title != ""  && content != "" && wikitag != ""){
             $.ajax({
 			type: "POST",
 			url: "/save_blog",
