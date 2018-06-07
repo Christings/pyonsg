@@ -104,20 +104,20 @@ def wiki_img(request):
 	if 14 in app_id_lst:
 		return render(request, 'wiki_img.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list",'img_lst':img_lst})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "wiki list",'img_lst':img_lst})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list"})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "wiki list"})
 
 #wiki detail
 def wiki_detail(request,task_id):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-	# user_id = 'zhangjingjun'
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
+	user_id = 'zhangjingjun'
 	try:
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()
@@ -128,13 +128,24 @@ def wiki_detail(request,task_id):
 			app_id_lst.append(appid.app_id_id)
 		wikidetail = models.Wikistore.objects.filter(id=task_id).values()
 		format_md = markdown2.markdown(wikidetail[0]['wikicontent'])
+
+		wikitags = models.Wikistore.objects.filter(id=task_id).values('wikitag')
+		taglist = list()
+		for item in wikitags:
+			if '--' in item['wikitag']:
+				tagsp = item['wikitag'].split('--')
+				taglist += tagsp
+			else:
+				taglist.append(item['wikitag'])
+		taglist = list(set(taglist))
+
 	except Exception as e:
 		print(e)
 		pass
 	return render(request, 'wiki_detail.html',
 				  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-				   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki', 'topic': 'blog', 'app_name': "wiki detail",
-				   'wikidetail':wikidetail,'format_md':format_md})
+				   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki', 'topic': 'wiki', 'app_name': "wiki detail",
+				   'wikidetail':wikidetail,'format_md':format_md,'taglist':taglist})
 
 #del wiki
 def del_wiki(request):
@@ -155,11 +166,11 @@ def del_wiki(request):
 
 #wiki list
 def wiki_list(request,page_id='1'):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	tag = request.GET.get('tag')
 	status = request.GET.get('status')
 	user_id = 'zhangjingjun'
@@ -202,11 +213,11 @@ def wiki_list(request,page_id='1'):
 	if 13 in app_id_lst:
 		return render(request, 'wiki_list.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list",'li':data,'page_str':page_str,'taglist':taglist})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "wiki list",'li':data,'page_str':page_str,'taglist':taglist})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "wiki list"})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "wiki list"})
 
 
 #save blog
@@ -276,11 +287,11 @@ def edit_blog(request):
 	if 12 in app_id_lst:
 		return render(request, 'wiki_edit_blog.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "edit blog",'edit_content':edit_content,'taglist':taglist})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "edit blog",'edit_content':edit_content,'taglist':taglist})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "edit blog"})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "edit blog"})
 
 #add blog
 def add_blog(request):
@@ -316,11 +327,11 @@ def add_blog(request):
 	if 12 in app_id_lst:
 		return render(request, 'wiki_add_blog.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "add blog",'taglist':taglist})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "add blog",'taglist':taglist})
 	else:
 		return render(request, 'no_limit.html',
 					  {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'blog', 'app_name': "add blog"})
+					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "add blog"})
 
 def get_now_time():
 	timeArray = time.localtime()

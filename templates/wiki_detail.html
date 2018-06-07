@@ -10,7 +10,10 @@
 		<div style="margin: 0px;padding: 0px; font-size: 14px;font-family: 'verdana, geneva, arial, helvetica, sans-serif';">
 			<h2 style="text-align: center;">{{wikidetail.0.wikititle}}</h1>
 			<div style="margin-top: 2px;margin-bottom: 20px;color: #707070;text-align: center;">
-				由&nbsp;<span>{{wikidetail.0.user}}</span>&nbsp;创建，{{wikidetail.0.update_user}} 最后一次修改&nbsp;<span>{{wikidetail.0.update_time}}</span>  
+				由&nbsp;<span>{{wikidetail.0.user}}</span>&nbsp;创建，{{wikidetail.0.update_user}} 最后一次修改&nbsp;<span>{{wikidetail.0.update_time}}</span><span style="color: #008CFF;">&nbsp;&nbsp;关于:</span>
+				{% for item in taglist%}
+				<span>{{item}}</span>
+				{% endfor %}
 			</div>
 			<div style="box-sizing: border-box;margin: 0;padding: 15px 20px 20px;line-height: 1.7;outline: none;word-wrap: break-word;">
 				{{format_md|safe}}
