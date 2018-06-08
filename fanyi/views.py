@@ -9,8 +9,21 @@ from utils import qqfy_t
 from utils import pagination
 import signal
 
-import json,requests,time,subprocess,urllib.parse,os,base64,M2Crypto
+import json,requests,time,subprocess,urllib.parse,os,base64
 # Create your views here.
+
+def auth(func):
+	def inner(request,*args,**kwargs):
+		login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+		try:
+			user_id = request.COOKIES.get('uid')
+			if not user_id:
+				return redirect(login_url)
+		except:
+			return redirect(login_url)
+		v = request.COOKIES.get('username111')
+		return func(request,*args,**kwargs)
+	return inner
 
 # admin
 def user_app_del(request):
@@ -671,14 +684,15 @@ def xml_req(request):
 		ret['status'] = False
 	return HttpResponse(json.dumps(ret))
 
-
+@auth
 def fy_req_xml(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	# login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+	# try:
+	# 	user_id = request.COOKIES['uid']
+	# except:
+	# 	return redirect(login_url)
 	#user_id = 'zhangjingjun'
+	user_id = request.COOKIES['uid']
 	try:
 		business_lst = models.Business.objects.all()
 		app_lst = models.Application.objects.all()
@@ -711,13 +725,13 @@ def home(request):
 	if (ptoken != ""):#login request callback
 		message = urllib.parse.unquote(ptoken)
 		# login with php
-		#child = subprocess.Popen(['/usr/bin/php', '/search/odin/daemon/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
-		#child.wait()
-		#user = child.stdout.read().decode('utf-8')
-		#login with phthon
-		strcode = base64.b64decode(message)
-		pkey = M2Crypto.RSA.load_pub_key('/search/odin/daemon/pyonsg/public.pem')
-		output = pkey.public_decrypt(strcode, M2Crypto.RSA.pkcs1_padding)
+		child = subprocess.Popen(['/usr/bin/php', '/search/odin/daemon/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
+		child.wait()
+		user = child.stdout.read().decode('utf-8')
+		# login with phthon
+		# strcode = base64.b64decode(message)
+		# pkey = M2Crypto.RSA.load_pub_key('/search/odin/daemon/pyonsg/public.pem')
+		# output = pkey.public_decrypt(strcode, M2Crypto.RSA.pkcs1_padding)
 		try:
 			json_data = json.loads(output.decode('utf-8'))
 			uid = json_data['uid']
@@ -755,3 +769,5 @@ def home(request):
 def get_now_time():
 	timeArray = time.localtime()
 	return time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+
+
