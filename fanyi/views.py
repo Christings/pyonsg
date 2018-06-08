@@ -9,7 +9,7 @@ from utils import qqfy_t
 from utils import pagination
 import signal
 
-import json,requests,time,subprocess,urllib.parse,os
+import json,requests,time,subprocess,urllib.parse,os,base64,M2Crypto
 # Create your views here.
 
 # admin
@@ -710,11 +710,14 @@ def home(request):
 
 	if (ptoken != ""):#login request callback
 		message = urllib.parse.unquote(ptoken)
-		child = subprocess.Popen(['/usr/bin/php', '/search/odin/daemon/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
-		child.wait()
-		user = child.stdout.read().decode('utf-8')
+		#child = subprocess.Popen(['/usr/bin/php', '/search/odin/daemon/pyonsg/rsa_decode.php', message], shell = False, stdout = subprocess.PIPE)
+		#child.wait()
+		#user = child.stdout.read().decode('utf-8')
+		strcode = base64.b64decode(message)
+		pkey = M2Crypto.RSA.load_pub_key('/search/odin/daemon/pyonsg/public.pem')
+		output = pkey.public_decrypt(strcode, M2Crypto.RSA.pkcs1_padding)
 		try:
-			json_data = json.loads(user)
+			json_data = json.loads(output)
 			uid = json_data['uid']
 			login_time = int(json_data['ts'])/1000 #s
 			userStatus = models.UserInfo.objects.filter(user_name=uid)
