@@ -7,14 +7,24 @@ from utils import resizeImg
 import json,time,markdown2,os
 # Create your views here.
 
+def auth(func):
+	def inner(request,*args,**kwargs):
+		login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+		try:
+			user_id = request.COOKIES.get('uid')
+			if not user_id:
+				return redirect(login_url)
+		except:
+			return redirect(login_url)
+		v = request.COOKIES.get('username111')
+		return func(request,*args,**kwargs)
+	return inner
+
 #del img
+@auth
 def del_img(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except Exception as e:
-		return redirect(login_url)
 	#user_id = 'zhangjingjun'
+	user_id = request.COOKIES.get('uid')
 	ret = {'status': True, 'error': None, 'data': None}
 	img_name = request.POST.get('img_name')
 	try:
@@ -22,25 +32,20 @@ def del_img(request):
 		# static_dir = 'E:/html/lianxi/img/new/upload'
 		user_dir = os.path.join(static_dir, user_id)
 		file = os.path.join(user_dir, img_name)
-		# print('file',file)
 		if os.path.isfile(file):
 			os.remove(file)
 			big_file = file.split('_rs.')[0]+'.'+file.split('_rs.')[1]
 			os.remove(big_file)
-		# print(big_file)
 	except Exception as e:
 		ret['status'] = False
 		ret['error'] = "Error:" + str(e)
 	return HttpResponse(json.dumps(ret))
 
 #upload_img
+@auth
 def upload_img(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	# user_id = 'zhangjingjun'
+	user_id = request.COOKIES.get('uid')
 	ret = {'status': True, 'error': None, 'data': None}
 	obj = request.FILES.get('file')
 	if obj:
@@ -75,13 +80,10 @@ def upload_img(request):
 	return HttpResponse(json.dumps(ret))
 
 #wiki img
+@auth
 def wiki_img(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	# user_id = 'zhangjingjun'
+	user_id = request.COOKIES.get('uid')
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
 	req_lst = layout.ReqInfo.objects.filter(user_fk_id=user_id)
@@ -111,13 +113,10 @@ def wiki_img(request):
 					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "wiki list"})
 
 #wiki detail
+@auth
 def wiki_detail(request,task_id):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	# user_id = 'zhangjingjun'
+	user_id = request.COOKIES.get('uid')
 	try:
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()
@@ -148,12 +147,8 @@ def wiki_detail(request,task_id):
 				   'wikidetail':wikidetail,'format_md':format_md,'taglist':taglist})
 
 #del wiki
+@auth
 def del_wiki(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except Exception as e:
-		return redirect(login_url)
 	#user_id = 'zhangjingjun'
 	ret = {'status': True, 'error': None, 'data': None}
 	req_id = request.POST.get('line_id')
@@ -165,12 +160,8 @@ def del_wiki(request):
 	return HttpResponse(json.dumps(ret))
 
 #wiki list
+@auth
 def wiki_list(request,page_id='1'):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	tag = request.GET.get('tag')
 	status = request.GET.get('status')
 	user_id = 'zhangjingjun'
@@ -221,13 +212,10 @@ def wiki_list(request,page_id='1'):
 
 
 #save blog
+@auth
 def save_blog(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	#user_id = 'zhangjingjun'
+	user_id = request.COOKIES.get('uid')
 	ret = {'status': True, 'error': None, 'data': None}
 	title = request.POST.get('title')
 	# summary=request.POST.get('summary')
@@ -253,13 +241,9 @@ def save_blog(request):
 	return HttpResponse(json.dumps(ret))
 
 #edit blog
+@auth
 def edit_blog(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-	# user_id = 'zhangjingjun'
+	user_id = request.COOKIES.get('uid')
 	edit_id = request.GET.get('id')
 	try:
 		business_lst = layout.Business.objects.all()
@@ -294,14 +278,10 @@ def edit_blog(request):
 					   'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'wiki','topic':'wiki', 'app_name': "edit blog"})
 
 #add blog
+@auth
 def add_blog(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	# user_id = 'zhangjingjun'
-
+	user_id = request.COOKIES.get('uid')
 	try:
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()

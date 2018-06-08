@@ -8,13 +8,22 @@ import time,json
 
 # Create your views here.
 
+def auth(func):
+	def inner(request,*args,**kwargs):
+		login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+		try:
+			user_id = request.COOKIES.get('uid')
+			if not user_id:
+				return redirect(login_url)
+		except:
+			return redirect(login_url)
+		v = request.COOKIES.get('username111')
+		return func(request,*args,**kwargs)
+	return inner
 
+@auth
 def qw_req(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	user_id = request.COOKIES.get('uid')
 	if request.method == 'GET':
 		business_lst = layout.Business.objects.all()
 		app_lst = layout.Application.objects.all()
@@ -27,13 +36,8 @@ def qw_req(request):
 		else:
 			return render(request, 'no_limit.html',{'business_lst': business_lst,'user_id':user_id,'user_app_lst':user_app_lst, 'app_lst': app_lst,'businame':'Webqw','app_name':"webqw请求调试"})
 
-
+@auth
 def qw_task_cancel(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	ret = {'status': True, 'errro': None, 'data': None}
 	try:
 		re_add_task_d = request.POST.get('task_id')
@@ -43,12 +47,9 @@ def qw_task_cancel(request):
 		ret['status'] = False
 	return HttpResponse(json.dumps(ret))
 
+@auth
 def qw_task_readd(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
+	user_id = request.COOKIES.get('uid')
 	ret = {'status': True, 'errro': None, 'data': None}
 	re_add_task_d = request.POST.get('task_id')
 	try:
@@ -72,28 +73,20 @@ def qw_task_readd(request):
 		ret['status'] = False
 	return HttpResponse(json.dumps(ret))
 
-
+@auth
 def qw_task_detail(request,task_id):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
 	#user_id="zhangjingjun"
+	user_id = request.COOKIES.get('uid')
 	task_detail = models.webqwqps.objects.filter(id=task_id)
 	business_lst = layout.Business.objects.all()
 	app_lst = layout.Application.objects.all()
 	user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
 	return render(request, 'qw_task_tail.html',{'business_lst': business_lst, 'app_lst': app_lst, 'user_id':user_id,'user_app_lst':user_app_lst,  'businame': 'Webqw', 'app_name': "webqw性能对比自动化",'topic':'任务详情','task_detail': task_detail})
 
+@auth
 def qw_automation_add(request):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-
 	# user_id = "zhangjingjun"
+	user_id = request.COOKIES.get('uid')
 	ret = {'status': True, 'errro': None, 'data': None}
 	test_svn = str_dos2unix(request.POST.get('qw_testsvn'))
 	base_svn = str_dos2unix(request.POST.get('qw_basesvn'))
@@ -135,15 +128,10 @@ def qw_automation_add(request):
 		ret['status'] = False
 	return HttpResponse(json.dumps(ret))
 
-
+@auth
 def qw_automation(request, page_id):
-	login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-	try:
-		user_id = request.COOKIES['uid']
-	except:
-		return redirect(login_url)
-
 	# user_id="zhangjingjun"
+	user_id = request.COOKIES.get('uid')
 	if page_id == '':
 		page_id=1
 	task_list = models.webqwqps.objects.order_by('id')[::-1]
