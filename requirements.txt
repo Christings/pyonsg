@@ -1,8 +1,12 @@
 certifi==2018.4.16
 chardet==3.0.4
 Django==2.0.6
+django-editor-md==0.2.150
 idna==2.6
+image==1.5.24
+M2Crypto==0.30.1
 markdown2==2.3.5
+Pillow==5.1.0
 PyMySQL==0.8.1
 pytz==2018.4
 requests==2.18.4
