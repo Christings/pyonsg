@@ -1,4 +1,6 @@
 from django.db import models
+from fanyi.models import UserInfo
+
 
 # Create your models here.
 class webqwqps(models.Model):
@@ -7,7 +9,7 @@ class webqwqps(models.Model):
     end_time = models.CharField(max_length=50, default="")
     user = models.CharField(max_length=50)
     status = models.IntegerField(default=0)
-    step =  models.IntegerField(default=-1)
+    step = models.IntegerField(default=-1)
     testitem = models.IntegerField(default=0)
     newdataip = models.CharField(max_length=500, default="")
     newdatauser = models.CharField(max_length=500, default="")
@@ -29,3 +31,14 @@ class webqwqps(models.Model):
     press_expid = models.IntegerField()
     press_rate = models.FloatField()
     testtag = models.CharField(max_length=500, default="")
+
+
+class ReqInfo_QW(models.Model):
+    host_ip = models.CharField(max_length=128)
+    reqtype = models.CharField(max_length=20)
+    exp_id = models.IntegerField(default=1000)
+    req_text = models.CharField(max_length=2000)
+    result = models.CharField(max_length=2000)
+    c_time = models.DateTimeField(auto_now=True)
+    user_fk = models.ForeignKey(to=UserInfo, to_field='user_name', on_delete=models.CASCADE)
+    # user_fk = models.ForeignKey(UserInfo,on_delete=models.CASCADE)
