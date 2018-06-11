@@ -7,5 +7,6 @@
     $ virtualenv pyonsg_env  # 创建虚拟环境
     $ source pyonsg_env/bin/activate # 激活虚拟环境(windows的路径和mac有所不同，找到activat激活即可)
     $ pip install -r requirements.txt
-
+## 3.依赖
+    
 
