@@ -46,14 +46,14 @@
                     <label class="col-sm-1 control-label">HOST</label>
                     <div class="col-sm-7">
                         <input type="text" class="form-control" id="inputHost" name="inputHost"
-                               value="http://ywhub01.fy.sjs.ted:12000">
+                               value="http://webqo01.web.djt.ted:8012/request">
                     </div>
-                    <div class="col-sm-3">
-                        <select id="reqtype" name="reqtype" class="form-control" style="cursor: pointer;">
-                            <option value="web" selected=""> web</option>
-                            <option value="wap"> wap</option>
-                        </select>
-                    </div>
+{#                    <div class="col-sm-3">#}
+{#                        <select id="reqtype" name="reqtype" class="form-control" style="cursor: pointer;">#}
+{#                            <option value="web" selected=""> web</option>#}
+{#                            <option value="wap"> wap</option>#}
+{#                        </select>#}
+{#                    </div>#}
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label">ExpId</label>
@@ -94,201 +94,187 @@
     </div>
 
 {% endblock %}
-{#{% block js %}#}
-{#    <script>#}
-{#        //save#}
-{#        $('#save_xml').click(function () {#}
-{#            var reqtext = $('#reqtext').val()#}
-{#            var inputHost = $('#inputHost').val()#}
-{#            var lan_sel = $('#lan_sel').val()#}
-{#            var inlineRadioOptions = $("input[name='inlineRadioOptions']:checked").val()#}
-{#            var result = $('#result').val()#}
-{#            var reqtpye = $('#reqtype').val()#}
-{#            if (reqtext != "" && inputHost != "") {#}
-{#                $.ajax({#}
-{#                    type: "POST",#}
-{#                    url: "/xml_req_save",#}
-{#                    async: true,#}
-{#                    traditional: true,#}
-{#                    data: {#}
-{#                        'inputHost': inputHost,#}
-{#                        'lan_sel': lan_sel,#}
-{#                        'inlineRadioOptions': inlineRadioOptions,#}
-{#                        'reqtext': reqtext,#}
-{#                        'result': result,#}
-{#                        'reqtype': reqtpye,#}
-{#                    },#}
+{% block js %}
+    <script>
+        //save
+        $('#save_xml').click(function () {
+            var reqtext = $('#reqtext').val()
+            var inputHost = $('#inputHost').val()
+            var lan_sel = $('#lan_sel').val()
+            var inlineRadioOptions = $("input[name='inlineRadioOptions']:checked").val()
+            var result = $('#result').val()
+            var reqtpye = $('#reqtype').val()
+            if (reqtext != "" && inputHost != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/xml_req_save",
+                    async: true,
+                    traditional: true,
+                    data: {
+                        'inputHost': inputHost,
+                        'lan_sel': lan_sel,
+                        'inlineRadioOptions': inlineRadioOptions,
+                        'reqtext': reqtext,
+                        'result': result,
+                        'reqtype': reqtpye,
+                    },
+                    dataType: 'JSON',
+                    success: function (obj) {
+                        if (obj.status) {
+                            location.reload();
+                        } else {
+                            $('#error_xml').text(obj.error);
+                        }
+                    },
+                    error: function () {
+
+                    },
+                });
+                $('#error_xml').text('');
+            } else {
+                if (reqtext == '') {
+                    $('#error_xml').text('Request不可为空。');
+                } else if (inputHost == '') {
+                    $('#error_xml').text('Host不可为空。');
+                } else {
+                    $('#error_xml').text('未知错误。');
+                }
+            }
+        })
+
+        //request
+        $('#request_xml').click(function () {
+            var reqtext = $('#reqtext').val()
+            var inputHost = $('#inputHost').val()
+            if (reqtext != "" && inputHost != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/qw_req_info",
+                    async: true,
+                    traditional: true,
+                    data: $('#form_xml').serialize(),
 {#                    dataType: 'JSON',#}
-{#                    success: function (obj) {#}
-{#                        if (obj.status) {#}
-{#                            location.reload();#}
-{#                        } else {#}
-{#                            $('#error_xml').text(obj.error);#}
-{#                        }#}
-{#                    },#}
-{#                    error: function () {#}
-{##}
-{#                    },#}
-{#                });#}
-{#                $('#error_xml').text('');#}
-{#            } else {#}
-{#                if (reqtext == '') {#}
-{#                    $('#error_xml').text('Request不可为空。');#}
-{#                } else if (inputHost == '') {#}
-{#                    $('#error_xml').text('Host不可为空。');#}
-{#                } else {#}
-{#                    $('#error_xml').text('未知错误。');#}
-{#                }#}
-{#            }#}
-{#        })#}
-{##}
-{#        //request#}
-{#        $('#request_xml').click(function () {#}
-{#            var reqtext = $('#reqtext').val()#}
-{#            var inputHost = $('#inputHost').val()#}
-{#            if (reqtext != "" && inputHost != "") {#}
-{#                $.ajax({#}
-{#                    type: "POST",#}
-{#                    url: "/xml_req",#}
-{#                    async: true,#}
-{#                    traditional: true,#}
-{#                    data: $('#form_xml').serialize(),#}
-{#                    dataType: 'JSON',#}
-{#                    success: function (obj) {#}
-{#                        if (obj.status) {#}
-{#                            if (obj.reqtype == 'alltrans_json') {#}
-{#                                resultSplit = (obj.transResult).split('|||');#}
-{#                                result_str = ""#}
-{#                                for (i = 0; i < resultSplit.length; i++) {#}
-{#                                    console.log(i)#}
-{#                                    result_str += (resultSplit[i] + '\r\n')#}
-{#                                    console.log(resultSplit[i])#}
-{#                                }#}
-{#                                debugInfo_str = "返回信息：\r\n" + obj.debugInfo + '\r\n' + "请求串:\r\n" + obj.requestStr#}
-{#                            } else {#}
-{#                                result_str = obj.transResult#}
-{##}
-{#                                debugInfo_str = "Debug信息：\r\n" + obj.debugInfo + '\r\n' + "请求串:\r\n" + obj.requestStr#}
-{#                            }#}
-{#                            $('#result').val(result_str)#}
-{#                            $('#debugInfo').val(debugInfo_str);#}
-{#                            $('#error_xml').text('');#}
-{#                        } else {#}
-{#                            $('#error_xml').text(obj.error);#}
-{#                        }#}
-{#                    },#}
-{#                    error: function () {#}
-{##}
-{#                    },#}
-{#                });#}
-{#                $('#error_xml').text('');#}
-{#            } else {#}
-{#                if (reqtext == '') {#}
-{#                    $('#error_xml').text('Request不可为空');#}
-{#                } else if (inputHost == '') {#}
-{#                    $('#error_xml').text('Host不可为空');#}
-{#                } else {#}
-{#                    $('#error_xml').text('未知错误');#}
-{#                }#}
-{#            }#}
-{#        })#}
-{##}
-{#        //table hover#}
-{#        $(function () {#}
-{#            function showBox(obj, box) {#}
-{#                var timer = null;#}
-{#                $(obj).on("mouseover", function (e) {#}
-{#                    clearTimeout(timer);#}
-{#                    var clientX = e.clientX;#}
-{#                    var clientY = e.clientY;#}
-{#                    var y = clientY + 20;#}
-{#                    var txt = $(this).text();#}
-{#                    timer = setTimeout(function () {#}
-{#                        $(box).css("left", clientX).css("top", y);#}
-{#                        if (txt == "") {#}
-{#                            $(box).hide();#}
-{#                        } else {#}
-{#                            $(box).show();#}
-{#                            $(box).html(txt);#}
-{#                        }#}
-{#                    }, 300);#}
-{#                });#}
-{#                $(obj).on("mouseout", function () {#}
-{#                    clearTimeout(timer);#}
-{#                    $(box).hide();#}
-{#                });#}
-{#            }#}
-{##}
-{#            showBox("#reqData > tbody td", "#showDiv");#}
-{#        });#}
-{##}
-{#        //del#}
-{#        $('.del_line').click(function () {#}
-{#            var line_id = $(this).parent().parent().attr('req_id');#}
-{#            $.ajax({#}
-{#                type: "POST",#}
-{#                url: "del_xml_line",#}
-{#                async: true,#}
-{#                data: {#}
-{#                    'line_id': line_id#}
-{#                },#}
-{#                dataType: 'JSON',#}
-{#                success: function (obj) {#}
-{#                    if (obj.status) {#}
-{#                        location.reload();#}
-{#                    } else {#}
-{#                        $('#error_xml').text(obj.error);#}
-{#                    }#}
-{#                },#}
-{#                error: function () {#}
-{##}
-{#                }#}
-{#            });#}
-{##}
-{#        })#}
-{##}
-{#        //getData#}
-{#        $('.get_data').dblclick(function () {#}
-{#            var linelst = $(this).children();#}
-{#            reqtype = $(linelst[1]).text();#}
-{#            hostip = "http://" + $(linelst[2]).text();#}
-{#            direction = $(linelst[3]).text();#}
-{#            reqtext = $(linelst[4]).text();#}
-{#            result = $(linelst[5]).text();#}
-{#            isfromzh = $(linelst[6]).text();#}
-{#            $('#inputHost').val(hostip);#}
-{#            $('#reqtype').val(reqtype);#}
-{#            $('#lan_sel').val(direction);#}
-{#            $('#reqtext').val(reqtext);#}
-{#            if (isfromzh == 'fromzh') {#}
-{#                $('#inlineRadio2').attr("checked", 'checked');#}
-{#                $('#inlineRadio1').attr("checked", false);#}
-{#            } else {#}
-{#                $('#inlineRadio1').attr("checked", 'checked');#}
-{#                $('#inlineRadio2').attr("checked", false);#}
-{#            }#}
-{#            $('#result').val(result);#}
-{#            $('#debugInfo').val('');#}
-{#        })#}
-{##}
-{#        $('#lan_filter').change(function () {#}
-{#            var sel_lang = $(this).val();#}
-{#            console.log(sel_lang)#}
-{#            if (sel_lang == 'all') {#}
-{#                $('#reqBody').children().each(function () {#}
-{#                    $(this).removeClass('hide');#}
-{#                })#}
-{#            } else {#}
-{#                $('#reqBody').children().each(function () {#}
-{#                    var line_lang = $(this).attr('lang_type');#}
-{#                    if (sel_lang != line_lang) {#}
-{#                        $(this).addClass('hide');#}
-{#                    } else {#}
-{#                        $(this).removeClass('hide');#}
-{#                    }#}
-{#                })#}
-{##}
-{#            }#}
-{#        })#}
-{#    </script>#}
-{#{% endblock %}#}
+                    success: function (data) {
+                        if (data) {
+                            $('#result').val(data)
+                        } else {
+                            $('#error_xml').text('error')
+
+                        }
+
+                    },
+                    error: function () {
+
+                    },
+                });
+                $('#error_xml').text('');
+            } else {
+                if (reqtext == '') {
+                    $('#error_xml').text('Request不可为空');
+                } else if (inputHost == '') {
+                    $('#error_xml').text('Host不可为空');
+                } else {
+                    $('#error_xml').text('未知错误');
+                }
+            }
+        })
+
+        //table hover
+        $(function () {
+            function showBox(obj, box) {
+                var timer = null;
+                $(obj).on("mouseover", function (e) {
+                    clearTimeout(timer);
+                    var clientX = e.clientX;
+                    var clientY = e.clientY;
+                    var y = clientY + 20;
+                    var txt = $(this).text();
+                    timer = setTimeout(function () {
+                        $(box).css("left", clientX).css("top", y);
+                        if (txt == "") {
+                            $(box).hide();
+                        } else {
+                            $(box).show();
+                            $(box).html(txt);
+                        }
+                    }, 300);
+                });
+                $(obj).on("mouseout", function () {
+                    clearTimeout(timer);
+                    $(box).hide();
+                });
+            }
+
+            showBox("#reqData > tbody td", "#showDiv");
+        });
+
+        //del
+        $('.del_line').click(function () {
+            var line_id = $(this).parent().parent().attr('req_id');
+            $.ajax({
+                type: "POST",
+                url: "del_xml_line",
+                async: true,
+                data: {
+                    'line_id': line_id
+                },
+                dataType: 'JSON',
+                success: function (obj) {
+                    if (obj.status) {
+                        location.reload();
+                    } else {
+                        $('#error_xml').text(obj.error);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+
+        })
+
+        //getData
+        $('.get_data').dblclick(function () {
+            var linelst = $(this).children();
+            reqtype = $(linelst[1]).text();
+            hostip = "http://" + $(linelst[2]).text();
+            direction = $(linelst[3]).text();
+            reqtext = $(linelst[4]).text();
+            result = $(linelst[5]).text();
+            isfromzh = $(linelst[6]).text();
+            $('#inputHost').val(hostip);
+            $('#reqtype').val(reqtype);
+            $('#lan_sel').val(direction);
+            $('#reqtext').val(reqtext);
+            if (isfromzh == 'fromzh') {
+                $('#inlineRadio2').attr("checked", 'checked');
+                $('#inlineRadio1').attr("checked", false);
+            } else {
+                $('#inlineRadio1').attr("checked", 'checked');
+                $('#inlineRadio2').attr("checked", false);
+            }
+            $('#result').val(result);
+            $('#debugInfo').val('');
+        })
+
+        $('#lan_filter').change(function () {
+            var sel_lang = $(this).val();
+            console.log(sel_lang)
+            if (sel_lang == 'all') {
+                $('#reqBody').children().each(function () {
+                    $(this).removeClass('hide');
+                })
+            } else {
+                $('#reqBody').children().each(function () {
+                    var line_lang = $(this).attr('lang_type');
+                    if (sel_lang != line_lang) {
+                        $(this).addClass('hide');
+                    } else {
+                        $(this).removeClass('hide');
+                    }
+                })
+
+            }
+        })
+    </script>
+{% endblock %}
