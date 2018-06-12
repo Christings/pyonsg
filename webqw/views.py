@@ -4,6 +4,10 @@ from webqw import models
 from fanyi import models as layout
 from utils import pagination
 import time, json
+from fanyi import requestData
+import requests
+from urllib.parse import urlencode
+import sys
 
 
 # Create your views here.
@@ -45,6 +49,53 @@ def qw_req(request):
                           {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                            'req_lst': req_lst,
                            'app_lst': app_lst, 'businame': 'Webqw', 'app_name': "webqw请求调试"})
+
+
+@auth
+def qw_req_info(request):
+    ret = {
+        'status': True,
+        'error': None,
+        'data': None
+    }
+    inputHost = request.POST.get('inputHost')
+    reqtype = request.POST.get('reqtype')
+    inputExpId = request.POST.get('inputExpId')
+    reqtext = request.POST.get('reqtext')
+    query = requestData.getUniNum(reqtext)
+    output = 'host={_host},reqtype={_reqtype},inputExpId={_inputExpId},query={_query}'.format(
+        _host=inputHost,
+        _reqtype=reqtype,
+        _inputExpId=inputExpId,
+        _query=reqtext
+    )
+
+    exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
+    exp_id = exp_id.encode('utf-16LE')
+
+    utf16_query = query.encode('utf-16LE', 'ignore')
+
+    params = urlencode({
+        'queryString': utf16_query,
+        'forceQuery': 1,
+        # 'exp_id': exp_id,
+    })
+    headers = {"Content-type": "application/x-www-form-urlencoded;charset=UTF-16LE"}
+
+    try:
+        resp = requests.post(inputHost, data=params, headers=headers)
+        status = resp.reason
+        if status != 'OK':
+            print(sys.stderr, query, status)
+            return ''
+        data = resp.text
+        print("data:", data)
+
+    except Exception as e:
+        print(e)
+        print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
+        print(sys.stderr, query)
+    return HttpResponse(data)
 
 
 @auth
