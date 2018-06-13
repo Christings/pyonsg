@@ -8,6 +8,7 @@ from fanyi import requestData
 import requests
 from urllib.parse import urlencode
 import sys
+from bs4 import BeautifulSoup
 
 
 # Create your views here.
@@ -61,14 +62,7 @@ def qw_req_info(request):
     inputHost = request.POST.get('inputHost')
     reqtype = request.POST.get('reqtype')
     inputExpId = request.POST.get('inputExpId')
-    reqtext = request.POST.get('reqtext')
-    query = requestData.getUniNum(reqtext)
-    output = 'host={_host},reqtype={_reqtype},inputExpId={_inputExpId},query={_query}'.format(
-        _host=inputHost,
-        _reqtype=reqtype,
-        _inputExpId=inputExpId,
-        _query=reqtext
-    )
+    query = request.POST.get('reqtext')
 
     exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
@@ -78,7 +72,7 @@ def qw_req_info(request):
     params = urlencode({
         'queryString': utf16_query,
         'forceQuery': 1,
-        # 'exp_id': exp_id,
+        'exp_id': exp_id,
     })
     headers = {"Content-type": "application/x-www-form-urlencoded;charset=UTF-16LE"}
 
@@ -87,15 +81,20 @@ def qw_req_info(request):
         status = resp.reason
         if status != 'OK':
             print(sys.stderr, query, status)
-            return ''
-        data = resp.text
+            ret['error'] = 'Error:未知的请求类型'
+            ret['status'] = False
+            return ret
+        data = BeautifulSoup(resp.text)
+        ret['data'] = data.prettify()
         print("data:", data)
 
     except Exception as e:
         print(e)
         print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
         print(sys.stderr, query)
-    return HttpResponse(data)
+        ret['error'] = "Error:" + str(e)
+        ret['status'] = False
+    return HttpResponse(json.dumps(ret))
 
 
 @auth
