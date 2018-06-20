@@ -98,6 +98,26 @@ def qw_req_info(request):
 
 
 @auth
+def qw_req_save(request):
+    ret = {
+        'status': True,
+        'error': None,
+        'data': None,
+    }
+    inputHost=request.POST.get('inputHost')
+    reqtype=request.POST.get('reqtype')
+    inputExpId=request.POST.get('inputExpId')
+    query = request.POST.get('reqtext')
+    result=reqtype.POst.get('result')
+
+    if result is None:
+        result=""
+
+
+
+
+
+@auth
 def qw_task_cancel(request):
     ret = {'status': True, 'errro': None, 'data': None}
     try:
