@@ -60,7 +60,7 @@ def qw_req_info(request):
         'data': None
     }
     inputHost = request.POST.get('inputHost')
-    reqtype = request.POST.get('reqtype')
+    # reqtype = request.POST.get('reqtype')
     inputExpId = request.POST.get('inputExpId')
     query = request.POST.get('reqtext')
 
@@ -99,22 +99,32 @@ def qw_req_info(request):
 
 @auth
 def qw_req_save(request):
+    user_id = "zhangjingjun"
     ret = {
         'status': True,
         'error': None,
         'data': None,
     }
-    inputHost=request.POST.get('inputHost')
-    reqtype=request.POST.get('reqtype')
-    inputExpId=request.POST.get('inputExpId')
+    inputHost = request.POST.get('inputHost')
+    # reqtype=request.POST.get('reqtype')
+    inputExpId = request.POST.get('inputExpId')
     query = request.POST.get('reqtext')
-    result=reqtype.POst.get('result')
+    result = request.POST.get('result')
 
     if result is None:
-        result=""
-
-
-
+        result = ""
+    try:
+        models.ReqInfo_QW.objects.create(host_ip=inputHost, exp_id=inputExpId, req_text=query, result=request,
+                                         user_fk_id=user_id)
+        ret['inputHost'] = inputHost
+        ret['inputExpId'] = inputExpId
+        ret['query'] = query
+        ret['result'] = result
+    except Exception as e:
+        ret['error'] = "Error:" + str(e)
+        print(e)
+        ret['status'] = False
+    return HttpResponse(json.dumps(ret))
 
 
 @auth

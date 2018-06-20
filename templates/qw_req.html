@@ -92,25 +92,21 @@
     <script>
         //save
         $('#save_xml').click(function () {
-            var reqtext = $('#reqtext').val()
             var inputHost = $('#inputHost').val()
-            var lan_sel = $('#lan_sel').val()
-            var inlineRadioOptions = $("input[name='inlineRadioOptions']:checked").val()
+            var inputExpId = $('#inputExpId').val()
+            var reqtext = $('#reqtext').val()
             var result = $('#result').val()
-            var reqtpye = $('#reqtype').val()
             if (reqtext != "" && inputHost != "") {
                 $.ajax({
                     type: "POST",
-                    url: "/xml_req_save",
+                    url: "/qw_req_save",
                     async: true,
                     traditional: true,
                     data: {
                         'inputHost': inputHost,
-                        'lan_sel': lan_sel,
-                        'inlineRadioOptions': inlineRadioOptions,
+                        'inputExpId': inputExpId,
                         'reqtext': reqtext,
                         'result': result,
-                        'reqtype': reqtpye,
                     },
                     dataType: 'JSON',
                     success: function (obj) {
