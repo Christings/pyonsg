@@ -12,7 +12,7 @@
                     <thead>
                     <tr>
                         <td style="">Time</td>
-                        <td style="">Type</td>
+                        {#                        <td style="">Type</td>#}
                         <td>Host</td>
                         <td>ExpId</td>
                         <td>Request</td>
@@ -24,7 +24,7 @@
                     {% for item in req_lst %}
                         <tr req_id="{{ item.id }}" class="get_data">
                             <td class="tabletd" style="">{{ item.c_time }}</td>
-                            <td style="">{{ item.reqtype }}</td>
+                            {#                            <td style="">{{ item.reqtype }}</td>#}
                             <td class="tabletd">{{ item.host_ip }}   </td>
                             <td class="tabletd">{{ item.exp_id }}   </td>
                             <td class="tabletd">{{ item.req_text }}</td>
@@ -203,7 +203,7 @@
             var line_id = $(this).parent().parent().attr('req_id');
             $.ajax({
                 type: "POST",
-                url: "del_xml_line",
+                url: "qw_req_del",
                 async: true,
                 data: {
                     'line_id': line_id
@@ -226,45 +226,15 @@
         //getData
         $('.get_data').dblclick(function () {
             var linelst = $(this).children();
-            reqtype = $(linelst[1]).text();
-            hostip = "http://" + $(linelst[2]).text();
-            direction = $(linelst[3]).text();
-            reqtext = $(linelst[4]).text();
-            result = $(linelst[5]).text();
-            isfromzh = $(linelst[6]).text();
+            hostip = "http://" + $(linelst[1]).text();
+            expid = $(linelst[2]).text();
+            reqtext = $(linelst[3]).text();
+            result = $(linelst[4]).text();
             $('#inputHost').val(hostip);
-            $('#reqtype').val(reqtype);
-            $('#lan_sel').val(direction);
+            $('#inputExpId').val(expid);
             $('#reqtext').val(reqtext);
-            if (isfromzh == 'fromzh') {
-                $('#inlineRadio2').attr("checked", 'checked');
-                $('#inlineRadio1').attr("checked", false);
-            } else {
-                $('#inlineRadio1').attr("checked", 'checked');
-                $('#inlineRadio2').attr("checked", false);
-            }
             $('#result').val(result);
-            $('#debugInfo').val('');
         })
 
-        $('#lan_filter').change(function () {
-            var sel_lang = $(this).val();
-            console.log(sel_lang)
-            if (sel_lang == 'all') {
-                $('#reqBody').children().each(function () {
-                    $(this).removeClass('hide');
-                })
-            } else {
-                $('#reqBody').children().each(function () {
-                    var line_lang = $(this).attr('lang_type');
-                    if (sel_lang != line_lang) {
-                        $(this).addClass('hide');
-                    } else {
-                        $(this).removeClass('hide');
-                    }
-                })
-
-            }
-        })
     </script>
 {% endblock %}

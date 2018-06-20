@@ -98,6 +98,19 @@ def qw_req_info(request):
 
 
 @auth
+def qw_req_del(request):
+    ret = {'status': True, 'error': None, 'data': None}
+    req_id = request.POST.get('line_id')
+    try:
+        models.ReqInfo_QW.objects.filter(id=req_id).delete()
+    except Exception as e:
+        ret['status'] = False
+        ret['error'] = "Error:" + str(e)
+        print(e)
+    return HttpResponse(json.dumps(ret))
+
+
+@auth
 def qw_req_save(request):
     user_id = "zhangjingjun"
     ret = {
