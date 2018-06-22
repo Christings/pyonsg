@@ -4,8 +4,8 @@ from webqw import models
 from fanyi import models as layout
 from utils import pagination
 import time, json
-from fanyi import requestData
 import requests
+from requests import Request
 from urllib.parse import urlencode
 import sys
 from bs4 import BeautifulSoup
@@ -74,27 +74,26 @@ def qw_req_info(request):
         'forceQuery': 1,
         'exp_id': exp_id,
     })
+
     headers = {"Content-type": "application/x-www-form-urlencoded;charset=UTF-16LE"}
-    print("1111111111inputHost:", inputHost, "inputExpId", inputExpId, "query", query)
 
-    # try:
-    resp = requests.post(inputHost, data=params, headers=headers)
-    status = resp.reason
-    if status != 'OK':
-        print(sys.stderr, query, status)
-        ret['error'] = 'Error:未知的请求类型'
+    try:
+        resp = requests.post(inputHost, data=params, headers=headers)
+        status = resp.reason
+        if status != 'OK':
+            print(sys.stderr, query, status)
+            ret['error'] = 'Error:未知的请求类型'
+            ret['status'] = False
+            return ret
+        data = BeautifulSoup(resp.text)
+        ret['data'] = data.prettify()
+
+    except Exception as e:
+        print(e)
+        print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
+        print(sys.stderr, query)
+        ret['error'] = "Error:" + str(e)
         ret['status'] = False
-        return ret
-    data = BeautifulSoup(resp.text)
-    ret['data'] = data.prettify()
-    print("data:", data)
-
-    # except Exception as e:
-    #     print(e)
-    #     print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
-    #     print(sys.stderr, query)
-    #     ret['error'] = "Error:" + str(e)
-    #     ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
 

@@ -12,11 +12,9 @@
                     <thead>
                     <tr>
                         <td style="">Time</td>
-                        {#                        <td style="">Type</td>#}
                         <td>Host</td>
                         <td>ExpId</td>
                         <td>Request</td>
-                        {#                        <td>Result</td>#}
                         <td style="">Ctrl</td>
                     </tr>
                     </thead>
@@ -24,11 +22,9 @@
                     {% for item in req_lst %}
                         <tr req_id="{{ item.id }}" class="get_data">
                             <td class="tabletd" style="">{{ item.c_time }}</td>
-                            {#                            <td style="">{{ item.reqtype }}</td>#}
-                            <td class="tabletd">{{ item.host_ip }}   </td>
-                            <td class="tabletd">{{ item.exp_id }}   </td>
+                            <td class="tabletd">{{ item.host_ip }}</td>
+                            <td class="tabletd">{{ item.exp_id }}</td>
                             <td class="tabletd">{{ item.req_text }}</td>
-                            {#                            <td class="tabletd">{{ item.result }}</td>#}
                             <td class="tabletd" style="">
                                 <button class="del_line">DEL</button>
                             </td>
@@ -95,7 +91,7 @@
             var inputHost = $('#inputHost').val()
             var inputExpId = $('#inputExpId').val()
             var reqtext = $('#reqtext').val()
-            {#            var result = $('#result').val()#}
+
             if (reqtext != "" && inputHost != "") {
                 $.ajax({
                     type: "POST",
