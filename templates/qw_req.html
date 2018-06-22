@@ -21,7 +21,7 @@
                     <tbody style="cursor: pointer;" id="reqBody">
                     {% for item in req_lst %}
                         <tr req_id="{{ item.id }}" class="get_data">
-                            <td class="tabletd" style="">{{ item.c_time }}</td>
+                            <td class="tabletd" style="">{{ item.c_time | date:"Y/m/d H:i" }}</td>
                             <td class="tabletd">{{ item.host_ip }}</td>
                             <td class="tabletd">{{ item.exp_id }}</td>
                             <td class="tabletd">{{ item.req_text }}</td>

@@ -53,7 +53,6 @@ def qw_req(request):
 
 
 def qw_req_info(request):
-    user_id = "zhangjingjun"
     ret = {
         'status': True,
         'error': None,
