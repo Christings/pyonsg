@@ -16,7 +16,7 @@
                         <td>Host</td>
                         <td>ExpId</td>
                         <td>Request</td>
-                        <td>Result</td>
+                        {#                        <td>Result</td>#}
                         <td style="">Ctrl</td>
                     </tr>
                     </thead>
@@ -28,7 +28,7 @@
                             <td class="tabletd">{{ item.host_ip }}   </td>
                             <td class="tabletd">{{ item.exp_id }}   </td>
                             <td class="tabletd">{{ item.req_text }}</td>
-                            <td class="tabletd">{{ item.result }}</td>
+                            {#                            <td class="tabletd">{{ item.result }}</td>#}
                             <td class="tabletd" style="">
                                 <button class="del_line">DEL</button>
                             </td>
@@ -95,7 +95,7 @@
             var inputHost = $('#inputHost').val()
             var inputExpId = $('#inputExpId').val()
             var reqtext = $('#reqtext').val()
-            var result = $('#result').val()
+            {#            var result = $('#result').val()#}
             if (reqtext != "" && inputHost != "") {
                 $.ajax({
                     type: "POST",
@@ -106,7 +106,6 @@
                         'inputHost': inputHost,
                         'inputExpId': inputExpId,
                         'reqtext': reqtext,
-                        'result': result,
                     },
                     dataType: 'JSON',
                     success: function (obj) {
@@ -226,14 +225,12 @@
         //getData
         $('.get_data').dblclick(function () {
             var linelst = $(this).children();
-            hostip = "http://" + $(linelst[1]).text();
+            hostip = $(linelst[1]).text();
             expid = $(linelst[2]).text();
             reqtext = $(linelst[3]).text();
-            result = $(linelst[4]).text();
             $('#inputHost').val(hostip);
             $('#inputExpId').val(expid);
             $('#reqtext').val(reqtext);
-            $('#result').val(result);
         })
 
     </script>

@@ -52,8 +52,8 @@ def qw_req(request):
                            'app_lst': app_lst, 'businame': 'Webqw', 'app_name': "webqw请求调试"})
 
 
-@auth
 def qw_req_info(request):
+    user_id = "zhangjingjun"
     ret = {
         'status': True,
         'error': None,
@@ -75,25 +75,26 @@ def qw_req_info(request):
         'exp_id': exp_id,
     })
     headers = {"Content-type": "application/x-www-form-urlencoded;charset=UTF-16LE"}
+    print("1111111111inputHost:", inputHost, "inputExpId", inputExpId, "query", query)
 
-    try:
-        resp = requests.post(inputHost, data=params, headers=headers)
-        status = resp.reason
-        if status != 'OK':
-            print(sys.stderr, query, status)
-            ret['error'] = 'Error:未知的请求类型'
-            ret['status'] = False
-            return ret
-        data = BeautifulSoup(resp.text)
-        ret['data'] = data.prettify()
-        print("data:", data)
-
-    except Exception as e:
-        print(e)
-        print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
-        print(sys.stderr, query)
-        ret['error'] = "Error:" + str(e)
+    # try:
+    resp = requests.post(inputHost, data=params, headers=headers)
+    status = resp.reason
+    if status != 'OK':
+        print(sys.stderr, query, status)
+        ret['error'] = 'Error:未知的请求类型'
         ret['status'] = False
+        return ret
+    data = BeautifulSoup(resp.text)
+    ret['data'] = data.prettify()
+    print("data:", data)
+
+    # except Exception as e:
+    #     print(e)
+    #     print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
+    #     print(sys.stderr, query)
+    #     ret['error'] = "Error:" + str(e)
+    #     ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
 
@@ -122,17 +123,14 @@ def qw_req_save(request):
     # reqtype=request.POST.get('reqtype')
     inputExpId = request.POST.get('inputExpId')
     query = request.POST.get('reqtext')
-    result = request.POST.get('result')
+    # result = request.POST.get('result')
 
-    if result is None:
-        result = ""
     try:
-        models.ReqInfo_QW.objects.create(host_ip=inputHost, exp_id=inputExpId, req_text=query, result=request,
+        models.ReqInfo_QW.objects.create(host_ip=inputHost, exp_id=inputExpId, req_text=query,
                                          user_fk_id=user_id)
         ret['inputHost'] = inputHost
         ret['inputExpId'] = inputExpId
         ret['query'] = query
-        ret['result'] = result
     except Exception as e:
         ret['error'] = "Error:" + str(e)
         print(e)
