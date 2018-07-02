@@ -12,14 +12,14 @@ from bs4 import BeautifulSoup
 # Create your views here.
 def auth(func):
     def inner(request, *args, **kwargs):
-        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        # try:
-        #     user_id = request.COOKIES.get('uid')
-        #     if not user_id:
-        #         return redirect(login_url)
-        # except:
-        #     return redirect(login_url)
-        # v = request.COOKIES.get('username111')
+        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        try:
+            user_id = request.COOKIES.get('uid')
+            if not user_id:
+                return redirect(login_url)
+        except:
+            return redirect(login_url)
+        v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
@@ -27,8 +27,8 @@ def auth(func):
 
 @auth
 def qo_req(request):
-    user_id = "zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     if request.method == 'GET':
         business_lst = layout.Business.objects.all()
         app_lst = layout.Application.objects.all()
@@ -93,7 +93,8 @@ def qo_req_info(request):
 
 @auth
 def qo_req_save(request):
-    user_id = "zhangjingjun"
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     ret = {
         'status': True,
         'error': None,
@@ -118,7 +119,7 @@ def qo_req_save(request):
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
-
+@auth
 def qo_req_del(request):
     ret = {
         'status': True,
