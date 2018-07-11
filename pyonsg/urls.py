@@ -18,10 +18,9 @@ from fanyi import views as trans
 from webqo import views as webqo
 from webqw import views as webqw
 from wiki import views as wiki
-from django.urls import path,re_path
+from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -64,6 +63,9 @@ urlpatterns = [
     re_path(r'^qo_task_detail_(?P<task_id>\d+).html$',webqo.qo_task_detail),
     re_path(r'^qo_task_readd$',webqo.qo_task_readd),
     re_path(r'^qo_task_cancel',webqo.qo_task_cancel),
+    re_path(r'^qo_req$', webqo.qo_req),
+    re_path(r'^qo_req_info$', webqo.qo_req_info),
+    re_path(r'^qo_req_save$', webqo.qo_req_save),
     re_path(r'^qo_req$',webqo.qo_req),
     re_path(r'^logout$',webqo.logout),
     # webqw
@@ -87,3 +89,4 @@ urlpatterns = [
     re_path(r'^del_wiki$',wiki.del_wiki),
     re_path(r'^del_img$',wiki.del_img),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

@@ -1,11 +1,252 @@
-{% extends 'layout.html' %}  {% block content %}
-<ol class="breadcrumb">
-	<li>{{businame}}</li>
-	<li class="active">{{app_name}}</li>
-	<li style="color: red;"><span id="error_xml"></span></li>
-</ol>
-<div class="row">
-	<h3>敬请期待</h3>
-</div>
+{% extends 'layout.html' %}
+{% block content %}
+    <ol class="breadcrumb">
+        <li>{{ businame }}</li>
+        <li class="active">{{ app_name }}</li>
+        <li style="color: red;"><span id="error_xml"></span></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-5">
+            <div style="position:absolute; height:700px; overflow:auto">
+                <table class="table table-hover" id="reqData">
+                    <thead>
+                    <tr>
+                        <td style="">Time</td>
+                        <td>Host</td>
+                        <td>ExpId</td>
+                        <td>query</td>
+                        <td>Query_from</td>
+                        <td style="">Ctrl</td>
+                    </tr>
+                    </thead>
+                    <tbody style="cursor: pointer;" id="reqBody">
+                    {% for item in req_lst %}
+                        <tr req_id="{{ item.id }}" class="get_data">
+                            <td class="tabletd" style="">{{ item.c_time | date:"Y/m/d H:i" }}</td>
+                            <td class="tabletd">{{ item.host_ip }}</td>
+                            <td class="tabletd">{{ item.exp_id }}</td>
+                            <td class="tabletd">{{ item.query }}</td>
+                            <td class="tabletd">{{ item.query_from }}</td>
+                            <td class="tabletd" style="">
+                                <button class="del_line">DEL</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
 
+                </table>
+            </div>
+            <div id="showDiv"></div>
+        </div>
+        <div class="col-md-7">
+            <form class="form-horizontal" action="" method="post" id="form_xml">
+
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">HOST</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="inputHost" name="inputHost"
+                               value="http://webqo01.web.djt.ted:8012/request">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="col-sm-3 form-control" id="inputExpId" name="inputExpId"
+                               placeholder="ExpId">
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label class="col-sm-1 control-label">Query_from</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="2" style="resize: none;" name="query_from"
+                                  id="query_from"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label class="col-sm-1 control-label">Query</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="2" style="resize: none;" name="query"
+                                  id="query"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-10">
+                        <div class="col-sm-offset-1 col-sm-5">
+                            <label class="btn btn-primary btn-lg btn-block" id="request_xml">开始调试</label>
+                        </div>
+                        <div class=" col-sm-5">
+                            <label class="btn btn-primary btn-lg btn-block" id="save_xml">保存请求</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Result</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" rows="24" style="resize: none;" id="result"
+                                  name="req_result">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+        //save
+        $('#save_xml').click(function () {
+            var inputHost = $('#inputHost').val()
+            var inputExpId = $('#inputExpId').val()
+            var query_from = $('#query_from').val()
+            var query = $('#query').val()
+
+
+            if (query != "" && inputHost != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/qo_req_save",
+                    async: true,
+                    traditional: true,
+                    data: {
+                        'inputHost': inputHost,
+                        'inputExpId': inputExpId,
+                        'query_from': query_from,
+                        'query': query,
+                    },
+                    dataType: 'JSON',
+                    success: function (obj) {
+                        if (obj.status) {
+                            location.reload();
+                        } else {
+                            $('#error_xml').text(obj.error);
+                        }
+                    },
+                    error: function () {
+
+                    },
+                });
+                $('#error_xml').text('');
+            } else {
+                if (query == '') {
+                    $('#error_xml').text('Request不可为空。');
+                } else if (inputHost == '') {
+                    $('#error_xml').text('Host不可为空。');
+                } else {
+                    $('#error_xml').text('未知错误。');
+                }
+            }
+
+
+        })
+
+        //request
+        $('#request_xml').click(function () {
+            var query = $('#query').val()
+            var query_from = $('#query_from').val()
+            var inputExpId = $('#inputExpId').val()
+            var inputHost = $('#inputHost').val()
+            if (query != "" && inputHost != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/qo_req_info",
+                    async: true,
+                    traditional: true,
+                    data: $('#form_xml').serialize(),
+                    dataType: 'JSON',
+                    success: function (ret) {
+                        if (ret.status) {
+                            $('#result').val(ret.data)
+                        } else {
+                            $('#error_xml').text(ret.error)
+
+                        }
+
+                    },
+                    error: function () {
+
+                    },
+                });
+                $('#error_xml').text('');
+            } else {
+                if (query == '') {
+                    $('#error_xml').text('Request不可为空');
+                } else if (inputHost == '') {
+                    $('#error_xml').text('Host不可为空');
+                } else {
+                    $('#error_xml').text('未知错误');
+                }
+            }
+        })
+
+        //table hover
+        $(function () {
+            function showBox(obj, box) {
+                var timer = null;
+                $(obj).on("mouseover", function (e) {
+                    clearTimeout(timer);
+                    var clientX = e.clientX;
+                    var clientY = e.clientY;
+                    var y = clientY + 20;
+                    var txt = $(this).text();
+                    timer = setTimeout(function () {
+                        $(box).css("left", clientX).css("top", y);
+                        if (txt == "") {
+                            $(box).hide();
+                        } else {
+                            $(box).show();
+                            $(box).html(txt);
+                        }
+                    }, 300);
+                });
+                $(obj).on("mouseout", function () {
+                    clearTimeout(timer);
+                    $(box).hide();
+                });
+            }
+
+            showBox("#reqData > tbody td", "#showDiv");
+        });
+
+        //del
+        $('.del_line').click(function () {
+            var line_id = $(this).parent().parent().attr('req_id');
+            $.ajax({
+                type: "POST",
+                url: "qo_req_del",
+                async: true,
+                data: {
+                    'line_id': line_id
+                },
+                dataType: 'JSON',
+                success: function (obj) {
+                    if (obj.status) {
+                        location.reload();
+                    } else {
+                        $('#error_xml').text(obj.error);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+
+        })
+
+        //getData
+        $('.get_data').dblclick(function () {
+            var linelst = $(this).children();
+            hostip = $(linelst[1]).text();
+            expid = $(linelst[2]).text();
+            query = $(linelst[3]).text();
+            query_from = $(linelst[4]).text();
+            $('#inputHost').val(hostip);
+            $('#inputExpId').val(expid);
+            $('#query').val(query);
+            $('#query_from').val(query_from);
+        })
+
+    </script>
 {% endblock %}
