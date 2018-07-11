@@ -102,15 +102,16 @@ body {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	table-layout: fixed;
 }
 
 table {
-	/**/
+	table-layout: fixed;
 	/*display: block;
 	height: 700px;
 	overflow-y: scroll;
 	overflow-x: none;*/
-	table-layout: fixed;
+	
 }
 
 @media (min-width: 768px) {
@@ -213,3 +214,21 @@ table {
 	z-index: 1053;
 }
 
+table.diff {font-family:Courier; border:medium;word-wrap:break-word;word-break:break-all;max-width:100%;}
+.diff_header {background-color:#e0e0e0;}
+td.diff_header {text-align:right;width: 30px;}
+.diff_next {background-color:#c0c0c0}
+.diff_add {background-color:#aaffaa}
+.diff_chg {background-color:#ffff77}
+.diff_sub {background-color:#ffaaaa}
+
+/*#retopbtn{
+    position:fixed;
+    bottom:10px;
+    right:10px;
+}
+#rebtmbtn{
+    position:fixed;
+    top:10px;
+    right:10px;
+}*/
