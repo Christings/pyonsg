@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 err
+diff.html
 start.sh
 std
 fanyi/__pycache__/
