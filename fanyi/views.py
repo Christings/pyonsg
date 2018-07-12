@@ -9,7 +9,7 @@ from utils import youdaofy_t
 from utils import qqfy_t
 from utils import pagination
 import signal,sys
-import M2Crypto
+# import M2Crypto
 
 import json,requests,time,subprocess,urllib.parse,os,base64
 # Create your views here.
@@ -693,7 +693,7 @@ def xml_req(request):
     lan_sel = request.POST.get('lan_sel')
     fromto = request.POST.get('inlineRadioOptions')
     reqtext = request.POST.get('reqtext')
-    print(reqtext)
+    # print(reqtext)
     query = requestData.getUniNum(reqtext)
     if fromto == 'tozh':
         fromlan = lan_sel
