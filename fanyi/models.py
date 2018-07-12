@@ -79,6 +79,10 @@ class FyDiff(models.Model):
     testtag = models.CharField(max_length=500, default="")
     finished = models.IntegerField(default=0)
     diffnum = models.IntegerField(default=0)
+    fromlan = models.CharField(max_length=20, default="")
+    tolan = models.CharField(max_length=20, default="")
+    isfromzh = models.CharField(max_length=10, default="")
+    lan_sel = models.CharField(max_length=10, default="")
 
 
 class DiffContent(models.Model):

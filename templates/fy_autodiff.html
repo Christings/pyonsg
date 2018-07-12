@@ -82,8 +82,79 @@
 			</div>
 			<div class="form-group">
 				<label class="col-sm-1 control-label">querypath</label>
-				<div class="col-sm-11">
+				<div class="col-sm-6">
 					<input type="text" class="form-control" id="query_path" name="query_path" placeholder="path(e.g.)/search/odin/daemon/fanyi/query(文件，绝对路径)">
+				</div>
+				<div class="col-sm-2">
+					<select id="lan_sel" name="lan_sel" class="form-control" style="cursor: pointer;">
+						<option value="en" selected=""> 英 </option>
+						<option value="fr"> 法 </option>
+						<option value="ru"> 俄 </option>
+						<option value="ko"> 韩 </option>
+						<option value="ja"> 日 </option>
+						<option value="ar"> 阿拉伯语 </option>
+						<option value="de"> 德语 </option>
+						<option value="pt"> 葡萄牙语 </option>
+						<option value="es"> 西班牙语 </option>
+						<option value="hu"> 匈牙利语 </option>
+						<option value="it"> 意大利语 </option>
+						<option value="pl"> 波兰语 </option>
+						<option value="cs"> 捷克语 </option>
+						<option value="nl"> 荷兰语 </option>
+						<option value="da"> 丹麦语 </option>
+						<option value="fi"> 芬兰语 </option>
+						<option value="tr"> 土耳其语 </option>
+						<option value="sv"> 瑞典语 </option>
+						<option value="et" style="display: none;"> 爱沙尼亚语 </option>
+						<option value="bg"  style="display: none;"> 保加利亚语 </option>						
+						<option value="bs-Latn" style="display: none;"> 波斯尼亚语 </option>
+						<option value="fa" style="display: none;"> 波斯语 </option>
+						<option value="mww" style="display: none;"> 白苗文 </option>																		
+						<option value="tlh-Qaak" style="display: none;"> 克林贡语(piqaD) </option>
+						<option value="tlh" style="display: none;"> 克林贡语 </option>
+						<option value="hr" style="display: none;"> 克罗地亚语 </option>
+						<option value="otq" style="display: none;"> 克雷塔罗奥托米语 </option>
+						<option value="ca" style="display: none;"> 加泰隆语 </option>						
+						<option value="ro" style="display: none;"> 罗马尼亚语 </option>
+						<option value="lv" style="display: none;"> 拉脱维亚语 </option>
+						<option value="ht" style="display: none;"> 海地克里奥尔语 </option>
+						<option value="lt" style="display: none;"> 立陶宛语 </option>						
+						<option value="ms" style="display: none;"> 马来语 </option>
+						<option value="mt" style="display: none;"> 马耳他语 </option>						
+						<option value="sl" style="display: none;"> 斯洛文尼亚语 </option>
+						<option value="th" style="display: none;"> 泰语 </option>						
+						<option value="sr-Latn" style="display: none;"> 塞尔维亚语(拉丁文) </option>
+						<option value="sr-Cyrl" style="display: none;"> 塞尔维亚语(西里尔文) </option>
+						<option value="sk" style="display: none;"> 斯洛伐克语 </option>
+						<option value="sw" style="display: none;"> 斯瓦希里语 </option>
+						<option value="af" style="display: none;"> 南非荷兰语 </option>
+						<option value="no" style="display: none;"> 挪威语 </option>						
+						<option value="uk" style="display: none;"> 乌克兰语 </option>
+						<option value="ur" style="display: none;"> 乌尔都语 </option>
+						<option value="el" style="display: none;"> 希腊语 </option>						
+						<option value="cy" style="display: none;"> 威尔士语 </option>
+						<option value="yua" style="display: none;"> 尤卡坦玛雅语 </option>
+						<option value="he" style="display: none;"> 希伯来语 </option>						
+						<option value="hi" style="display: none;"> 印地语 </option>
+						<option value="id" style="display: none;"> 印度尼西亚语 </option>
+						<option value="vi" style="display: none;"> 越南语 </option>						
+						<option value="yue" style="display: none;"> 粤语(繁体) </option>
+						<option value="fj" style="display: none;"> 斐济语 </option>
+						<option value="FIL" style="display: none;"> 菲律宾语 </option>
+						<option value="sm" style="display: none;"> 萨摩亚语 </option>
+						<option value="to" style="display: none;"> 汤加语 </option>
+						<option value="ty" style="display: none;"> 塔希提语 </option>
+						<option value="mg" style="display: none;"> 马尔加什语 </option>
+						<option value="bn" style="display: none;"> 孟加拉语 </option>
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<label class="radio-inline">
+	  					<input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="tozh" checked="checked"> TO-zh
+					</label>
+					<label class="radio-inline">
+		 	 			<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="fromzh"> FROM-zh
+					</label>
 				</div>
 			</div>
 			<div class="form-group">
@@ -109,7 +180,9 @@
 						<td style="width: 30px;">ID</td>
 						<td class="tabletd">CreateTime</td>
 						<td class="tabletd">StartTime</td>
-						<td style="width: 200px;">Testtag</td>
+						<td style="width: 60px;">From</td>
+						<td style="width: 60px;">To</td>
+						<td style="width: 100px;">Testtag</td>
 						<td style="width: 100px;">Status</td>						
 						<td style="width: 100px;">User</td>
 						<td style="display: none;">Ctrl</td>						
@@ -121,6 +194,8 @@
 						<td style="width: 20px;">{{ item.id }}</td>
 						<td class="tabletd">{{ item.create_time }}</td>
 						<td class="tabletd">{{ item.start_time }}</td>
+						<td class="tabletd" >{{ item.fromlan }}</td>
+						<td class="tabletd" >{{ item.tolan }}</td>
 						<td class="tabletd" >{{ item.testtag }}</td>
 						<td style="width: 100px;">
 							<a href="/fy_task_detail?tasknum={{ item.id }}">
@@ -164,6 +239,8 @@
 						<td style="display: none;">{{ item.queyruser }}</td>
 						<td style="display: none;">{{ item.querypassw }}</td>
 						<td style="display: none;">{{ item.querypath }}</td>
+						<td style="display: none;">{{ item.isfromzh }}</td>
+						<td style="display: none;">{{ item.lan_sel }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -315,23 +392,25 @@
 	//getData
 	$('.get_data').dblclick(function() {
 		var linelst = $(this).children();
-		testtag = $(linelst[3]).text();
-		hubsvn = $(linelst[6]).text();
-		sersvn = $(linelst[7]).text();
-		hubcfgip = $(linelst[8]).text();
-		hubcfguser = $(linelst[9]).text();
-		hubcfgpassw = $(linelst[10]).text();
-		hubcfgpath = $(linelst[11]).text();
-		hubdatapath = $(linelst[12]).text();
-		sercfgip = $(linelst[13]).text();
-		sercfguser = $(linelst[14]).text();
-		sercfgpassw = $(linelst[15]).text();
-		sercfgpath = $(linelst[16]).text();
-		serdatapath = $(linelst[17]).text();
-		queryip = $(linelst[18]).text();
-		queyruser = $(linelst[19]).text();
-		querypassw = $(linelst[20]).text();
-		querypath = $(linelst[21]).text();
+		testtag = $(linelst[5]).text();
+		hubsvn = $(linelst[8]).text();
+		sersvn = $(linelst[9]).text();
+		hubcfgip = $(linelst[10]).text();
+		hubcfguser = $(linelst[11]).text();
+		hubcfgpassw = $(linelst[12]).text();
+		hubcfgpath = $(linelst[13]).text();
+		hubdatapath = $(linelst[14]).text();
+		sercfgip = $(linelst[15]).text();
+		sercfguser = $(linelst[16]).text();
+		sercfgpassw = $(linelst[17]).text();
+		sercfgpath = $(linelst[18]).text();
+		serdatapath = $(linelst[19]).text();
+		queryip = $(linelst[20]).text();
+		queyruser = $(linelst[21]).text();
+		querypassw = $(linelst[22]).text();
+		querypath = $(linelst[23]).text();
+		isfromzh = $(linelst[24]).text();
+		lan_sel = $(linelst[25]).text();
 		
 		$('#hub_svn').val(hubsvn);
 		$('#server_svn').val(sersvn);
@@ -350,6 +429,14 @@
 		$('#query_pass').val(querypassw);
 		$('#query_path').val(querypath);
 		$('#testtag').val(testtag);
+		$('#lan_sel').val(lan_sel);
+		if(isfromzh == 'fromzh') {
+			$('#inlineRadio2').attr("checked", 'checked');
+			$('#inlineRadio1').attr("checked", false);
+		} else {
+			$('#inlineRadio1').attr("checked", 'checked');
+			$('#inlineRadio2').attr("checked", false);
+		}
 	})
 
 	$('#lan_filter').change(function() {

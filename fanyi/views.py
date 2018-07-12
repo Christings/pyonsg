@@ -9,7 +9,7 @@ from utils import youdaofy_t
 from utils import qqfy_t
 from utils import pagination
 import signal,sys
-import M2Crypto
+#import M2Crypto
 
 import json,requests,time,subprocess,urllib.parse,os,base64
 # Create your views here.
@@ -433,6 +433,14 @@ def fy_difftask_add(request):
     querypassw = str_dos2unix(request.POST.get('query_pass'))
     querypath = str_dos2unix(request.POST.get('query_path'))
     testtag = str_dos2unix(request.POST.get('testtag'))
+    lan_sel = request.POST.get('lan_sel')
+    fromto = request.POST.get('inlineRadioOptions')
+    if fromto == 'tozh':
+        fromlan = lan_sel
+        tolan = 'zh-CHS'
+    else:
+        fromlan = 'zh-CHS'
+        tolan = lan_sel
 
     try:
         models.FyDiff.objects.create(create_time=get_now_time(), user=user_id,hubsvn=hubsvn,
@@ -442,7 +450,7 @@ def fy_difftask_add(request):
                                        sercfgip=sercfgip, sercfguser=sercfguser, sercfgpassw=sercfgpassw,
                                        sercfgpath=sercfgpath, serdatapath=serdatapath, queryip=queryip,queyruser=queyruser,
                                        querypassw=querypassw,querypath=querypath,
-                                       testtag=testtag)
+                                       testtag=testtag,fromlan=fromlan,tolan=tolan,lan_sel=lan_sel, isfromzh=fromto)
     except Exception as e:
         print(e)
         ret['error'] = 'error:' + str(e)
@@ -650,10 +658,10 @@ def del_xml_line(request):
         ret['error'] = "Error:" + str(e)
     return HttpResponse(json.dumps(ret))
 
-@auth
+# @auth
 def xml_req_save(request):
-    #user_id = 'zhangjingjun'
-    user_id = request.COOKIES.get('uid')
+    user_id = 'zhangjingjun'
+    # user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     inputHost = request.POST.get('inputHost')
     lan_sel = request.POST.get('lan_sel')
