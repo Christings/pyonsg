@@ -9,7 +9,7 @@ from utils import youdaofy_t
 from utils import qqfy_t
 from utils import pagination
 import signal,sys
-# import M2Crypto
+import M2Crypto
 
 import json,requests,time,subprocess,urllib.parse,os,base64
 # Create your views here.
@@ -379,9 +379,10 @@ def nvidia_smi(request,task_id='',page_id=1):
                        'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看"})
 
 #fanyi diff
+@auth
 def fy_autodiff(request):
-    user_id = 'zhangjingjun'
-    #user_id = request.COOKIES.get('uid')
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     page = request.GET.get('page')
     current_page=1
     if page:
@@ -412,9 +413,10 @@ def fy_autodiff(request):
                       {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                        'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译效果对比"})
 
+@auth
 def fy_difftask_add(request):
-    user_id = "zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     hubsvn = str_dos2unix(request.POST.get('hub_svn'))
     sersvn = str_dos2unix(request.POST.get('server_svn'))
@@ -457,9 +459,10 @@ def fy_difftask_add(request):
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
+@auth
 def fy_task_detail(request):
-    user_id="zhangjingjun"
-    #user_id = request.COOKIES.get('uid')
+    # user_id="zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     task_id = request.GET.get('tasknum')
     task_page = request.GET.get('page')
     page = request.GET.get('page')
@@ -481,10 +484,10 @@ def fy_task_detail(request):
                   {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                    'businame': 'Translate', 'app_name': "翻译效果对比", 'topic': '任务详情', 'task_detail': task_detail,'li': data,'page_str': page_str})
 
-
+@auth
 def fy_task_readd(request):
-    #user_id = request.COOKIES.get('uid')
-    user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
     ret = {'status': True, 'errro': None, 'data': None}
     re_add_task_d = request.POST.get('task_id')
     try:
@@ -525,6 +528,7 @@ def str_dos2unix(input):
     return input.replace('\r\n', '\n').replace(' ', '')
 
 #bbk
+
 def fy_bbk_req(request):
     ret = {'status': True, 'errro': None, 'data': None}
     inputHost = request.POST.get('inputHost')
@@ -658,10 +662,10 @@ def del_xml_line(request):
         ret['error'] = "Error:" + str(e)
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def xml_req_save(request):
-    user_id = 'zhangjingjun'
-    # user_id = request.COOKIES.get('uid')
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     inputHost = request.POST.get('inputHost')
     lan_sel = request.POST.get('lan_sel')
@@ -743,8 +747,8 @@ def xml_req(request):
 
 # @auth
 def fy_req_xml(request):
-    user_id = 'zhangjingjun'
-    # user_id = request.COOKIES['uid']
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES['uid']
     try:
         business_lst = models.Business.objects.all()
         app_lst = models.Application.objects.all()
