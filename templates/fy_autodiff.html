@@ -310,7 +310,7 @@
 	$('#add_fy_task').click(function() {
 		var hub_svn = $('#hub_svn').val()
 		var server_svn = $('#server_svn').val()
-		if(hub_svn != "" || server_svn != "") {
+		if(hub_svn != "" && server_svn != "") {
 			$.ajax({
 				type: "POST",
 				url: "/fy_difftask_add",
@@ -332,7 +332,7 @@
 			});
 			$('#error_xml').text('');
 		} else {
-			$('#error_xml').text('svn不可都为空');
+			$('#error_xml').text('svn不可为空');
 		}
 	})
 

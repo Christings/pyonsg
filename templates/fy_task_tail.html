@@ -71,6 +71,14 @@
 			</span>
 		</div>
 		<div>
+		<table class="table">
+			<thead>
+				<tr>
+					<td style="">Base Diff Detail</td>
+					<td style="">Test Diff Detail</td>
+				</tr>
+			</thead>
+		</table>
 		{% autoescape off %}
 			{% for item in li %}
 		    	{% formatStr item.diff_content %}						
