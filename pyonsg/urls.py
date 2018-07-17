@@ -47,6 +47,11 @@ urlpatterns = [
     re_path(r'^fy_task_detail$',trans.fy_task_detail),
     re_path(r'^fy_task_readd$',trans.fy_task_readd),
     re_path(r'^fy_task_cancel$',trans.fy_task_cancel),
+    re_path(r'^fy_xmldiff$',trans.fy_xmldiff),
+    re_path(r'^fy_xmltask_add$',trans.fy_xmltask_add),
+    re_path(r'^fy_diff_detail$',trans.fy_diff_detail),
+    re_path(r'^fy_xml_readd$',trans.fy_xml_readd),
+    re_path(r'^fy_xml_cancel$',trans.fy_xml_cancel),
     # nvi_montor
     re_path(r'^nvidia_smi_(?P<task_id>\d*)_(?P<page_id>\d*)$',trans.nvidia_smi),
     re_path(r'^monitor_host_add$',trans.monitor_host_add),

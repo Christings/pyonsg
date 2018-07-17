@@ -224,7 +224,7 @@
         	<h4>Baidu</h4>
         </div>
         <div class="col-xs-6 col-sm-12 placeholder">
-        	<textarea class="form-control" rows="4" style="resize: none;" id="google_result" name="google_result"></textarea>
+        	<textarea class="form-control" rows="4" style="resize: none;" id="google_result" name="google_result" placeholder="接口付费，不再支持" ></textarea>
         	<h4>Google</h4>
         </div>
     </div>
@@ -335,17 +335,17 @@
 						}
 						$('#baidu_result').val(baidu_result)
 						//google
-						var gg_result_str=obj.gg_result;
-						var google_result="";
-						if (gg_result_str.indexOf("|||")>0){
-							var gg_result_split = gg_result_str.split('|||');
-							for(i=0;i<gg_result_split.length;i++){
-								google_result+=(gg_result_split[i]+'\r\n');
-							}
-						}else{
-							google_result=gg_result_str;
-						}
-						$('#google_result').val(google_result)
+//						var gg_result_str=obj.gg_result;
+//						var google_result="";
+//						if (gg_result_str.indexOf("|||")>0){
+//							var gg_result_split = gg_result_str.split('|||');
+//							for(i=0;i<gg_result_split.length;i++){
+//								google_result+=(gg_result_split[i]+'\r\n');
+//							}
+//						}else{
+//							google_result=gg_result_str;
+//						}
+//						$('#google_result').val(google_result)
 						
 						//qq
 						var qq_result_str=obj.qq_result;

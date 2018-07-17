@@ -1,0 +1,253 @@
+{% extends 'layout.html' %} {% load tag_tools %} {% block content %}
+<ol class="breadcrumb">
+	<li>{{businame}}</li>
+	<li>{{app_name}}</li>
+	<li class="active">{{topic}}</li>
+	<li style="color: red;"><span id="error_xml"></span></li>
+</ol>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="alert alert-info" role="alert">Task Detail</div>
+		<table class="table table-hover" id="reqData">
+			<thead>
+				<tr>
+					<td>ID</td>
+					<td>CreateTime</td>
+					<td>StartTime</td>
+					<td>From</td>
+					<td>To</td>
+					<td>Finished</td>
+					<td>DiffNum</td>
+					<td>DiffRate(%)</td>
+					<td>Testtag</td>
+					<td>Status</td>
+					<td>User</td>
+					<td>Ctrl</td>
+				</tr>
+			</thead>
+			<tbody id="reqBody">
+				<tr  class="get_data">
+					<td>{{ task_detail.0.id }}</td>
+					<td class="tabletd">{{task_detail.0.create_time}}</td>
+					<td class="tabletd">{{task_detail.0.start_time}}</td>
+					<td>{{task_detail.0.test_url}}</td>
+					<td>{{task_detail.0.base_url}}</td>
+					<td>{{task_detail.0.finished}}</td>
+					<td>{{task_detail.0.diffnum}}</td>
+					<td>{% getRate task_detail.0.finished task_detail.0.diffnum %}</td>
+					<td class="tabletd">{{task_detail.0.testtag}}</td>
+					<td class="tabletd">
+						{% ifequal task_detail.0.status 0 %}
+						<font color="gray">Waiting</font>{% endifequal %} {% ifequal task_detail.0.status 1 %}
+						<font color="cream">Ready</font>{% endifequal %} {% ifequal task_detail.0.status 2 %}
+						<font color="green">Running</font>{% endifequal %} {% ifequal task_detail.0.status 3 %}
+						<font color="red">Error</font>{% endifequal %} {% ifequal task_detail.0.status 4 %}
+						<font color="blue">Finished</font>{% endifequal %} {% ifequal task_detail.0.status 5 %}
+						<font color="orange">Canceled</font>{% endifequal %} {% ifequal task_detail.0.status 6 %}
+						<font color="orange">Canceling</font>{% endifequal %}
+					</td>
+					<td class="tabletd">{{task_detail.0.user}}</td>
+					<td class="tabletd">
+						<button class="del_line" id="restart_task" task_id="{{task_detail.0.id}}">Restart</button>
+						{% ifequal task_detail.0.status 2 %}
+						<button class="del_line" id="cancel_task" task_id="{{task_detail.0.id}}">Cancel</button>
+						{% endifequal %}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div id="showDiv"></div>
+	</div>
+	
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="alert alert-info" role="alert">Diff Detail
+			<!--<span class="badge" style="float: right;">
+				<a id='downdiff'style="color: aliceblue;cursor: pointer;" class="del_line">[下载全部Diff]</a>
+			</span>-->
+			<span class="badge" style="float: right;">
+				<a id='rebtmbtn' onclick='returnBottom()' style="color: aliceblue;cursor: pointer;" class="del_line">[去底部]</a>
+			</span>
+		</div>
+		<div>
+		<table class="table">
+			<thead>
+				<tr>
+					<td style="">Test Diff Detail</td>
+					<td style="">Base Diff Detail</td>
+				</tr>
+			</thead>
+		</table>
+		{% autoescape off %}
+			{% for item in li %}
+		    	{% formatStr item.diff_content %}						
+			{% endfor %}
+		{% endautoescape%}
+		</div>
+		<span class="badge" style="float: right;"><a id='retopbtn' onclick='returnTop()' style="color: aliceblue;cursor: pointer;" class="del_line">[回顶部]</a></span>
+		<nav aria-label="Page navigation">
+				<ul class="pagination">
+				     {{page_str}}
+				</ul>
+		</nav>
+	</div>
+	
+</div>
+		    
+<div class="row">
+	<div class="col-sm-12">
+		<div class="alert alert-info" role="alert">SVN Info</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<td style="">Test SVN</td>
+					<td style="">Base SVN</td>
+				</tr>
+			</thead>
+			<tbody id="reqBody">
+				<tr req_id="{{task_detail.id}}" class="get_data">
+					<td><pre>{{task_detail.0.hubsvn}}</pre></td>
+					<td><pre>{{task_detail.0.sersvn}}</pre></td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="alert alert-info" role="alert">Log Info</div>
+		<table class="table">
+			<tr req_id="{{task_detail.id}}" class="get_data">
+				<td style="width: 20px;"><pre>{{task_detail.0.errorlog}}</pre></td>
+			</tr>
+
+		</table>
+	</div>
+</div>
+
+{% endblock %} {% block js %}
+<script>
+	//cancel task
+	$('#cancel_task').click(function(){
+		var task_id = $(this).attr('task_id');
+		$.ajax({
+				type: "POST",
+				url: "/fy_xml_cancel",
+				async: true,
+				traditional: true,
+				data: {
+					'task_id':task_id,
+				},
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {						
+						location.reload();
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+	})
+	
+	//restart task
+	$('#restart_task').click(function(){
+		var task_id = $(this).attr('task_id');
+		$.ajax({
+				type: "POST",
+				url: "/fy_xml_readd",
+				async: true,
+				traditional: true,
+				data: {
+					'task_id':task_id,
+				},
+				dataType: 'JSON',
+				success: function(obj) {
+					if(obj.status) {
+						//location.reload();
+						window.location.href='/fy_autodiff';
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+	})
+	
+		//table hover
+	$(function() {
+		function showBox(obj, box) {
+			var timer = null;
+			$(obj).on("mouseover", function(e) {
+				clearTimeout(timer);
+				var clientX = e.clientX;
+				var clientY = e.clientY;
+				var y = clientY + 20;
+				var txt = $(this).text();
+				timer = setTimeout(function() {
+					$(box).css("left", clientX).css("top", y);
+					if(txt == "") {
+						$(box).hide();
+					} else {
+						$(box).show();
+						$(box).html(txt);
+					}
+				}, 300);
+			});
+			$(obj).on("mouseout", function() {
+				clearTimeout(timer);
+				$(box).hide();
+			});
+		}
+		showBox("#reqData > tbody td", "#showDiv");
+	});
+	
+function showReposBtn(){
+    var clientHeight = $(window).height();
+    var scrollTop = $(document).scrollTop();
+    var maxScroll = $(document).height() - clientHeight;
+    //滚动距离超过可视一屏的距离时显示返回顶部按钮
+    if( scrollTop > clientHeight ){
+        $('#retopbtn').show();
+    }else{
+        $('#retopbtn').hide();
+    }
+    //滚动距离到达最底部时隐藏返回底部按钮
+    if( scrollTop >= maxScroll ){
+        $('#rebtmbtn').hide();
+    }else{
+        $('#rebtmbtn').show();
+    }
+}
+
+window.onload = function(){
+    //获取文档对象
+    $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $("html") : $("body")) : $("html,body");
+    //显示按钮
+    showReposBtn();
+}
+
+window.onscroll = function(){
+    //滚动时调整按钮显隐
+    showReposBtn();
+}
+
+//返回顶部
+function returnTop(){
+    $body.animate({scrollTop: 0},400);
+}
+
+//返回底部
+function returnBottom(){
+    $body.animate({scrollTop: $(document).height()},400);
+}
+</script>
+{% endblock %}
