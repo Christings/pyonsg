@@ -99,7 +99,7 @@ class FyXmlDiff(models.Model):
     base_url = models.CharField(max_length=500, default="")
     user = models.CharField(max_length=50)
     queryip = models.CharField(max_length=500, default="")
-    queyruser = models.CharField(max_length=500, default="")
+    queryuser = models.CharField(max_length=500, default="")
     querypassw = models.CharField(max_length=500, default="")
     querypath = models.CharField(max_length=500, default="")
     status = models.IntegerField(default=0)
@@ -113,5 +113,5 @@ class XmlDiffContent(models.Model):
     create_time = models.CharField(max_length=50, default="")
     user = models.CharField(max_length=50)
     diff_content = models.TextField(default="")
-    diff_task = models.ForeignKey(to="FyDiff", to_field='id', on_delete=models.CASCADE)
+    diff_task = models.ForeignKey(to="FyXmlDiff", to_field='id', on_delete=models.CASCADE)
 
