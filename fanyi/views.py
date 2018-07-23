@@ -495,7 +495,7 @@ def fy_cancel_xml(request):
         res = models.FyXmlDiff.objects.filter(id=re_add_task_d).first()
         models.FyXmlDiff.objects.filter(id=re_add_task_d).update(status=6)
         os.kill(int(res.runningPID), signal.SIGTERM)
-        models.FyMonitor.objects.filter(id=re_add_task_d).update(status=5, end_time=get_now_time())
+        models.FyXmlDiff.objects.filter(id=re_add_task_d).update(status=5, end_time=get_now_time())
     except Exception as e:
         ret['error'] = 'error:' + str(e)
         ret['status'] = False
