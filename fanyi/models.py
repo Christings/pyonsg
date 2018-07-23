@@ -92,7 +92,6 @@ class DiffContent(models.Model):
     diff_task = models.ForeignKey(to="FyDiff", to_field='id', on_delete=models.CASCADE)
 
 class FyXmlDiff(models.Model):
-    create_time = models.CharField(max_length=50, default="")
     start_time = models.CharField(max_length=50, default="")
     end_time = models.CharField(max_length=50, default="")
     test_url = models.CharField(max_length=500, default="")
@@ -107,6 +106,7 @@ class FyXmlDiff(models.Model):
     testtag = models.CharField(max_length=500, default="")
     finished = models.IntegerField(default=0)
     diffnum = models.IntegerField(default=0)
+    runningPID = models.CharField(max_length=20, default="")
 
 
 class XmlDiffContent(models.Model):

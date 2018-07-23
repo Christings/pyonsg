@@ -72,13 +72,13 @@
 					{% for item in li %}
 					<tr class="get_data" >
 						<td style="width: 20px;">{{ item.id }}</td>
-						<td class="tabletd">{{ item.create_time }}</td>
 						<td class="tabletd">{{ item.start_time }}</td>
+						<td class="tabletd">{{ item.end_time }}</td>
 						<td class="tabletd" >{{ item.test_url }}</td>
 						<td class="tabletd" >{{ item.base_url }}</td>
 						<td class="tabletd" >{{ item.testtag }}</td>
 						<td style="width: 100px;">
-							<a href="/fy_diff_detail?tasknum={{ item.id }}">
+							<a href="/fy_xmldetail?tasknum={{ item.id }}">
 								{% ifequal item.status 0 %}
 								<font color="gray">Waiting</font>
 								{% endifequal %} 
@@ -104,7 +104,7 @@
 						</td>
 						<td style="width: 100px;">{{ item.user }}</td>						
 						<td style="display: none;">{{ item.queryip }}</td>
-						<td style="display: none;">{{ item.queyruser }}</td>
+						<td style="display: none;">{{ item.queryuser }}</td>
 						<td style="display: none;">{{ item.querypassw }}</td>
 						<td style="display: none;">{{ item.querypath }}</td>
 					</tr>
@@ -217,14 +217,14 @@
 		base_url = $(linelst[4]).text();
 		testtag = $(linelst[5]).text();
 		queryip = $(linelst[8]).text();
-		queyruser = $(linelst[9]).text();
+		queryuser = $(linelst[9]).text();
 		querypassw = $(linelst[10]).text();
 		querypath = $(linelst[11]).text();
 
 		$('#test_url').val(test_url);
 		$('#base_url').val(base_url);
 		$('#query_ip').val(queryip);
-		$('#query_user').val(queyruser);
+		$('#query_user').val(queryuser);
 		$('#query_pass').val(querypassw);
 		$('#query_path').val(querypath);
 		$('#testtag').val(testtag);

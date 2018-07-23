@@ -12,10 +12,10 @@
 			<thead>
 				<tr>
 					<td>ID</td>
-					<td>CreateTime</td>
 					<td>StartTime</td>
-					<td>From</td>
-					<td>To</td>
+					<td>EndTime</td>
+					<td>test_url</td>
+					<td>base_url</td>
 					<td>Finished</td>
 					<td>DiffNum</td>
 					<td>DiffRate(%)</td>
@@ -28,8 +28,8 @@
 			<tbody id="reqBody">
 				<tr  class="get_data">
 					<td>{{ task_detail.0.id }}</td>
-					<td class="tabletd">{{task_detail.0.create_time}}</td>
 					<td class="tabletd">{{task_detail.0.start_time}}</td>
+					<td class="tabletd">{{task_detail.0.end_time}}</td>
 					<td>{{task_detail.0.test_url}}</td>
 					<td>{{task_detail.0.base_url}}</td>
 					<td>{{task_detail.0.finished}}</td>
@@ -48,7 +48,7 @@
 					</td>
 					<td class="tabletd">{{task_detail.0.user}}</td>
 					<td class="tabletd">
-						<button class="del_line" id="restart_task" task_id="{{task_detail.0.id}}">Restart</button>
+						<!--<button class="del_line" id="restart_task" task_id="{{task_detail.0.id}}">Restart</button>-->
 						{% ifequal task_detail.0.status 2 %}
 						<button class="del_line" id="cancel_task" task_id="{{task_detail.0.id}}">Cancel</button>
 						{% endifequal %}
@@ -94,28 +94,6 @@
 	</div>
 	
 </div>
-		    
-<div class="row">
-	<div class="col-sm-12">
-		<div class="alert alert-info" role="alert">SVN Info</div>
-		<table class="table">
-			<thead>
-				<tr>
-					<td style="">Test SVN</td>
-					<td style="">Base SVN</td>
-				</tr>
-			</thead>
-			<tbody id="reqBody">
-				<tr req_id="{{task_detail.id}}" class="get_data">
-					<td><pre>{{task_detail.0.hubsvn}}</pre></td>
-					<td><pre>{{task_detail.0.sersvn}}</pre></td>
-				</tr>
-			</tbody>
-
-		</table>
-	</div>
-</div>
-
 
 <div class="row">
 	<div class="col-sm-12">
@@ -136,7 +114,7 @@
 		var task_id = $(this).attr('task_id');
 		$.ajax({
 				type: "POST",
-				url: "/fy_xml_cancel",
+				url: "/fy_cancelxml",
 				async: true,
 				traditional: true,
 				data: {

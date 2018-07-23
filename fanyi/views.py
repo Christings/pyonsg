@@ -379,10 +379,10 @@ def nvidia_smi(request,task_id='',page_id=1):
                        'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看"})
 
 #fanyi diff unparse xml
-# @auth
+@auth
 def fy_xmldiff(request):
-    user_id = 'zhangjingjun'
-    # user_id = request.COOKIES.get('uid')
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     page = request.GET.get('page')
     current_page=1
     if page:
@@ -413,37 +413,35 @@ def fy_xmldiff(request):
                       {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                        'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译效果对比"})
 
-# @auth
+@auth
 def fy_xmltask_add(request):
-    user_id = "zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     test_url = str_dos2unix(request.POST.get('test_url'))
     base_url = str_dos2unix(request.POST.get('base_url'))
     queryip = str_dos2unix(request.POST.get('query_ip'))
-    queyruser = str_dos2unix(request.POST.get('query_user'))
+    queryuser = str_dos2unix(request.POST.get('query_user'))
     querypassw = str_dos2unix(request.POST.get('query_pass'))
     querypath = str_dos2unix(request.POST.get('query_path'))
     testtag = str_dos2unix(request.POST.get('testtag'))
 
     try:
-        a = models.FyXmlDiff.objects.create(create_time=get_now_time(), user=user_id,test_url=test_url,
+        a = models.FyXmlDiff.objects.create(start_time=get_now_time(), user=user_id,test_url=test_url,
                                      base_url=base_url, queryip=queryip,
-                                     queyruser=queyruser,
+                                     queryuser=queryuser,
                                      querypassw=querypassw, querypath=querypath,
                                      testtag=testtag)
-        print(a.id)
         os.system('/usr/local/bin/python2 /search/odin/daemon/fanyi/sg_auto_server/lib/getdiff_byxml.py %d &' % a.id)
     except Exception as e:
-        print(e)
         ret['error'] = 'error:' + str(e)
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def fy_diff_detail(request):
-    user_id="zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id="zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     task_id = request.GET.get('tasknum')
     task_page = request.GET.get('page')
     page = request.GET.get('page')
@@ -455,20 +453,20 @@ def fy_diff_detail(request):
     task_diff_detail = models.XmlDiffContent.objects.filter(diff_task_id=task_id).order_by('id')[::-1]
     page_obj = pagination.Page(current_page, len(task_diff_detail), 4, 9)
     data = task_diff_detail[page_obj.start:page_obj.end]
-    page_str = page_obj.page_str("/fy_task_detail?tasknum="+task_id+'&page=')
+    page_str = page_obj.page_str("/fy_xmldetail?tasknum="+task_id+'&page=')
 
     business_lst = models.Business.objects.all()
     app_lst = models.Application.objects.all()
     user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
 
-    return render(request, 'fy_task_tail.html',
+    return render(request, 'fy_diff_detail.html',
                   {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                    'businame': 'Translate', 'app_name': "翻译效果对比", 'topic': '任务详情', 'task_detail': task_detail,'li': data,'page_str': page_str})
 
-# @auth
+@auth
 def fy_xml_readd(request):
-    # user_id = request.COOKIES.get('uid')
-    user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
     ret = {'status': True, 'errro': None, 'data': None}
     re_add_task_d = request.POST.get('task_id')
     try:
@@ -490,11 +488,14 @@ def fy_xml_readd(request):
     return HttpResponse(json.dumps(ret))
 
 
-def fy_xml_cancel(request):
+def fy_cancel_xml(request):
     ret = {'status': True, 'errro': None, 'data': None}
     try:
         re_add_task_d = request.POST.get('task_id')
+        res = models.FyXmlDiff.objects.filter(id=re_add_task_d).first()
         models.FyXmlDiff.objects.filter(id=re_add_task_d).update(status=6)
+        os.kill(int(res.runningPID), signal.SIGTERM)
+        models.FyMonitor.objects.filter(id=re_add_task_d).update(status=5, end_time=get_now_time())
     except Exception as e:
         ret['error'] = 'error:' + str(e)
         ret['status'] = False
@@ -502,10 +503,10 @@ def fy_xml_cancel(request):
 
 
 #fanyi diff
-# @auth
+@auth
 def fy_autodiff(request):
-    user_id = 'zhangjingjun'
-    # user_id = request.COOKIES.get('uid')
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     page = request.GET.get('page')
     current_page=1
     if page:
@@ -536,7 +537,7 @@ def fy_autodiff(request):
                       {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                        'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译效果对比"})
 
-# @auth
+@auth
 def fy_difftask_add(request):
     user_id = "zhangjingjun"
     # user_id = request.COOKIES.get('uid')
@@ -582,10 +583,10 @@ def fy_difftask_add(request):
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def fy_task_detail(request):
-    user_id="zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id="zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     task_id = request.GET.get('tasknum')
     task_page = request.GET.get('page')
     page = request.GET.get('page')
@@ -607,10 +608,10 @@ def fy_task_detail(request):
                   {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                    'businame': 'Translate', 'app_name': "翻译效果对比", 'topic': '任务详情', 'task_detail': task_detail,'li': data,'page_str': page_str})
 
-# @auth
+@auth
 def fy_task_readd(request):
-    # user_id = request.COOKIES.get('uid')
-    user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
     ret = {'status': True, 'errro': None, 'data': None}
     re_add_task_d = request.POST.get('task_id')
     try:
@@ -735,7 +736,7 @@ def fy_bbk_req(request):
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def fy_bbk(request):
     user_id = 'zhangjingjun'
     # user_id = request.COOKIES.get('uid')
@@ -868,7 +869,7 @@ def xml_req(request):
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def fy_req_xml(request):
     # user_id = 'zhangjingjun'
     user_id = request.COOKIES['uid']
@@ -945,6 +946,27 @@ def home(request):
         return redirect(login_url)
     return response
 
+
+
+def test_xml(request):
+    import random
+    temp_num = random.randint(1,10)
+    query_str = request.GET.get('key')
+    result_str=query_str+str(temp_num)
+    xml_str = """
+    <data>
+    <request name="Sogou">
+        <rank>1</rank>
+        <year>2008</year>
+        <qtext>hello world</qtext>
+    </request>
+    <result name="Sogou">
+        <rank>1</rank>
+        <year>2008</year>
+        <qresult>"""+result_str+"""</qresult>
+    </result>
+    </data>"""
+    return HttpResponse(xml_str)
 
 
 
