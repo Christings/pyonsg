@@ -16,14 +16,14 @@ import difflib
 
 def auth(func):
     def inner(request, *args, **kwargs):
-        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        # try:
-        #     user_id = request.COOKIES.get('uid')
-        #     if not user_id:
-        #         return redirect(login_url)
-        # except:
-        #     return redirect(login_url)
-        # v = request.COOKIES.get('username111')
+        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        try:
+            user_id = request.COOKIES.get('uid')
+            if not user_id:
+                return redirect(login_url)
+        except:
+            return redirect(login_url)
+        v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
@@ -31,8 +31,8 @@ def auth(func):
 
 @auth
 def qw_req(request):
-    user_id = "zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     if request.method == 'GET':
         business_lst = layout.Business.objects.all()
         app_lst = layout.Application.objects.all()
@@ -173,8 +173,8 @@ def qw_req_del(request):
 
 @auth
 def qw_req_save(request):
-    # user_id = request.COOKIES.get('uid')
-    user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
     ret = {
         'status': True,
         'error': None,
