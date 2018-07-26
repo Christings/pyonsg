@@ -80,8 +80,10 @@
             <div id="showDiv"></div>
         </div>
         <div class="col-md-8">
-            <div id="result" style="width: 100%"></div>
-
+            <textarea class="form-control" rows="30" style="resize: none;" id="result" name="req_result"
+                      placeholder="结果">
+            </textarea>
+            <div id="result_diff"></div>
         </div>
     </div>
 
@@ -148,12 +150,8 @@
                     dataType: 'JSON',
                     success: function (ret) {
                         if (ret.status) {
-                            $('#result').css({
-                                'border-style': 'solid',
-                                'height': 'auto',
-                                'border-color': 'grey',
-                                'border-width': '0.5px'
-                            })
+                            $('#result_diff').hide()
+                            $('#result').show()
                             $('#result').text(ret.data)
                         } else {
                             $('#error_xml').text(ret.error)
@@ -202,8 +200,9 @@
                     dataType: 'JSON',
                     success: function (ret) {
                         if (ret.status) {
-                            {#                            $('#result_diff').val(ret.data)#}
-                            $('#result').html(ret.data)
+                            $('#result').hide()
+                            $('#result_diff').show()
+                            $('#result_diff').html(ret.data)
                         } else {
                             $('#error_xml').text(ret.error)
                         }
