@@ -109,7 +109,6 @@ def qw_diff(request):
 
     inputHost_diff = request.POST.get('inputHost_diff')
     inputExpId_diff = request.POST.get('inputExpId_diff')
-    query_diff = request.POST.get('reqtext_diff')
 
     exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
@@ -118,7 +117,6 @@ def qw_diff(request):
     exp_id_diff = exp_id_diff.encode('utf-16LE')
 
     utf16_query = query.encode('utf-16LE', 'ignore')
-    utf16_query_diff = query_diff.encode('utf-16LE', 'ignore')
 
     params = urlencode({
         'queryString': utf16_query,
@@ -126,7 +124,7 @@ def qw_diff(request):
         'exp_id': exp_id,
     })
     params_diff = urlencode({
-        'queryString': utf16_query_diff,
+        'queryString': utf16_query,
         'forceQuery': 1,
         'exp_id': exp_id_diff,
     })
@@ -139,7 +137,7 @@ def qw_diff(request):
         status = resp.reason
         status_diff = resp.reason
         if status != 'OK' or status_diff != 'OK':
-            print(sys.stderr, query, query_diff, status, status_diff)
+            print(sys.stderr, query, status, status_diff)
             ret['error'] = 'Error:未知的请求类型'
             ret['status'] = False
             return ret
@@ -148,7 +146,6 @@ def qw_diff(request):
 
         diff = difflib.HtmlDiff()
 
-        # ret['data'] = diff.make_table(resp, resp_diff)
         ret['data'] = diff.make_table(data.prettify().splitlines(), data_diff.prettify().splitlines()).replace(
             'nowrap="nowrap"', '')
 
