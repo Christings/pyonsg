@@ -7,19 +7,20 @@ import time, json
 import requests
 import sys
 from bs4 import BeautifulSoup
+import difflib
 
 
 # Create your views here.
 def auth(func):
     def inner(request, *args, **kwargs):
-        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        try:
-            user_id = request.COOKIES.get('uid')
-            if not user_id:
-                return redirect(login_url)
-        except:
-            return redirect(login_url)
-        v = request.COOKIES.get('username111')
+        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        # try:
+        #     user_id = request.COOKIES.get('uid')
+        #     if not user_id:
+        #         return redirect(login_url)
+        # except:
+        #     return redirect(login_url)
+        # v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
@@ -27,8 +28,8 @@ def auth(func):
 
 @auth
 def qo_req(request):
-    # user_id = "zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     if request.method == 'GET':
         business_lst = layout.Business.objects.all()
         app_lst = layout.Application.objects.all()
@@ -46,6 +47,66 @@ def qo_req(request):
             return render(request, 'no_limit.html',
                           {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                            'app_lst': app_lst, 'businame': 'Webqo', 'app_name': "webqo请求调试"})
+
+
+def qo_diff(request):
+    ret = {
+        'status': True,
+        'error': None,
+        'data': None
+    }
+    inputHost = request.POST.get('inputHost')
+    inputExpId = request.POST.get('inputExpId')
+    query_from = request.POST.get('query_from')
+    inputHost_diff = request.POST.get('inputHost_diff')
+    inputExpId_diff = request.POST.get('inputExpId_diff')
+    query_from_diff = request.POST.get('query_from_diff')
+    query = request.POST.get('query')
+
+    exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
+    exp_id = exp_id.encode('utf-16LE')
+
+    exp_id_diff = inputExpId_diff + "^0^0^0^0^0^0^0^0"
+    exp_id_diff = exp_id_diff.encode('utf-16LE')
+
+    utf16_query = query.encode('utf-16LE', 'ignore')
+
+    params = {
+        'queryString': utf16_query,
+        'queryFrom': query_from,
+        'exp_id': exp_id
+    }
+
+    params_diff = {
+        'queryString': utf16_query,
+        'queryFrom': query_from_diff,
+        'exp_id': exp_id_diff
+    }
+
+    headers = {"Content-type": "application/x-www-form-urlencoded;charset=UTF-16LE"}
+
+    try:
+        resp = requests.post(inputHost, data=params, headers=headers)
+        resp_diff = requests.post(inputHost_diff, data=params_diff, headers=headers)
+        status = resp.reason
+        status_diff = resp_diff.reason
+        if status != 'OK' or status_diff != 'OK':
+            print(sys.stderr, query, status, status_diff)
+            ret['error'] = 'Error:未知的请求类型'
+            ret['status'] = False
+            return ret
+        data = BeautifulSoup(resp.text)
+        data_diff = BeautifulSoup(resp_diff.text)
+        diff = difflib.HtmlDiff()
+        ret['data'] = diff.make_table(data.prettify().splitlines(), data_diff.prettify().splitlines()).replace(
+            'nowrap="nowrap"', '')
+
+    except Exception as e:
+        print(e)
+        print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
+        ret['error'] = "Error:" + str(e)
+        ret['status'] = False
+    return HttpResponse(json.dumps(ret))
 
 
 def qo_req_info(request):
@@ -93,8 +154,8 @@ def qo_req_info(request):
 
 @auth
 def qo_req_save(request):
-    # user_id = "zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     ret = {
         'status': True,
         'error': None,
@@ -118,6 +179,7 @@ def qo_req_save(request):
         print(e)
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
+
 
 @auth
 def qo_req_del(request):

@@ -7,16 +7,72 @@
     </ol>
     <div class="row">
         <div class="col-md-5">
+            <form class="form-horizontal" action="" method="post" id="form_xml">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">single:</label>
+
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" id="inputHost" name="inputHost"
+                               value="http://webqo01.web.djt.ted:8012/request">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="col-sm-2 form-control" id="inputExpId" name="inputExpId"
+                               placeholder="ExpId">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="col-sm-2 form-control" id="query_from" name="query_from"
+                               placeholder="来源">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">diff :&nbsp;&nbsp;&nbsp;&nbsp;</label>
+
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" id="inputHost_diff" name="inputHost_diff"
+                               value="http://webqo01.web.djt.ted:8012/request">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="col-sm-3 form-control" id="inputExpId_diff" name="inputExpId_diff"
+                               placeholder="ExpId">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="col-sm-2 form-control" id="query_from_diff" name="query_from_diff"
+                               placeholder="来源">
+                    </div>
+
+                </div>
+                <div class="form-group">
+
+                    <div class="col-sm-12">
+                        <textarea class="form-control" rows="2" style="resize: none;" name="query"
+                                  id="query" placeholder="请求"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-10">
+                        <div class="col-sm-offset-1 col-sm-3">
+                            <label class="btn btn-primary btn-sm btn-block" id="request_xml">开始调试</label>
+                        </div>
+                        <div class=" col-sm-3">
+                            <label class="btn btn-primary btn-sm btn-block" id="save_xml">保存请求</label>
+                        </div>
+                        <div class=" col-sm-3">
+                            <label class="btn btn-primary btn-sm btn-block" id="request_xml_diff">diff</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
             <div style="position:absolute; height:700px; overflow:auto">
                 <table class="table table-hover" id="reqData">
                     <thead>
                     <tr>
-                        <td style="">Time</td>
+                        <td style="">时间</td>
                         <td>Host</td>
                         <td>ExpId</td>
-                        <td>query</td>
-                        <td>Query_from</td>
-                        <td style="">Ctrl</td>
+                        <td>请求</td>
+                        <td>请求来源</td>
+                        <td style="">操作</td>
                     </tr>
                     </thead>
                     <tbody style="cursor: pointer;" id="reqBody">
@@ -28,7 +84,7 @@
                             <td class="tabletd">{{ item.query }}</td>
                             <td class="tabletd">{{ item.query_from }}</td>
                             <td class="tabletd" style="">
-                                <button class="del_line">DEL</button>
+                                <button class="del_line">删除</button>
                             </td>
                         </tr>
                     {% endfor %}
@@ -39,58 +95,12 @@
             <div id="showDiv"></div>
         </div>
         <div class="col-md-7">
-            <form class="form-horizontal" action="" method="post" id="form_xml">
-
-
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">HOST</label>
-                    <div class="col-sm-7">
-                        <input type="text" class="form-control" id="inputHost" name="inputHost"
-                               value="http://webqo01.web.djt.ted:8012/request">
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="text" class="col-sm-3 form-control" id="inputExpId" name="inputExpId"
-                               placeholder="ExpId">
-                    </div>
-                </div>
-                <div class="form-group">
-
-                    <label class="col-sm-1 control-label">Query_from</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="2" style="resize: none;" name="query_from"
-                                  id="query_from"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-
-                    <label class="col-sm-1 control-label">Query</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="2" style="resize: none;" name="query"
-                                  id="query"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-1 col-sm-10">
-                        <div class="col-sm-offset-1 col-sm-5">
-                            <label class="btn btn-primary btn-lg btn-block" id="request_xml">开始调试</label>
-                        </div>
-                        <div class=" col-sm-5">
-                            <label class="btn btn-primary btn-lg btn-block" id="save_xml">保存请求</label>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Result</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="24" style="resize: none;" id="result"
-                                  name="req_result">
-                        </textarea>
-                    </div>
-                </div>
-            </div>
+            <textarea class="form-control" rows="30" style="resize: none;" id="result" name="req_result"
+                      placeholder="结果">
+            </textarea>
+            <div id="result_diff"></div>
         </div>
+
     </div>
 
 {% endblock %}
@@ -158,7 +168,61 @@
                     dataType: 'JSON',
                     success: function (ret) {
                         if (ret.status) {
+                            $('#result_diff').hide()
+                            $('#result').show()
                             $('#result').val(ret.data)
+                        } else {
+                            $('#error_xml').text(ret.error)
+                        }
+                    },
+                    error: function () {
+
+                    },
+                });
+                $('#error_xml').text('');
+            } else {
+                if (query == '') {
+                    $('#error_xml').text('Request不可为空');
+                } else if (inputHost == '') {
+                    $('#error_xml').text('Host不可为空');
+                } else {
+                    $('#error_xml').text('未知错误');
+                }
+            }
+        })
+
+        //diff
+        //request
+        $('#request_xml_diff').click(function () {
+            var query = $('#query').val()
+            var query_from = $('#query_from').val()
+            var inputExpId = $('#inputExpId').val()
+            var inputHost = $('#inputHost').val()
+            var query_from_diff = $('#query_from_diff').val()
+            var inputExpId_diff = $('#inputExpId_diff').val()
+            var inputHost_diff = $('#inputHost_diff').val()
+            if (query != "" && inputHost != "" && inputHost_diff != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/qo_diff",
+                    async: true,
+                    traditional: true,
+                    {#                    data: $('#form_xml').serialize(),#}
+                    data: {
+                        'inputHost': inputHost,
+                        'inputExpId': inputExpId,
+                        'query_from': query_from,
+                        'inputHost_diff': inputHost_diff,
+                        'inputExpId_diff': inputExpId_diff,
+                        'query_from_diff': query_from_diff,
+                        'query': query,
+                    },
+                    dataType: 'JSON',
+                    success: function (ret) {
+                        if (ret.status) {
+                            $('#result').hide()
+                            $('#result_diff').show()
+                            $('#result_diff').html(ret.data)
                         } else {
                             $('#error_xml').text(ret.error)
 

@@ -85,6 +85,7 @@ urlpatterns = [
     re_path(r'^qw_req_save$',webqw.qw_req_save),
     re_path(r'^qw_req_del$',webqw.qw_req_del),
     re_path(r'^qw_diff$',webqw.qw_diff),
+    re_path(r'^qo_diff$',webqo.qo_diff),
 
     # wiki
     re_path(r'^add_blog$',wiki.add_blog),
