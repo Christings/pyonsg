@@ -141,11 +141,7 @@
                     url: "/qw_req_info",
                     async: true,
                     traditional: true,
-                    data: {
-                        'inputHost': inputHost,
-                        'inputExpId': inputExpId,
-                        'reqtext': reqtext,
-                    },
+                    data: $('#form_xml').serialize(),
                     //data: $('#form_xml').serialize(),
                     dataType: 'JSON',
                     success: function (ret) {

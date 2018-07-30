@@ -63,10 +63,10 @@ def qo_diff(request):
     query_from_diff = request.POST.get('query_from_diff')
     query = request.POST.get('query')
 
-    exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
+    exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
-    exp_id_diff = inputExpId_diff + "^0^0^0^0^0^0^0^0"
+    exp_id_diff = hex(int(inputExpId_diff)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id_diff = exp_id_diff.encode('utf-16LE')
 
     utf16_query = query.encode('utf-16LE', 'ignore')
@@ -120,7 +120,7 @@ def qo_req_info(request):
     query_from = request.POST.get('query_from')
     query = request.POST.get('query')
 
-    exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
+    exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
     utf16_query = query.encode('utf-16LE', 'ignore')
@@ -154,8 +154,8 @@ def qo_req_info(request):
 
 @auth
 def qo_req_save(request):
-    user_id = "zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     ret = {
         'status': True,
         'error': None,
