@@ -16,23 +16,23 @@ import difflib
 
 def auth(func):
     def inner(request, *args, **kwargs):
-        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        try:
-            user_id = request.COOKIES.get('uid')
-            if not user_id:
-                return redirect(login_url)
-        except:
-            return redirect(login_url)
-        v = request.COOKIES.get('username111')
+        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        # try:
+        #     user_id = request.COOKIES.get('uid')
+        #     if not user_id:
+        #         return redirect(login_url)
+        # except:
+        #     return redirect(login_url)
+        # v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
 
 
-@auth
+# @auth
 def qw_req(request):
-    # user_id = "zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     if request.method == 'GET':
         business_lst = layout.Business.objects.all()
         app_lst = layout.Application.objects.all()
@@ -60,11 +60,10 @@ def qw_req_info(request):
         'data': None
     }
     inputHost = request.POST.get('inputHost')
-    # reqtype = request.POST.get('reqtype')
     inputExpId = request.POST.get('inputExpId')
     query = request.POST.get('reqtext')
 
-    exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
+    exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
     utf16_query = query.encode('utf-16LE', 'ignore')
@@ -110,10 +109,10 @@ def qw_diff(request):
     inputHost_diff = request.POST.get('inputHost_diff')
     inputExpId_diff = request.POST.get('inputExpId_diff')
 
-    exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
+    exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
-    exp_id_diff = inputExpId_diff + "^0^0^0^0^0^0^0^0"
+    exp_id_diff = hex(int(inputExpId_diff)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id_diff = exp_id_diff.encode('utf-16LE')
 
     utf16_query = query.encode('utf-16LE', 'ignore')
