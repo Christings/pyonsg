@@ -1,0 +1,254 @@
+{% extends 'layout.html' %} {% load tag_tools %} {% block content %}
+<ol class="breadcrumb">
+	<li>{{businame}}</li>
+	<li class="active">{{app_name}}</li>
+	<li style="color: red;"><span id="error_xml"></span></li>
+</ol>
+<div class="row">
+	<div class="col-md-5">
+		<form class="form-horizontal" action="" method="post" id="form_fy_addtask">			
+			<div class="form-group">
+				<label class="col-sm-1 control-label">testurl</label>
+				<div class="col-sm-11">
+					<input type="text" class="form-control" id="test_url" name="test_url" placeholder="ip:port">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">baseurl</label>
+				<div class="col-sm-11">
+					<input type="text" class="form-control" id="base_url" name="base_url" placeholder="ip:port">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">querycfg</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="query_ip" name="query_ip" placeholder="ip addr">
+				</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="query_user" name="query_user" placeholder="user">
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="query_pass" name="query_pass" placeholder="password">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">querypath</label>
+				<div class="col-sm-11">
+					<input type="text" class="form-control" id="query_path" name="query_path" placeholder="path(e.g.)/search/odin/daemon/fanyi/query(文件，绝对路径)">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">testtag</label>
+				<div class="col-sm-11">
+					<input type="text" class="form-control" id="testtag" name="testtag" placeholder="当前测试的备注信息">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-1 col-sm-10">
+					<div class="col-sm-offset-4 col-sm-4">
+						<label class="btn btn-primary btn-lg btn-block" id="add_fy_task">添加队列</label>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="col-md-7">
+		<div>
+			<table class="table table-hover" id="reqData">
+				<thead>
+					<tr>
+						<td style="width: 30px;">ID</td>
+						<td class="tabletd">CreateTime</td>
+						<td class="tabletd">StartTime</td>
+						<td style="">testurl</td>
+						<td style="">baseurl</td>
+						<td style="width: 100px;">Testtag</td>
+						<td style="width: 100px;">Status</td>						
+						<td style="width: 100px;">User</td>
+						<td style="display: none;">Ctrl</td>						
+					</tr>
+				</thead>
+				<tbody style="cursor: pointer;" id="reqBody">
+					{% for item in li %}
+					<tr class="get_data" >
+						<td style="width: 20px;">{{ item.id }}</td>
+						<td class="tabletd">{{ item.start_time }}</td>
+						<td class="tabletd">{{ item.end_time }}</td>
+						<td class="tabletd" >{{ item.test_url }}</td>
+						<td class="tabletd" >{{ item.base_url }}</td>
+						<td class="tabletd" >{{ item.testtag }}</td>
+						<td style="width: 100px;">
+							<a href="/fy_xmldetail?tasknum={{ item.id }}">
+								{% ifequal item.status 0 %}
+								<font color="gray">Waiting</font>
+								{% endifequal %} 
+								{% ifequal item.status 1 %}
+								<font color="cream">Ready</font>
+								{% endifequal %} 
+								{% ifequal item.status 2 %}
+								<font color="green">Running</font>
+								{% endifequal %} 
+								{% ifequal item.status 3 %}
+								<font color="red">Error</font>
+								{% endifequal %} 
+								{% ifequal item.status 4 %}
+								<font color="blue">Finished</font>
+								{% endifequal %} 
+								{% ifequal item.status 5 %}
+								<font color="orange">Canceled</font>
+								{% endifequal %} 
+								{% ifequal item.status 6 %}
+								<font color="orange">Canceling</font>
+								{% endifequal %}
+							</a>
+						</td>
+						<td style="width: 100px;">{{ item.user }}</td>						
+						<td style="display: none;">{{ item.queryip }}</td>
+						<td style="display: none;">{{ item.queryuser }}</td>
+						<td style="display: none;">{{ item.querypassw }}</td>
+						<td style="display: none;">{{ item.querypath }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		    
+		    <nav aria-label="Page navigation">
+				<ul class="pagination">
+				     {{page_str}}
+				</ul>
+			</nav>
+		    		    
+		</div>
+		<div id="showDiv"></div>
+	</div>
+
+</div>
+
+{% endblock %} {% block js %}
+<script>
+
+	//add task
+	$('#add_fy_task').click(function() {
+		var test_url = $('#test_url').val()
+		var base_url = $('#base_url').val()
+		if(test_url != "" && base_url != "") {
+			$.ajax({
+				type: "POST",
+				url: "/fy_xmltask_add",
+				async: true,
+				traditional: true,
+				data: $('#form_fy_addtask').serialize(),
+				dataType: 'JSON',
+				success: function(obj) {
+					console.log(obj.status)
+					if(obj.status) {
+						location.reload();
+					} else {
+						$('#error_xml').text(obj.error);
+					}
+				},
+				error: function() {
+
+				},
+			});
+			$('#error_xml').text('');
+		} else {
+			$('#error_xml').text('svn不可为空');
+		}
+	})
+
+	//table hover
+	$(function() {
+		function showBox(obj, box) {
+			var timer = null;
+			$(obj).on("mouseover", function(e) {
+				clearTimeout(timer);
+				var clientX = e.clientX;
+				var clientY = e.clientY;
+				var y = clientY + 20;
+				var txt = $(this).text();
+				timer = setTimeout(function() {
+					$(box).css("left", clientX).css("top", y);
+					if(txt == "") {
+						$(box).hide();
+					} else {
+						$(box).show();
+						$(box).html(txt);
+					}
+				}, 300);
+			});
+			$(obj).on("mouseout", function() {
+				clearTimeout(timer);
+				$(box).hide();
+			});
+		}
+		showBox("#reqData > tbody td", "#showDiv");
+	});
+
+	//del
+	$('.del_line').click(function() {
+		var line_id = $(this).parent().parent().attr('req_id');
+		$.ajax({
+			type: "POST",
+			url: "del_xml_line",
+			async: true,
+			data: {
+				'line_id': line_id
+			},
+			dataType: 'JSON',
+			success: function(obj) {
+				if(obj.status) {
+					location.reload();
+				} else {
+					$('#error_xml').text(obj.error);
+				}
+			},
+			error: function() {
+
+			}
+		});
+
+	})
+
+	//getData
+	$('.get_data').dblclick(function() {
+		var linelst = $(this).children();
+		test_url = $(linelst[3]).text();
+		base_url = $(linelst[4]).text();
+		testtag = $(linelst[5]).text();
+		queryip = $(linelst[8]).text();
+		queryuser = $(linelst[9]).text();
+		querypassw = $(linelst[10]).text();
+		querypath = $(linelst[11]).text();
+
+		$('#test_url').val(test_url);
+		$('#base_url').val(base_url);
+		$('#query_ip').val(queryip);
+		$('#query_user').val(queryuser);
+		$('#query_pass').val(querypassw);
+		$('#query_path').val(querypath);
+		$('#testtag').val(testtag);
+
+	})
+
+	$('#lan_filter').change(function() {
+		var sel_lang = $(this).val();
+		console.log(sel_lang)
+		if(sel_lang == 'all') {
+			$('#reqBody').children().each(function() {
+				$(this).removeClass('hide');
+			})
+		} else {
+			$('#reqBody').children().each(function() {
+				var line_lang = $(this).attr('lang_type');
+				if(sel_lang != line_lang) {
+					$(this).addClass('hide');
+				} else {
+					$(this).removeClass('hide');
+				}
+			})
+
+		}
+	})
+</script>
+{% endblock %}
