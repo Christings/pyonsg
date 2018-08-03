@@ -46,11 +46,12 @@ class FyMonitor(models.Model):
 
 
 class Host(models.Model):
-    ip = models.GenericIPAddressField(db_index=True,unique=True)
+    ip = models.GenericIPAddressField(db_index=True)
     user = models.CharField(max_length=500, default="")
     passw = models.CharField(max_length=500, default="")
     status = models.IntegerField(default=0)
     runningPID = models.CharField(max_length=20, default="")
+    gpuid = models.IntegerField(default=0)
 
 class FyDiff(models.Model):
     create_time = models.CharField(max_length=50, default="")
@@ -114,4 +115,22 @@ class XmlDiffContent(models.Model):
     user = models.CharField(max_length=50)
     diff_content = models.TextField(default="")
     diff_task = models.ForeignKey(to="FyXmlDiff", to_field='id', on_delete=models.CASCADE)
+
+
+class ModelBleu(models.Model):
+    start_time = models.CharField(max_length=50, default="")
+    end_time = models.CharField(max_length=50, default="")
+    test_url = models.CharField(max_length=500, default="")
+    base_url = models.CharField(max_length=500, default="")
+    user = models.CharField(max_length=50)
+    queryip = models.CharField(max_length=500, default="")
+    queryuser = models.CharField(max_length=500, default="")
+    querypassw = models.CharField(max_length=500, default="")
+    querypath = models.CharField(max_length=500, default="")
+    status = models.IntegerField(default=0)
+    errorlog = models.TextField(default="")
+    testtag = models.CharField(max_length=500, default="")
+    finished = models.IntegerField(default=0)
+    diffnum = models.IntegerField(default=0)
+    runningPID = models.CharField(max_length=20, default="")
 
