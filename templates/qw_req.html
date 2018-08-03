@@ -6,16 +6,59 @@
         <li style="color: red;"><span id="error_xml"></span></li>
     </ol>
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-4">
+            <form class="form-horizontal" action="" method="post" id="form_xml">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label ">single:</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="inputHost" name="inputHost"
+                               value="http://webqw01.web.djt.ted:8019/request">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="col-sm-3 form-control" id="inputExpId" name="inputExpId"
+                               placeholder="ExpId">
+                    </div>
+                    <div>&nbsp;</div>
+                    <label class="col-sm-2 control-label">diff :&nbsp;&nbsp; </label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="inputHost_diff" name="inputHost_diff"
+                               value="http://webqw01.web.djt.ted:8019/request">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="col-sm-3 form-control" id="inputExpId_diff" name="inputExpId_diff"
+                               placeholder="ExpId">
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class="col-sm-12">
+                        <textarea class="form-control" rows="2" style="resize: none;" name="reqtext"
+                                  id="reqtext" placeholder="queryString"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="btn btn-primary btn-lg btn-block" id="request_xml">开始调试</label>
+                        </div>
+                        <div class=" col-sm-4">
+                            <label class="btn btn-primary btn-lg btn-block" id="save_xml">保存请求</label>
+                        </div>
+                        <div class=" col-sm-4">
+                            <label class="btn btn-primary btn-lg btn-block" id="request_xml_diff">diff</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <div style="position:absolute; height:700px; overflow:auto">
                 <table class="table table-hover" id="reqData">
                     <thead>
                     <tr>
-                        <td style="">Time</td>
+                        <td style="">时间</td>
                         <td>Host</td>
                         <td>ExpId</td>
-                        <td>Request</td>
-                        <td style="">Ctrl</td>
+                        <td>请求</td>
+                        <td>操作</td>
                     </tr>
                     </thead>
                     <tbody style="cursor: pointer;" id="reqBody">
@@ -25,8 +68,8 @@
                             <td class="tabletd">{{ item.host_ip }}</td>
                             <td class="tabletd">{{ item.exp_id }}</td>
                             <td class="tabletd">{{ item.req_text }}</td>
-                            <td class="tabletd" style="">
-                                <button class="del_line">DEL</button>
+                            <td class="tabletd">
+                                <button class="del_line">删除</button>
                             </td>
                         </tr>
                     {% endfor %}
@@ -36,50 +79,11 @@
             </div>
             <div id="showDiv"></div>
         </div>
-        <div class="col-md-7">
-            <form class="form-horizontal" action="" method="post" id="form_xml">
-
-
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">HOST</label>
-                    <div class="col-sm-7">
-                        <input type="text" class="form-control" id="inputHost" name="inputHost"
-                               value="http://webqw01.web.djt.ted:8019/request">
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="text" class="col-sm-3 form-control" id="inputExpId" name="inputExpId"
-                               placeholder="ExpId">
-                    </div>
-                </div>
-                <div class="form-group">
-
-                    <label class="col-sm-1 control-label">Request</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="2" style="resize: none;" name="reqtext"
-                                  id="reqtext"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-1 col-sm-10">
-                        <div class="col-sm-offset-1 col-sm-5">
-                            <label class="btn btn-primary btn-lg btn-block" id="request_xml">开始调试</label>
-                        </div>
-                        <div class=" col-sm-5">
-                            <label class="btn btn-primary btn-lg btn-block" id="save_xml">保存请求</label>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-1 control-label">Result</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="24" style="resize: none;" id="result"
-                                  name="req_result">
-                        </textarea>
-                    </div>
-                </div>
-            </div>
+        <div class="col-md-8">
+            <textarea class="form-control" rows="30" style="resize: none;" id="result" name="req_result"
+                      placeholder="结果">
+            </textarea>
+            <div id="result_diff"></div>
         </div>
     </div>
 
@@ -138,10 +142,13 @@
                     async: true,
                     traditional: true,
                     data: $('#form_xml').serialize(),
+                    //data: $('#form_xml').serialize(),
                     dataType: 'JSON',
                     success: function (ret) {
                         if (ret.status) {
-                            $('#result').val(ret.data)
+                            $('#result_diff').hide()
+                            $('#result').show()
+                            $('#result').text(ret.data)
                         } else {
                             $('#error_xml').text(ret.error)
 
@@ -150,6 +157,53 @@
                     },
                     error: function () {
 
+                    },
+                });
+                $('#error_xml').text('');
+            } else {
+                if (reqtext == '') {
+                    $('#error_xml').text('Request不可为空');
+                } else if (inputHost == '') {
+                    $('#error_xml').text('Host不可为空');
+                } else {
+                    $('#error_xml').text('未知错误');
+                }
+            }
+        })
+
+        //diff
+        $('#request_xml_diff').click(function () {
+            var reqtext = $('#reqtext').val()
+            var inputHost = $('#inputHost').val()
+            var inputExpId = $('#inputExpId').val()
+
+            var inputHost_diff = $('#inputHost_diff').val()
+            var inputExpId_diff = $('#inputExpId_diff').val()
+
+            if (reqtext != "" && inputHost != "" && inputHost_diff != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/qw_diff",
+                    async: true,
+                    traditional: true,
+                    data: {
+                        'inputHost': inputHost,
+                        'inputExpId': inputExpId,
+                        'reqtext': reqtext,
+                        'inputHost_diff': inputHost_diff,
+                        'inputExpId_diff': inputExpId_diff,
+                    },
+                    dataType: 'JSON',
+                    success: function (ret) {
+                        if (ret.status) {
+                            $('#result').hide()
+                            $('#result_diff').show()
+                            $('#result_diff').html(ret.data)
+                        } else {
+                            $('#error_xml').text(ret.error)
+                        }
+                    },
+                    error: function () {
                     },
                 });
                 $('#error_xml').text('');

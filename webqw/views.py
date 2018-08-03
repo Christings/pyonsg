@@ -9,6 +9,7 @@ from requests import Request
 from urllib.parse import urlencode
 import sys
 from bs4 import BeautifulSoup
+import difflib
 
 
 # Create your views here.
@@ -59,11 +60,10 @@ def qw_req_info(request):
         'data': None
     }
     inputHost = request.POST.get('inputHost')
-    # reqtype = request.POST.get('reqtype')
     inputExpId = request.POST.get('inputExpId')
     query = request.POST.get('reqtext')
 
-    exp_id = inputExpId + "^0^0^0^0^0^0^0^0"
+    exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
     utf16_query = query.encode('utf-16LE', 'ignore')
@@ -86,6 +86,67 @@ def qw_req_info(request):
             return ret
         data = BeautifulSoup(resp.text)
         ret['data'] = data.prettify()
+
+    except Exception as e:
+        print(e)
+        print(sys.stderr, sys.exc_info()[0], sys.exc_info()[1])
+        print(sys.stderr, query)
+        ret['error'] = "Error:" + str(e)
+        ret['status'] = False
+    return HttpResponse(json.dumps(ret))
+
+
+def qw_diff(request):
+    ret = {
+        'status': True,
+        'error': None,
+        'data': None
+    }
+    inputHost = request.POST.get('inputHost')
+    inputExpId = request.POST.get('inputExpId')
+    query = request.POST.get('reqtext')
+
+    inputHost_diff = request.POST.get('inputHost_diff')
+    inputExpId_diff = request.POST.get('inputExpId_diff')
+
+    exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    exp_id = exp_id.encode('utf-16LE')
+
+    exp_id_diff = hex(int(inputExpId_diff)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    exp_id_diff = exp_id_diff.encode('utf-16LE')
+
+    utf16_query = query.encode('utf-16LE', 'ignore')
+
+    params = urlencode({
+        'queryString': utf16_query,
+        'forceQuery': 1,
+        'exp_id': exp_id,
+    })
+    params_diff = urlencode({
+        'queryString': utf16_query,
+        'forceQuery': 1,
+        'exp_id': exp_id_diff,
+    })
+
+    headers = {"Content-type": "application/x-www-form-urlencoded;charset=UTF-16LE"}
+
+    try:
+        resp = requests.post(inputHost, data=params, headers=headers)
+        resp_diff = requests.post(inputHost_diff, data=params_diff, headers=headers)
+        status = resp.reason
+        status_diff = resp.reason
+        if status != 'OK' or status_diff != 'OK':
+            print(sys.stderr, query, status, status_diff)
+            ret['error'] = 'Error:未知的请求类型'
+            ret['status'] = False
+            return ret
+        data = BeautifulSoup(resp.text)
+        data_diff = BeautifulSoup(resp_diff.text)
+
+        diff = difflib.HtmlDiff()
+
+        ret['data'] = diff.make_table(data.prettify().splitlines(), data_diff.prettify().splitlines()).replace(
+            'nowrap="nowrap"', '')
 
     except Exception as e:
         print(e)
@@ -139,7 +200,7 @@ def qw_req_save(request):
 
 @auth
 def qw_task_cancel(request):
-    ret = {'status': True, 'errro': None, 'data': None}
+    ret = {'status': True, 'error': None, 'data': None}
     try:
         re_add_task_d = request.POST.get('task_id')
         models.webqwqps.objects.filter(id=re_add_task_d).update(status=6)
