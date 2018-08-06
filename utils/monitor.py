@@ -43,17 +43,16 @@ def ssh_command(user, host, password, command):
 
 #gpu mem
 def gpu_info(host_id):
-    print(1111)
     db = pymysql.connect(database_host, database_user, database_pass, database_data)
     cursor = db.cursor()
     sql = "SELECT ip,passw,gpuid FROM fanyi_host where id='%d'" % int(host_id)
     cursor.execute(sql)
     (host_ip,passw,gpuid) = cursor.fetchone()
-    print(host_ip,passw)
     while True:
         #child = ssh_command("root", host_ip, passw, "nvidia-smi | grep 250W")
-        command_line = "nvidia-smi | egrep -A 1 '"+ gpuid +".*[PM]40'| grep -v 'Tesla'"
+        command_line = "nvidia-smi | egrep -A 1 '"+ str(gpuid) +".*[PMK]40'| grep -v 'Tesla'"
         child = ssh_command("root", host_ip, passw, command_line)
+        print(child)
         child.expect(pexpect.EOF)
         gpuinfo = (child.before).decode('utf-8')
         gpu_lst = gpuinfo.strip().split('\r\n')
@@ -99,4 +98,4 @@ if __name__ == '__main__':
         gpu_info(host_id)
 
     except Exception as e:
-        logInfo.log_info('Start Monitor failed')
+        logInfo.log_info('Start Monitor failed'+str(e))
