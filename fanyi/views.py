@@ -200,7 +200,7 @@ def sys_admin(request):
 
 
 #nvidia
-# @auth
+@auth
 def del_one_monitor(request):
     ret = {'status': True, 'error': None, 'data': None}
     req_id = request.POST.get('monitor_id')
@@ -211,7 +211,7 @@ def del_one_monitor(request):
         ret['error'] = "Error:" + str(e)
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def stop_monitor_ip(request):
     ret = {'status': True, 'error': None, 'data': None}
     req_id = request.POST.get('line_id')
@@ -228,7 +228,7 @@ def stop_monitor_ip(request):
         ret['error'] = "Error:" + str(e)
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def get_nvi_data(request):
     ret = {'status': True, 'error': None, 'gpumem': None,'gpumemused':None}
     fy_nvi_id = request.POST.get('line_id')
@@ -243,10 +243,10 @@ def get_nvi_data(request):
 
 
 
-# @auth
+@auth
 def nvi_task_detail(request,task_id):
-    user_id = 'zhangjingjun'
-    # user_id = request.COOKIES.get('uid')
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     task_detail = models.FyMonitor.objects.filter(id=task_id)
     business_lst = models.Business.objects.all()
     app_lst = models.Application.objects.all()
@@ -255,10 +255,10 @@ def nvi_task_detail(request,task_id):
                   {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                    'businame': 'Translate', 'app_name': "翻译显存监控", 'topic': '监控详情', 'task_detail': task_detail})
 
-# @auth
+@auth
 def start_monitor_ip(request):
-    user_id = 'zhangjingjun'
-    # user_id = request.COOKIES.get('uid')
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'error': None, 'data': None}
     req_id = request.POST.get('line_id')
     try:
@@ -285,7 +285,7 @@ def start_monitor_ip(request):
         ret['error'] = "Error:" + str(e)
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def del_host_ip(request):
     ret = {'status': True, 'error': None, 'data': None}
     req_id = request.POST.get('line_id')
@@ -296,7 +296,7 @@ def del_host_ip(request):
         ret['error'] = "Error:" + str(e)
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def monitor_host_add(request):
     ret = {'status': True, 'errro': None, 'data': None}
     ip = request.POST.get('monitorip')
@@ -318,10 +318,10 @@ def monitor_host_add(request):
         ret['status'] = False
     return HttpResponse(json.dumps(ret))
 
-# @auth
+@auth
 def fy_nvi_iplist(request,task_id,page_id):
-    user_id ='zhangjingjun'
-    # user_id = request.COOKIES.get('uid')
+    # user_id ='zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     if page_id == '':
         page_id = 1
     try:
@@ -347,10 +347,10 @@ def fy_nvi_iplist(request,task_id,page_id):
                       {'business_lst': business_lst, 'user_id': user_id,'user_app_lst':user_app_lst,
                        'req_lst': req_lst, 'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译比比看",
                        'gpu_info': gpu_info, 'li': data, 'page_str': page_str})
-# @auth
+@auth
 def nvidia_smi(request,task_id='',page_id=1):
-    user_id = 'zhangjingjun'
-    # user_id = request.COOKIES.get('uid')
+    # user_id = 'zhangjingjun'
+    user_id = request.COOKIES.get('uid')
     if page_id == '':
         page_id=1
     try:
