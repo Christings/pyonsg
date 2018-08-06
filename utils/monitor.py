@@ -42,10 +42,17 @@ def ssh_command(user, host, password, command):
     return child
 
 #gpu mem
-def gpu_info():
-    leave_num = 0
+def gpu_info(host_id):
+    db = pymysql.connect(database_host, database_user, database_pass, database_data)
+    cursor = db.cursor()
+    sql = "SELECT ip,passw,gpuid FROM fanyi_host where id='%d'" % int(host_id)
+    cursor.execute(sql)
+    (host_ip,passw,gpuid) = cursor.fetchone()
     while True:
-        child = ssh_command("root", "10.153.51.60", "sogourank@2016", "nvidia-smi | grep 250W")
+        #child = ssh_command("root", host_ip, passw, "nvidia-smi | grep 250W")
+        command_line = "nvidia-smi | egrep -A 1 '"+ str(gpuid) +".*[PMK]40'| grep -v 'Tesla'"
+        child = ssh_command("root", host_ip, passw, command_line)
+        print(child)
         child.expect(pexpect.EOF)
         gpuinfo = (child.before).decode('utf-8')
         gpu_lst = gpuinfo.strip().split('\r\n')
@@ -64,7 +71,6 @@ def gpu_info():
         except:
             db.rollback()
             logInfo.log_info('Insert a piece of data failed')
-        leave_num += 1
         time.sleep(5)
 
 
@@ -89,7 +95,7 @@ if __name__ == '__main__':
         except Exception as e:
             db.rollback()
             logInfo.log_info('Insert a new task failed')
-        gpu_info()
+        gpu_info(host_id)
 
     except Exception as e:
-        logInfo.log_info('Start Monitor failed')
+        logInfo.log_info('Start Monitor failed'+str(e))
