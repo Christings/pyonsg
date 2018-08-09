@@ -10,7 +10,8 @@ class logutil():
             level=logging.DEBUG,
             format='%(asctime)s : %(levelname)s  %(message)s',
             datefmt='%Y-%m-%d %A %H:%M:%S',
-            filename='utils/log/log-'+self.fname,
+            #filename='utils/log/log-'+self.fname,
+            filename='log/log-'+self.fname,
             filemode='a')
     def log_info(self,loginfo):
         logging.info(loginfo)

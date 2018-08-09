@@ -245,6 +245,7 @@ def get_nvi_data(request):
 
 @auth
 def nvi_task_detail(request,task_id):
+    # user_id = 'zhangjingjun'
     user_id = request.COOKIES.get('uid')
     task_detail = models.FyMonitor.objects.filter(id=task_id)
     business_lst = models.Business.objects.all()
@@ -256,7 +257,7 @@ def nvi_task_detail(request,task_id):
 
 @auth
 def start_monitor_ip(request):
-    #user_id = 'zhangjingjun'
+    # user_id = 'zhangjingjun'
     user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'error': None, 'data': None}
     req_id = request.POST.get('line_id')
@@ -301,10 +302,13 @@ def monitor_host_add(request):
     ip = request.POST.get('monitorip')
     monitor_user = request.POST.get('monitoruser')
     monitor_passw = request.POST.get('monitorpassw')
+    gpuid = request.POST.get('gpuid')
+    if gpuid =='':
+        gpuid = 0
     try:
-        nameisExist = models.Host.objects.filter(ip=ip)
+        nameisExist = models.Host.objects.filter(ip=ip,gpuid=gpuid)
         if nameisExist.exists() == False:
-            models.Host.objects.create(ip=ip,user=monitor_user,passw=monitor_passw)
+            models.Host.objects.create(ip=ip,user=monitor_user,passw=monitor_passw,gpuid=int(gpuid))
         else:
             ret['error'] = "Error:ip已存在，请勿重新添加"
             ret['status'] = False
@@ -316,6 +320,7 @@ def monitor_host_add(request):
 
 @auth
 def fy_nvi_iplist(request,task_id,page_id):
+    # user_id ='zhangjingjun'
     user_id = request.COOKIES.get('uid')
     if page_id == '':
         page_id = 1
@@ -344,6 +349,7 @@ def fy_nvi_iplist(request,task_id,page_id):
                        'gpu_info': gpu_info, 'li': data, 'page_str': page_str})
 @auth
 def nvidia_smi(request,task_id='',page_id=1):
+    # user_id = 'zhangjingjun'
     user_id = request.COOKIES.get('uid')
     if page_id == '':
         page_id=1
@@ -968,5 +974,42 @@ def test_xml(request):
     </data>"""
     return HttpResponse(xml_str)
 
+# models bleu
+# @auth
+def models_bleu(request):
+    user_id = 'zhangjingjun'
+    # user_id = request.COOKIES.get('uid')
+    if request.method == 'GET':
+        page = request.GET.get('page')
+        current_page=1
+        if page:
+            current_page = int(page)
 
+        try:
+            task_list = models.FyXmlDiff.objects.order_by('id')[::-1]
+            page_obj = pagination.Page(current_page, len(task_list), 16, 9)
+            data = task_list[page_obj.start:page_obj.end]
+            page_str = page_obj.page_str("/fy_xmldiff?page=")
 
+            business_lst = models.Business.objects.all()
+            app_lst = models.Application.objects.all()
+            user_app_lst = models.UserToApp.objects.filter(user_name_id=user_id)
+            app_id_lst = list()
+            for appid in user_app_lst:
+                app_id_lst.append(appid.app_id_id)
+        except Exception as e:
+            print(e)
+            pass
+        print(app_id_lst)
+        if 19 in app_id_lst:
+
+            return render(request, 'models_bleu.html',
+                          {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
+                           'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译效果对比",'li': data,
+                           'page_str': page_str})
+        else:
+            return render(request, 'no_limit.html',
+                          {'business_lst': business_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
+                           'app_lst': app_lst, 'businame': 'Translate', 'app_name': "翻译效果对比"})
+    elif request.method == 'POST':
+        pass

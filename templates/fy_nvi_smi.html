@@ -5,13 +5,16 @@
 	<li style="color: red;"><span id="error_xml"></span></li>
 </ol>
 <div class="row">	
-	<div class="col-md-4">
+	<div class="col-md-5">
 		<div>			
 			<form class="form-horizontal" action="" method="post" id="form_monitor">			
 				<div class="form-group">
 				<label class="col-sm-2 control-label">IPaddress</label>
-				<div class="col-sm-10">
+				<div class="col-sm-7">
 					<input type="text" class="form-control" id="monitorip" name="monitorip" placeholder="ip" >
+				</div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="gpuid" name="gpuid" placeholder="gpuid" >
 				</div>
 				</div>
 				<div class="form-group">
@@ -37,9 +40,10 @@
 				<table class="table table-hover" id="reqData">
 				<thead>
 					<tr>
-						<td style="width: 100px;">IP</td>
+						<td style="width: 130px;">IP</td>
 						<td style="width: 50px;">user</td>
 						<td>password</td>
+						<td style="width: 50px;">GPUid</td>
 						<td style="">Ctrl</td>
 						<td style="width: 60px;">Filter</td>
 					</tr>
@@ -49,7 +53,8 @@
 					<tr host_id="{{item.id}}" class="get_host">
 						<td class="tabletd" style="">{{item.ip}}</td>
 						<td class="tabletd" >{{item.user}}</td>
-						<td class="tabletd" >{{item.passw}}</td>						
+						<td class="tabletd" >{{item.passw}}</td>
+						<td class="tabletd" >{{item.gpuid}}</td>
 						<td style="">
 							{% ifequal item.status 0 %}
 							<button class="startMonitor" style="color: green;">START</button>
@@ -70,7 +75,7 @@
 		</div>				
 		<div id="showDiv"></div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-7">
 		<div>
 			<table class="table table-hover" id="reqData">
 				<thead>
@@ -141,6 +146,7 @@
 		var monitorip = $("#monitorip").val()
 		var monitoruser = $("#monitoruser").val()
 		var monitorpassw = $("#monitorpassw").val()
+		var gpuid = $("#gpuid").val()
 		if(monitorip != "" && monitoruser != "" && monitorpassw!="") {
 			$.ajax({
 				type: "POST",
@@ -151,6 +157,7 @@
 					'monitorip': monitorip,
 					'monitoruser': monitoruser,
 					'monitorpassw': monitorpassw,
+					'gpuid':gpuid,
 				},
 				dataType: 'JSON',
 				success: function(obj) {

@@ -36,10 +36,15 @@ class Googlefy:
 
 	# 页面抓取方式的翻译api，抓取无线端的翻译结果
 	def TranslateByGoogle(self, text, fromLang, toLang):
-		base_link = "http://translate.google.cn/m?hl=%s&sl=%s&q=%s"
+		base_link = "https://translate.google.cn/m?hl=zh-CN&sl=%s&tl=%s&q=%s"
+
 		text = urllib.parse.quote(text)
-		link = base_link % (toLang, fromLang, text)
+		link = base_link % (fromLang,toLang,text)
+		print(link)
 		req = urllib.request.Request(link, headers=self.agent)
+		resp = requests.get(link, headers=self.agent)
+		print(resp.text)
+		#print(req)
 		try:
 			raw_data = urllib.request.urlopen(req).read()
 			print(str(raw_data,encoding="utf-8"))
@@ -67,8 +72,9 @@ class Googlefy:
 		return json.loads(resp.text)
 if __name__ == '__main__':
 	ggfy = Googlefy()
-	result = ggfy.TranslateByGgapi('我爱你','zh','ko')
+	result = ggfy.TranslateByGoogle('我爱你','zh-CN','ko')
 	#result = ggfy.TranslateByGoogle('我爱你','zh','ko')
-	b=result['data']['translations'][0]['translatedText'].encode('utf-8')
-	print(b.decode('utf-8'))
+	#b=result['data']['translations'][0]['translatedText'].encode('utf-8')
+	#print(b.decode('utf-8'))
 	#print(result['data']['translations'][0]['translatedText'])
+	print(result)
