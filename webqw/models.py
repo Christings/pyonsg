@@ -26,11 +26,20 @@ class webqwqps(models.Model):
     errorlog = models.TextField(default="")
     cost_test = models.TextField(default="")
     cost_base = models.TextField(default="")
-    press_qps = models.IntegerField()
-    press_time = models.IntegerField()
+
+    press_qps = models.IntegerField(default=0)
+    press_time = models.IntegerField(default=0)
     press_expid = models.IntegerField()
     press_rate = models.FloatField()
+
+    query_ip = models.CharField(max_length=500, default="")
+    query_user = models.CharField(max_length=50, default="")
+    query_pwd = models.CharField(max_length=50, default="")
+    query_path = models.CharField(max_length=500, default="")
+
     testtag = models.CharField(max_length=500, default="")
+
+    diff_content = models.TextField(default="")
 
 
 class ReqInfo_QW(models.Model):
