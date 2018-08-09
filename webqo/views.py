@@ -63,6 +63,16 @@ def qo_diff(request):
     query_from_diff = request.POST.get('query_from_diff')
     query = request.POST.get('query')
 
+    if inputExpId == '':
+        inputExpId = 0
+    else:
+        inputExpId = inputExpId
+
+    if inputExpId_diff == '':
+        inputExpId_diff = 0
+    else:
+        inputExpId_diff = inputExpId_diff
+
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
@@ -119,6 +129,11 @@ def qo_req_info(request):
     inputExpId = request.POST.get('inputExpId')
     query_from = request.POST.get('query_from')
     query = request.POST.get('query')
+
+    if inputExpId == '':
+        inputExpId = 0
+    else:
+        inputExpId = inputExpId
 
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')

@@ -53,6 +53,7 @@ def qw_req(request):
                            'app_lst': app_lst, 'businame': 'Webqw', 'app_name': "webqw请求调试"})
 
 
+# 请求调试区
 def qw_req_info(request):
     ret = {
         'status': True,
@@ -62,6 +63,11 @@ def qw_req_info(request):
     inputHost = request.POST.get('inputHost')
     inputExpId = request.POST.get('inputExpId')
     query = request.POST.get('reqtext')
+
+    if inputExpId == '':
+        inputExpId = 0
+    else:
+        inputExpId = inputExpId
 
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
@@ -108,6 +114,16 @@ def qw_diff(request):
 
     inputHost_diff = request.POST.get('inputHost_diff')
     inputExpId_diff = request.POST.get('inputExpId_diff')
+
+    if inputExpId == '':
+        inputExpId = 0
+    else:
+        inputExpId = inputExpId
+
+    if inputExpId_diff == '':
+        inputExpId_diff = 0
+    else:
+        inputExpId_diff = inputExpId_diff
 
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
@@ -252,8 +268,8 @@ def qw_task_detail(request, task_id):
 
 @auth
 def qw_automation_add(request):
-    # user_id = "zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     test_svn = str_dos2unix(request.POST.get('qw_testsvn'))
     base_svn = str_dos2unix(request.POST.get('qw_basesvn'))
@@ -265,41 +281,76 @@ def qw_automation_add(request):
     newdatauser = str_dos2unix(request.POST.get('new_data_user'))
     newdatapassw = str_dos2unix(request.POST.get('new_data_pass'))
     newdatapath = str_dos2unix(request.POST.get('new_data_path'))
+
     press_qps = str_dos2unix(request.POST.get('qw_qps'))
     press_time = str_dos2unix(request.POST.get('qw_press_time'))
+
     press_expid = str_dos2unix(request.POST.get('qw_press_expid'))
     press_rate = str_dos2unix(request.POST.get('qw_press_rate'))
+
+    query_ip = str_dos2unix(request.POST.get('query_ip'))
+    query_user = str_dos2unix(request.POST.get('query_user'))
+    query_pwd = str_dos2unix(request.POST.get('query_pwd'))
+    query_path = str_dos2unix(request.POST.get('query_path'))
+
     testtag = str_dos2unix(request.POST.get('testtag'))
+
+    flag = (request.POST.get('radio_select'))
+    print("flag", flag)
+
     print("press_expid", type(press_expid))
     print("press_rate", type(press_rate))
-    if press_qps == "":
-        press_qps = 1000
-    if press_time == "":
-        press_time = 30
-    if press_expid == "":
-        press_expid = 0
-    if press_rate == "":
-        press_rate = 0
-    # print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
-    try:
-        models.webqwqps.objects.create(create_time=get_now_time(), user=user_id, testitem=1, testsvn=test_svn,
-                                       basesvn=base_svn,
-                                       newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
-                                       newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
-                                       newdatapassw=newdatapassw, newdatapath=newdatapath, press_qps=press_qps,
-                                       press_time=press_time, press_expid=press_expid, press_rate=press_rate,
-                                       testtag=testtag)
-    except Exception as e:
-        print(e)
-        ret['error'] = 'error:' + str(e)
-        ret['status'] = False
-    return HttpResponse(json.dumps(ret))
+
+    if flag == "press":
+
+        if press_qps == "":
+            press_qps = 1000
+        if press_time == "":
+            press_time = 30
+        if press_expid == "":
+            press_expid = 0
+        if press_rate == "":
+            press_rate = 0
+        # print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
+        try:
+            models.webqwqps.objects.create(create_time=get_now_time(), user=user_id, testitem=1, testsvn=test_svn,
+                                           basesvn=base_svn,
+                                           newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
+                                           newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
+                                           newdatapassw=newdatapassw, newdatapath=newdatapath, press_qps=press_qps,
+                                           press_time=press_time, press_expid=press_expid, press_rate=press_rate,
+                                           testtag=testtag)
+        except Exception as e:
+            print(e)
+            ret['error'] = 'error:' + str(e)
+            ret['status'] = False
+        return HttpResponse(json.dumps(ret))
+    elif flag == "longdiff":
+        if press_expid == "":
+            press_expid = 0
+        if press_rate == "":
+            press_rate = 0
+        # print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
+        try:
+            models.webqwqps.objects.create(create_time=get_now_time(), user=user_id, testitem=0, testsvn=test_svn,
+                                           basesvn=base_svn,
+                                           newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
+                                           newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
+                                           newdatapassw=newdatapassw, newdatapath=newdatapath, press_expid=press_expid,
+                                           press_rate=press_rate, query_ip=query_ip, query_user=query_user,
+                                           query_pwd=query_pwd,
+                                           query_path=query_path, testtag=testtag)
+        except Exception as e:
+            print(e)
+            ret['error'] = 'error:' + str(e)
+            ret['status'] = False
+        return HttpResponse(json.dumps(ret))
 
 
 @auth
 def qw_automation(request, page_id):
-    # user_id="zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     if page_id == '':
         page_id = 1
     task_list = models.webqwqps.objects.order_by('id')[::-1]
