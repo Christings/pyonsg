@@ -16,14 +16,14 @@ import difflib
 
 def auth(func):
     def inner(request, *args, **kwargs):
-        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        try:
-            user_id = request.COOKIES.get('uid')
-            if not user_id:
-                return redirect(login_url)
-        except:
-            return redirect(login_url)
-        v = request.COOKIES.get('username111')
+        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        # try:
+        #     user_id = request.COOKIES.get('uid')
+        #     if not user_id:
+        #         return redirect(login_url)
+        # except:
+        #     return redirect(login_url)
+        # v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
@@ -255,15 +255,30 @@ def qw_task_readd(request):
 
 @auth
 def qw_task_detail(request, task_id):
-    # user_id="zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     task_detail = models.webqwqps.objects.filter(id=task_id)
+    diff_detail = models.webqwdiffcontent.objects.filter(diff_fk_id=task_id)
     business_lst = layout.Business.objects.all()
     app_lst = layout.Application.objects.all()
     user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
-    return render(request, 'qw_task_tail.html',
-                  {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-                   'businame': 'Webqw', 'app_name': "webqw性能对比自动化", 'topic': '任务详情', 'task_detail': task_detail})
+    for item in diff_detail:
+        print("itme",item.diff_content)
+    testitem=models.webqwqps.objects.filter(id=task_id).values('testitem')
+    print(models.webqwqps.objects.filter(id=task_id).values('testitem'))
+    print("aa",testitem.first()['testitem'])
+
+    if testitem.first()['testitem'] == 1:
+
+        return render(request, 'qw_task_tail.html',
+                      {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id,
+                       'user_app_lst': user_app_lst, 'businame': 'Webqw', 'app_name': "webqw性能对比自动化", 'topic': '任务详情',
+                       'task_detail': task_detail})
+    elif testitem.first()['testitem'] == 0:
+        return render(request, 'qw_diff_detail.html',
+                      {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id,
+                       'user_app_lst': user_app_lst, 'businame': 'Webqw', 'app_name': "diff", 'topic': '任务详情',
+                       'task_detail': task_detail,'diff_detail':diff_detail})
 
 
 @auth

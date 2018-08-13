@@ -40,6 +40,15 @@ class webqwqps(models.Model):
     testtag = models.CharField(max_length=500, default="")
 
     diff_content = models.TextField(default="")
+    # diff_base = models.TextField(default="")
+    # diff_test = models.TextField(default="")
+
+
+class webqwdiffcontent(models.Model):
+    create_time = models.CharField(max_length=50, default="")
+    user = models.CharField(max_length=50)
+    diff_content = models.TextField(default="")
+    diff_fk = models.ForeignKey(to="webqwqps", to_field='id', on_delete=models.CASCADE)
 
 
 class ReqInfo_QW(models.Model):
