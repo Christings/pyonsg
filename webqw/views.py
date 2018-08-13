@@ -262,11 +262,13 @@ def qw_task_detail(request, task_id):
     business_lst = layout.Business.objects.all()
     app_lst = layout.Application.objects.all()
     user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
-    for item in diff_detail:
-        print("itme",item.diff_content)
-    testitem=models.webqwqps.objects.filter(id=task_id).values('testitem')
-    print(models.webqwqps.objects.filter(id=task_id).values('testitem'))
-    print("aa",testitem.first()['testitem'])
+
+    testitem = models.webqwqps.objects.filter(id=task_id).values('testitem')
+
+    page = request.GET.get('page')
+    current_page = 1
+    if page:
+        current_page = int(page)
 
     if testitem.first()['testitem'] == 1:
 
@@ -275,10 +277,14 @@ def qw_task_detail(request, task_id):
                        'user_app_lst': user_app_lst, 'businame': 'Webqw', 'app_name': "webqw性能对比自动化", 'topic': '任务详情',
                        'task_detail': task_detail})
     elif testitem.first()['testitem'] == 0:
+        page_obj = pagination.Page(current_page, len(diff_detail), 3, 9)
+        data = diff_detail[page_obj.start:page_obj.end]
+        page_str = page_obj.page_str('qw_task_detail_' + task_id + '.html?page=')
+
         return render(request, 'qw_diff_detail.html',
                       {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id,
                        'user_app_lst': user_app_lst, 'businame': 'Webqw', 'app_name': "diff", 'topic': '任务详情',
-                       'task_detail': task_detail,'diff_detail':diff_detail})
+                       'task_detail': task_detail, 'diff_detail': diff_detail, 'li': data, 'page_str': page_str})
 
 
 @auth
