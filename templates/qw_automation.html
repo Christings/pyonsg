@@ -308,37 +308,6 @@
             }
         })
 
-        // longdiff request
-        $('#add_qw_longdiff').click(function () {
-            var qw_base_svn = $('#qw_basesvn').val()
-            var qw_text_svn = $('#qw_testsvn').val()
-            if (qw_base_svn != "" || qw_text_svn != "") {
-                $.ajax({
-                    type: "POST",
-                    url: "/qw_longdiff_add",
-                    async: true,
-                    traditional: true,
-                    data: $('#form_qw_addtask').serialize(),
-                    dataType: 'JSON',
-                    success: function (obj) {
-                        console.log(obj.status)
-                        if (obj.status) {
-                            location.reload();
-                        } else {
-                            $('#error_xml').text(obj.error);
-                        }
-                    },
-                    error: function () {
-
-                    },
-                });
-                $('#error_xml').text('');
-            } else {
-                $('#error_xml').text('svn不可都为空');
-            }
-        })
-
-
         //table hover
         $(function () {
             function showBox(obj, box) {
