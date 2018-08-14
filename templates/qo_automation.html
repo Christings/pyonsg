@@ -79,10 +79,9 @@
             <div class="form-group">
                     <label class="col-sm-2 " style="float: left;">选&nbsp;&nbsp;项</label>
                     <div class="col-sm-10" style="float: left;">
-                        <label class="col-sm-4"><input type="radio" name="radio_select" id="diff"
-                                                       value="press">&nbsp;&nbsp;press</label>
-                        <label class="col-sm-4"><input type="radio" name="radio_select" id="diff"
-                                                       value="longdiff">&nbsp;&nbsp;diff</label>
+                        <label class="col-sm-4"><input type="radio" name="radio_select" value="press" checked>&nbsp;&nbsp;press</label>
+                        <label class="col-sm-4">
+                            <input type="radio" name="radio_select" value="longdiff">&nbsp;&nbsp;diff</label>
                     </div>
 
                 </div>
@@ -402,6 +401,11 @@
 	})
 
     $(document).ready(function () {
+            $('#query_ip').attr('readonly', true);
+            $('#query_user').attr('readonly', true);
+            $('#query_pwd').attr('readonly', true);
+            $('#query_path').attr('readonly', true);
+
             $('input[type=radio][name=radio_select]').change(function () {
                 if (this.value == 'press') {
                     $('#query_ip').attr('readonly', true);
