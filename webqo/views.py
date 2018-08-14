@@ -13,14 +13,14 @@ import difflib
 # Create your views here.
 def auth(func):
     def inner(request, *args, **kwargs):
-        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        # try:
-        #     user_id = request.COOKIES.get('uid')
-        #     if not user_id:
-        #         return redirect(login_url)
-        # except:
-        #     return redirect(login_url)
-        # v = request.COOKIES.get('username111')
+        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        try:
+            user_id = request.COOKIES.get('uid')
+            if not user_id:
+                return redirect(login_url)
+        except:
+            return redirect(login_url)
+        v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
@@ -254,8 +254,8 @@ def qo_task_readd(request):
 
 @auth
 def qo_task_detail(request, task_id):
-    user_id="zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id="zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     task_detail = models.webqoqps.objects.filter(id=task_id)
     diff_detail = models.webqodiffcontent.objects.filter(diff_fk_id=task_id)
     business_lst = layout.Business.objects.all()
@@ -289,8 +289,8 @@ def qo_task_detail(request, task_id):
 
 @auth
 def qo_automation_add(request):
-    user_id = "zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     test_svn = str_dos2unix(request.POST.get('qo_testsvn'))
     base_svn = str_dos2unix(request.POST.get('qo_basesvn'))
@@ -365,8 +365,8 @@ def qo_automation_add(request):
 
 @auth
 def qo_automation(request, page_id):
-    user_id="zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id="zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     if page_id == '':
         page_id = 1
     task_list = models.webqoqps.objects.order_by('id')[::-1]
