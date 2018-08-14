@@ -26,11 +26,23 @@ class webqoqps(models.Model):
     errorlog = models.TextField(default="")
     cost_test = models.TextField(default="")
     cost_base = models.TextField(default="")
-    press_qps = models.IntegerField()
-    press_time = models.IntegerField()
+    press_qps = models.IntegerField(default=0)
+    press_time = models.IntegerField(default=0)
     press_expid = models.IntegerField()
     press_rate = models.FloatField()
+
+    query_ip=models.CharField(max_length=500,default="")
+    query_user=models.CharField(max_length=50,default="")
+    query_pwd=models.CharField(max_length=50,default="")
+    query_path=models.CharField(max_length=500,default="")
+
     testtag = models.CharField(max_length=500, default="")
+
+class webqodiffcontent(models.Model):
+    create_time = models.CharField(max_length=50, default="")
+    user = models.CharField(max_length=50)
+    diff_content = models.TextField(default="")
+    diff_fk = models.ForeignKey(to="webqoqps", to_field='id', on_delete=models.CASCADE)
 
 
 class ReqInfo_QO(models.Model):

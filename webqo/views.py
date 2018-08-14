@@ -13,14 +13,14 @@ import difflib
 # Create your views here.
 def auth(func):
     def inner(request, *args, **kwargs):
-        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        try:
-            user_id = request.COOKIES.get('uid')
-            if not user_id:
-                return redirect(login_url)
-        except:
-            return redirect(login_url)
-        v = request.COOKIES.get('username111')
+        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        # try:
+        #     user_id = request.COOKIES.get('uid')
+        #     if not user_id:
+        #         return redirect(login_url)
+        # except:
+        #     return redirect(login_url)
+        # v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
@@ -254,21 +254,43 @@ def qo_task_readd(request):
 
 @auth
 def qo_task_detail(request, task_id):
-    # user_id="zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id="zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     task_detail = models.webqoqps.objects.filter(id=task_id)
+    diff_detail = models.webqodiffcontent.objects.filter(diff_fk_id=task_id)
     business_lst = layout.Business.objects.all()
     app_lst = layout.Application.objects.all()
     user_app_lst = layout.UserToApp.objects.filter(user_name_id=user_id)
-    return render(request, 'qo_task_tail.html',
-                  {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
-                   'businame': 'Webqo', 'app_name': "webqo性能对比自动化", 'topic': '任务详情', 'task_detail': task_detail})
+
+    testitem=models.webqoqps.objects.filter(id=task_id).values('testitem')
+
+    page=request.GET.get('page')
+    current_page=1
+    if page:
+        current_page=int(page)
+
+    if testitem.first()['testitem']==1:
+
+        return render(request, 'qo_task_tail.html',
+                      {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
+                       'businame': 'Webqo', 'app_name': "webqo性能对比自动化", 'topic': '任务详情', 'task_detail': task_detail})
+    elif testitem.first()['testitem']==0:
+        page_obj=pagination.Page(current_page,len(diff_detail),3,9)
+        data=diff_detail[page_obj.start:page_obj.end]
+        page_str=page_obj.page_str('qo_task_detail_'+task_id+'.html?page=')
+
+        return render(request, 'qo_diff_detail.html',
+                      {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id,
+                       'user_app_lst': user_app_lst,
+                       'businame': 'Webqo', 'app_name': "diff", 'topic': '任务详情', 'task_detail': task_detail,
+                       'diff_detail':diff_detail,'li':data,'page_str':page_str})
+
 
 
 @auth
 def qo_automation_add(request):
-    # user_id = "zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     test_svn = str_dos2unix(request.POST.get('qo_testsvn'))
     base_svn = str_dos2unix(request.POST.get('qo_basesvn'))
@@ -284,37 +306,67 @@ def qo_automation_add(request):
     press_time = str_dos2unix(request.POST.get('qo_press_time'))
     press_expid = str_dos2unix(request.POST.get('qo_press_expid'))
     press_rate = str_dos2unix(request.POST.get('qo_press_rate'))
+
+    query_ip = str_dos2unix(request.POST.get('query_ip'))
+    query_user = str_dos2unix(request.POST.get('query_user'))
+    query_pwd = str_dos2unix(request.POST.get('query_pwd'))
+    query_path = str_dos2unix(request.POST.get('query_path'))
+
     testtag = str_dos2unix(request.POST.get('testtag'))
+
+    flag=request.POST.get('radio_select')
+    print("flag:",flag)
     print("press_expid", type(press_expid))
     print("press_rate", type(press_rate))
-    if press_qps == "":
-        press_qps = 1000
-    if press_time == "":
-        press_time = 30
-    if press_expid == "":
-        press_expid = 0
-    if press_rate == "":
-        press_rate = 0
-    # print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
-    try:
-        models.webqoqps.objects.create(create_time=get_now_time(), user=user_id, testitem=1, testsvn=test_svn,
-                                       basesvn=base_svn,
-                                       newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
-                                       newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
-                                       newdatapassw=newdatapassw, newdatapath=newdatapath, press_qps=press_qps,
-                                       press_time=press_time, press_expid=press_expid, press_rate=press_rate,
-                                       testtag=testtag)
-    except Exception as e:
-        print(e)
-        ret['error'] = 'error:' + str(e)
-        ret['status'] = False
-    return HttpResponse(json.dumps(ret))
+
+    if flag=='press':
+        if press_qps == "":
+            press_qps = 1000
+        if press_time == "":
+            press_time = 30
+        if press_expid == "":
+            press_expid = 0
+        if press_rate == "":
+            press_rate = 0
+        # print('test_svn:'+test_svn,'base_svn:'+base_svn,'newconfip:'+newconfip,'newconfuser:'+newconfuser,'newconfpassw:'+newconfpassw,'newconfpath:'+newconfpath,'newdataip:'+newdataip,'newdatauser:'+newdatauser,'newdatapassw:'+newdatapassw,'newdatapath:'+newdatapath)
+        try:
+            models.webqoqps.objects.create(create_time=get_now_time(), user=user_id, testitem=1, testsvn=test_svn,
+                                           basesvn=base_svn,
+                                           newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
+                                           newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
+                                           newdatapassw=newdatapassw, newdatapath=newdatapath, press_qps=press_qps,
+                                           press_time=press_time, press_expid=press_expid, press_rate=press_rate,
+                                           testtag=testtag)
+        except Exception as e:
+            print(e)
+            ret['error'] = 'error:' + str(e)
+            ret['status'] = False
+        return HttpResponse(json.dumps(ret))
+    elif flag=='longdiff':
+        if press_expid == "":
+            press_expid = 0
+        if press_rate == "":
+            press_rate = 0
+        try:
+            models.webqoqps.objects.create(create_time=get_now_time(), user=user_id, testitem=0, testsvn=test_svn,
+                                           basesvn=base_svn,
+                                           newconfip=newconfip, newconfuser=newconfuser, newconfpassw=newconfpassw,
+                                           newconfpath=newconfpath, newdataip=newdataip, newdatauser=newdatauser,
+                                           newdatapassw=newdatapassw, newdatapath=newdatapath, press_expid=press_expid,
+                                           press_rate=press_rate, query_ip=query_ip, query_user=query_user,
+                                           query_pwd=query_pwd,
+                                           query_path=query_path, testtag=testtag)
+        except Exception as e:
+            print(e)
+            ret['error'] = 'error:' + str(e)
+            ret['status'] = False
+        return HttpResponse(json.dumps(ret))
 
 
 @auth
 def qo_automation(request, page_id):
-    # user_id="zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id="zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     if page_id == '':
         page_id = 1
     task_list = models.webqoqps.objects.order_by('id')[::-1]

@@ -6,7 +6,7 @@
 </ol>
 <div class="row">
 	<div class="col-md-6">
-		<form class="form-horizontal" action="" method="post" id="form_qo_addtask">			
+		<form class="form-horizontal" action="" method="post" id="form_qo_addtask">
 			<label class="col-sm-1 control-label">Basesvn</label>
 			<div class="form-group">
 				<div class="col-sm-12">
@@ -64,16 +64,7 @@
 					<textarea class="form-control" rows="4" style="resize: none;" name="new_data_path" id="new_data_path" placeholder='1.使用和线上一致的数据，置空&#13;&#10;2.更新单独文件/search/odin/daemon/qo/data/vocab.txt;data/base/nb&#13;&#10;3.更新多文件/search/odin/daemon/zhangjj/tools/qo/data/{template.lst,tflag_qo.xml};data/base&#13;&#10;4.完全使用自有完整数据(需支持rsync)/search/odin/daemon/zhangjj/tools/qo/data;data'></textarea>
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-1 control-label">presscfg</label>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" id="qo_qps" name="qo_qps" placeholder="press qps默认1000">
-				</div>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" id="qo_press_time" name="qo_press_time" placeholder="press time默认30min">
-				</div>
-			</div>
-			<div class="form-group">
+            <div class="form-group">
 				<label class="col-sm-1 control-label">exp_id</label>
 				<div class="col-sm-4">
 					<input type="text" class="form-control" id="qo_press_expid" name="qo_press_expid" placeholder="expid">
@@ -85,6 +76,49 @@
 					<label class="col-sm-1 control-label">(%)</label>
 				</div>
 			</div>
+            <div class="form-group">
+                    <label class="col-sm-2 " style="float: left;">选&nbsp;&nbsp;项</label>
+                    <div class="col-sm-10" style="float: left;">
+                        <label class="col-sm-4"><input type="radio" name="radio_select" id="diff"
+                                                       value="press">&nbsp;&nbsp;press</label>
+                        <label class="col-sm-4"><input type="radio" name="radio_select" id="diff"
+                                                       value="longdiff">&nbsp;&nbsp;diff</label>
+                    </div>
+
+                </div>
+			<div class="form-group">
+				<label class="col-sm-1 control-label">presscfg</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="qo_qps" name="qo_qps" placeholder="press qps默认1000">
+				</div>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="qo_press_time" name="qo_press_time" placeholder="press time默认30min">
+				</div>
+			</div>
+
+            <div class="form-group">
+                    <label class="col-sm-1 control-label">queryCfg</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="query_ip" name="query_ip"
+                               placeholder="ip">
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="query_user" name="query_user"
+                               placeholder="user">
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="query_pwd" name="query_pwd" placeholder="password">
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">queryPath</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="query_path" name="query_path"
+                               placeholder="path">
+                    </div>
+                </div>
 			<div class="form-group">
 				<div class="col-sm-offset-1 col-sm-10">
 					<div class="col-sm-offset-4 col-sm-4">
@@ -103,12 +137,12 @@
 						<td class="tabletd">CreateTime</td>
 						<td class="tabletd">StartTime</td>
 						<td style="width: 80px;">Expid</td>
-						<td style="width: 80px;">Rate</td>	
+						<td style="width: 80px;">Rate</td>
 						<td style="width: 100px;">Testtag</td>
 						<td style="width: 100px;">Status</td>
-						<td style="display: none;">TestItem</td>						
+						<td style="width: 100px;">TestItem</td>
 						<td style="width: 100px;">User</td>
-						<td style="display: none;">Ctrl</td>						
+						<td style="display: none;">Ctrl</td>
 					</tr>
 				</thead>
 				<tbody style="cursor: pointer;" id="reqBody">
@@ -124,35 +158,35 @@
 							<a href="/qo_task_detail_{{ item.id }}.html">
 								{% ifequal item.status 0 %}
 								<font color="gray">Waiting</font>
-								{% endifequal %} 
+								{% endifequal %}
 								{% ifequal item.status 1 %}
 								<font color="cream">Ready</font>
-								{% endifequal %} 
+								{% endifequal %}
 								{% ifequal item.status 2 %}
 								<font color="green">Running</font>
-								{% endifequal %} 
+								{% endifequal %}
 								{% ifequal item.status 3 %}
 								<font color="red">Error</font>
-								{% endifequal %} 
+								{% endifequal %}
 								{% ifequal item.status 4 %}
 								<font color="blue">Finished</font>
-								{% endifequal %} 
+								{% endifequal %}
 								{% ifequal item.status 5 %}
 								<font color="orange">Canceled</font>
-								{% endifequal %} 
+								{% endifequal %}
 								{% ifequal item.status 6 %}
 								<font color="orange">Canceling</font>
 								{% endifequal %}
 							</a>
 						</td>
 						{% ifequal item.testitem 1 %}
-						<td style="width: 70px;display: none;">cost</td>
+						<td style="width: 70px;">cost</td>
 						{% else %}
-						<td style="width: 70px;display: none;">Null</td>
+						<td style="width: 70px;">diff</td>
 						{% endifequal%}
 						<td style="width: 100px;">{{ item.user }}</td>
 						<td style="display: none;">{{ item.testsvn }}</td>
-						<td style="display: none;">{{ item.basesvn }}</td>						
+						<td style="display: none;">{{ item.basesvn }}</td>
 						<td style="display: none;">{{ item.newconfip }}</td>
 						<td style="display: none;">{{ item.newconfuser }}</td>
 						<td style="display: none;">{{ item.newconfpassw }}</td>
@@ -162,18 +196,18 @@
 						<td style="display: none;">{{ item.newdatapassw }}</td>
 						<td style="display: none;">{{ item.newdatapath }}</td>
 						<td style="display: none;">{{ item.press_qps }}</td>
-						<td style="display: none;">{{ item.press_time }}</td>												
+						<td style="display: none;">{{ item.press_time }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
 			</table>
-		    
+
 		    <nav aria-label="Page navigation">
 				<ul class="pagination">
 				     {{page_str}}
 				</ul>
 			</nav>
-		    		    
+
 		</div>
 		<div id="showDiv"></div>
 	</div>
@@ -328,8 +362,8 @@
 		newdatapassw = $(linelst[17]).text();
 		newdatapath = $(linelst[18]).text();
 		press_qps = $(linelst[19]).text();
-		press_time = $(linelst[20]).text();	
-		
+		press_time = $(linelst[20]).text();
+
 		$('#qo_testsvn').val(testsvn);
 		$('#qo_basesvn').val(basesvn);
 		$('#new_conf_ip').val(newconfip);
@@ -366,5 +400,30 @@
 
 		}
 	})
+
+    $(document).ready(function () {
+            $('input[type=radio][name=radio_select]').change(function () {
+                if (this.value == 'press') {
+                    $('#query_ip').attr('readonly', true);
+                    $('#query_user').attr('readonly', true);
+                    $('#query_pwd').attr('readonly', true);
+                    $('#query_path').attr('readonly', true);
+
+                    $('#qo_qps').attr('readonly', false);
+                    $('#qo_press_time').attr('readonly', false);
+                }
+                else if (this.value == 'longdiff') {
+                    $('#qo_qps').attr('readonly', true);
+                    $('#qo_press_time').attr('readonly', true);
+
+                    $('#query_ip').attr('readonly', false);
+                    $('#query_user').attr('readonly', false);
+                    $('#query_pwd').attr('readonly', false);
+                    $('#query_path').attr('readonly', false);
+                }
+            });
+
+        });
+
 </script>
 {% endblock %}
