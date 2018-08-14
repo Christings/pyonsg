@@ -73,6 +73,22 @@ def qo_diff(request):
     else:
         inputExpId_diff = inputExpId_diff
 
+    if query_from == '':
+        query_from = 0
+    else:
+        query_from = query_from
+
+    if query_from_diff == '':
+        query_from_diff = 0
+    else:
+        query_from_diff = query_from_diff
+
+    query_from = hex(int(query_from)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    query_from = query_from.encode('utf-16LE')
+
+    query_from_diff = hex(int(query_from_diff)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    query_from_diff = query_from_diff.encode('utf-16LE')
+
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
@@ -134,6 +150,14 @@ def qo_req_info(request):
         inputExpId = 0
     else:
         inputExpId = inputExpId
+
+    if query_from == '':
+        query_from = 0
+    else:
+        query_from = query_from
+
+    query_from = hex(int(query_from)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    query_from = query_from.encode('utf-16LE')
 
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
@@ -274,7 +298,7 @@ def qo_task_detail(request, task_id):
         return render(request, 'qo_task_tail.html',
                       {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                        'businame': 'Webqo', 'app_name': "webqo性能对比自动化", 'topic': '任务详情', 'task_detail': task_detail})
-    elif testitem.first()['testitem']==0:
+    elif testitem.fir()['testitem']==0:
         page_obj=pagination.Page(current_page,len(diff_detail),3,9)
         data=diff_detail[page_obj.start:page_obj.end]
         page_str=page_obj.page_str('qo_task_detail_'+task_id+'.html?page=')

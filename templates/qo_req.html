@@ -42,7 +42,6 @@
 
                 </div>
                 <div class="form-group">
-
                     <div class="col-sm-12">
                         <textarea class="form-control" rows="2" style="resize: none;" name="query"
                                   id="query" placeholder="请求"></textarea>
@@ -192,7 +191,6 @@
         })
 
         //diff
-        //request
         $('#request_xml_diff').click(function () {
             var query = $('#query').val()
             var query_from = $('#query_from').val()
@@ -304,8 +302,8 @@
             var linelst = $(this).children();
             hostip = $(linelst[1]).text();
             expid = $(linelst[2]).text();
-            query = $(linelst[3]).text();
-            query_from = $(linelst[4]).text();
+            query = $(linelst[4]).text();
+            query_from = $(linelst[3]).text();
             $('#inputHost').val(hostip);
             $('#inputExpId').val(expid);
             $('#query').val(query);
