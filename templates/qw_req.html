@@ -6,28 +6,36 @@
         <li style="color: red;"><span id="error_xml"></span></li>
     </ol>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <form class="form-horizontal" action="" method="post" id="form_xml">
                 <div class="form-group">
                     <label class="col-sm-2 control-label ">single:</label>
-                    <div class="col-sm-7">
+                    <div class="col-sm-5">
                         <input type="text" class="form-control" id="inputHost" name="inputHost"
                                value="http://webqw01.web.djt.ted:8019/request">
                     </div>
                     <div class="col-sm-3">
-                        <input type="text" class="col-sm-3 form-control" id="inputExpId" name="inputExpId"
+                        <input type="text" class="col-sm-2 form-control" id="inputExpId" name="inputExpId"
                                placeholder="ExpId">
                     </div>
-                    <div>&nbsp;</div>
+                    <div class="col-sm-2">
+                        <input type="text" class="col-sm-2 form-control" id="query_from" name="query_from"
+                               placeholder="from">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">diff :&nbsp;&nbsp; </label>
-                    <div class="col-sm-7">
+                    <div class="col-sm-5">
                         <input type="text" class="form-control" id="inputHost_diff" name="inputHost_diff"
                                value="http://webqw01.web.djt.ted:8019/request">
                     </div>
                     <div class="col-sm-3">
-                        <input type="text" class="col-sm-3 form-control" id="inputExpId_diff" name="inputExpId_diff"
+                        <input type="text" class="col-sm-2 form-control" id="inputExpId_diff" name="inputExpId_diff"
                                placeholder="ExpId">
                     </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="col-sm-2 form-control" id="query_from_diff"
+                               name="query_from_diff" placeholder="from"></div>
                 </div>
                 <div class="form-group">
 
@@ -57,6 +65,7 @@
                         <td style="">时间</td>
                         <td>Host</td>
                         <td>ExpId</td>
+                        <td>queryFrom</td>
                         <td>请求</td>
                         <td>操作</td>
                     </tr>
@@ -67,6 +76,7 @@
                             <td class="tabletd" style="">{{ item.c_time | date:"Y/m/d H:i" }}</td>
                             <td class="tabletd">{{ item.host_ip }}</td>
                             <td class="tabletd">{{ item.exp_id }}</td>
+                            <td class="tabletd">{{ item.query_from }}</td>
                             <td class="tabletd">{{ item.req_text }}</td>
                             <td class="tabletd">
                                 <button class="del_line">删除</button>
@@ -79,7 +89,7 @@
             </div>
             <div id="showDiv"></div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-7">
             <textarea class="form-control" rows="30" style="resize: none;" id="result" name="req_result"
                       placeholder="结果">
             </textarea>
@@ -94,6 +104,7 @@
         $('#save_xml').click(function () {
             var inputHost = $('#inputHost').val()
             var inputExpId = $('#inputExpId').val()
+            var query_from = $('#query_from').val()
             var reqtext = $('#reqtext').val()
 
             if (reqtext != "" && inputHost != "") {
@@ -105,6 +116,7 @@
                     data: {
                         'inputHost': inputHost,
                         'inputExpId': inputExpId,
+                        'query_from': query_from,
                         'reqtext': reqtext,
                     },
                     dataType: 'JSON',
@@ -135,6 +147,9 @@
         $('#request_xml').click(function () {
             var reqtext = $('#reqtext').val()
             var inputHost = $('#inputHost').val()
+            var query_from = $('#query_from').val()
+            var inputExpId = $('#inputExpId').val()
+
             if (reqtext != "" && inputHost != "") {
                 $.ajax({
                     type: "POST",
@@ -174,11 +189,13 @@
         //diff
         $('#request_xml_diff').click(function () {
             var reqtext = $('#reqtext').val()
+            var query_from = $('#query_from').val()
             var inputHost = $('#inputHost').val()
             var inputExpId = $('#inputExpId').val()
 
             var inputHost_diff = $('#inputHost_diff').val()
             var inputExpId_diff = $('#inputExpId_diff').val()
+            var query_from_diff = $('#query_from_diff').val()
 
             if (reqtext != "" && inputHost != "" && inputHost_diff != "") {
                 $.ajax({
@@ -189,9 +206,11 @@
                     data: {
                         'inputHost': inputHost,
                         'inputExpId': inputExpId,
+                        'query_from': query_from,
                         'reqtext': reqtext,
                         'inputHost_diff': inputHost_diff,
                         'inputExpId_diff': inputExpId_diff,
+                        'query_from_diff': query_from_diff
                     },
                     dataType: 'JSON',
                     success: function (ret) {
@@ -278,9 +297,11 @@
             hostip = $(linelst[1]).text();
             expid = $(linelst[2]).text();
             reqtext = $(linelst[3]).text();
+            query_from = $(linelst[4]).text();
             $('#inputHost').val(hostip);
             $('#inputExpId').val(expid);
             $('#reqtext').val(reqtext);
+            $('#query_from').val(query_from);
         })
 
     </script>

@@ -16,14 +16,14 @@ import difflib
 
 def auth(func):
     def inner(request, *args, **kwargs):
-        login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
-        try:
-            user_id = request.COOKIES.get('uid')
-            if not user_id:
-                return redirect(login_url)
-        except:
-            return redirect(login_url)
-        v = request.COOKIES.get('username111')
+        # login_url = "https://login.sogou-inc.com/?appid=1162&sso_redirect=http://frontqa.web.sjs.ted/&targetUrl="
+        # try:
+        #     user_id = request.COOKIES.get('uid')
+        #     if not user_id:
+        #         return redirect(login_url)
+        # except:
+        #     return redirect(login_url)
+        # v = request.COOKIES.get('username111')
         return func(request, *args, **kwargs)
 
     return inner
@@ -31,8 +31,8 @@ def auth(func):
 
 @auth
 def qw_req(request):
-    # user_id = "zhangjingjun"
-    user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
     if request.method == 'GET':
         business_lst = layout.Business.objects.all()
         app_lst = layout.Application.objects.all()
@@ -62,12 +62,23 @@ def qw_req_info(request):
     }
     inputHost = request.POST.get('inputHost')
     inputExpId = request.POST.get('inputExpId')
+    query_from = request.POST.get('query_from')
     query = request.POST.get('reqtext')
+
 
     if inputExpId == '':
         inputExpId = 0
     else:
         inputExpId = inputExpId
+
+
+    if query_from == '':
+        query_from = 0
+    else:
+        query_from = query_from
+
+    query_from = hex(int(query_from)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    query_from = query_from.encode('utf-16LE')
 
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
@@ -76,6 +87,7 @@ def qw_req_info(request):
 
     params = urlencode({
         'queryString': utf16_query,
+        'queryForm': query_from,
         'forceQuery': 1,
         'exp_id': exp_id,
     })
@@ -86,6 +98,7 @@ def qw_req_info(request):
         resp = requests.post(inputHost, data=params, headers=headers)
         status = resp.reason
         if status != 'OK':
+            print("url:",resp.url)
             print(sys.stderr, query, status)
             ret['error'] = 'Error:未知的请求类型'
             ret['status'] = False
@@ -110,10 +123,13 @@ def qw_diff(request):
     }
     inputHost = request.POST.get('inputHost')
     inputExpId = request.POST.get('inputExpId')
+    query_from = request.POST.get('query_from')
+
     query = request.POST.get('reqtext')
 
     inputHost_diff = request.POST.get('inputHost_diff')
     inputExpId_diff = request.POST.get('inputExpId_diff')
+    query_from_diff = request.POST.get('query_from_diff')
 
     if inputExpId == '':
         inputExpId = 0
@@ -125,21 +141,39 @@ def qw_diff(request):
     else:
         inputExpId_diff = inputExpId_diff
 
+    if query_from == '':
+        query_from = 0
+    else:
+        query_from = query_from
+
+    if query_from_diff == '':
+        query_from_diff = 0
+    else:
+        query_from_diff = query_from_diff
+
     exp_id = hex(int(inputExpId)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id = exp_id.encode('utf-16LE')
 
     exp_id_diff = hex(int(inputExpId_diff)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
     exp_id_diff = exp_id_diff.encode('utf-16LE')
 
+    query_from = hex(int(query_from)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    query_from = query_from.encode('utf-16LE')
+
+    query_from_diff = hex(int(query_from_diff)).split('0x')[1] + "^0^0^0^0^0^0^0^0"
+    query_from_diff = query_from_diff.encode('utf-16LE')
+
     utf16_query = query.encode('utf-16LE', 'ignore')
 
     params = urlencode({
         'queryString': utf16_query,
+        'queryFrom': query_from,
         'forceQuery': 1,
         'exp_id': exp_id,
     })
     params_diff = urlencode({
         'queryString': utf16_query,
+        'queryFrom': query_from_diff,
         'forceQuery': 1,
         'exp_id': exp_id_diff,
     })
@@ -156,8 +190,8 @@ def qw_diff(request):
             ret['error'] = 'Error:未知的请求类型'
             ret['status'] = False
             return ret
-        data = BeautifulSoup(resp.text)
-        data_diff = BeautifulSoup(resp_diff.text)
+        data = BeautifulSoup(resp.text,"html.parser")
+        data_diff = BeautifulSoup(resp_diff.text,"html.parser")
 
         diff = difflib.HtmlDiff()
 
@@ -188,8 +222,8 @@ def qw_req_del(request):
 
 @auth
 def qw_req_save(request):
-    user_id = request.COOKIES.get('uid')
-    # user_id = "zhangjingjun"
+    # user_id = request.COOKIES.get('uid')
+    user_id = "zhangjingjun"
     ret = {
         'status': True,
         'error': None,
@@ -198,14 +232,16 @@ def qw_req_save(request):
     inputHost = request.POST.get('inputHost')
     # reqtype=request.POST.get('reqtype')
     inputExpId = request.POST.get('inputExpId')
+    query_from = request.POST.get('query_from')
     query = request.POST.get('reqtext')
     # result = request.POST.get('result')
 
     try:
-        models.ReqInfo_QW.objects.create(host_ip=inputHost, exp_id=inputExpId, req_text=query,
+        models.ReqInfo_QW.objects.create(host_ip=inputHost, exp_id=inputExpId,query_from=query_from, req_text=query,
                                          user_fk_id=user_id)
         ret['inputHost'] = inputHost
         ret['inputExpId'] = inputExpId
+        ret['query_from'] = query_from
         ret['query'] = query
     except Exception as e:
         ret['error'] = "Error:" + str(e)
@@ -289,8 +325,8 @@ def qw_task_detail(request, task_id):
 
 @auth
 def qw_automation_add(request):
-    user_id = "zhangjingjun"
-    # user_id = request.COOKIES.get('uid')
+    # user_id = "zhangjingjun"
+    user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
     test_svn = str_dos2unix(request.POST.get('qw_testsvn'))
     base_svn = str_dos2unix(request.POST.get('qw_basesvn'))

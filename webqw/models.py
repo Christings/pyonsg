@@ -50,6 +50,7 @@ class ReqInfo_QW(models.Model):
     host_ip = models.CharField(max_length=128)
     reqtype = models.CharField(max_length=20)
     exp_id = models.CharField(max_length=8)
+    query_from = models.CharField(max_length=4,default="")
     req_text = models.CharField(max_length=2000)
     result = models.CharField(max_length=2000)
     c_time = models.DateTimeField(auto_now=True)
