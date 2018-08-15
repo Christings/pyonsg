@@ -298,7 +298,7 @@ def qo_task_detail(request, task_id):
         return render(request, 'qo_task_tail.html',
                       {'business_lst': business_lst, 'app_lst': app_lst, 'user_id': user_id, 'user_app_lst': user_app_lst,
                        'businame': 'Webqo', 'app_name': "webqo性能对比自动化", 'topic': '任务详情', 'task_detail': task_detail})
-    elif testitem.fir()['testitem']==0:
+    elif testitem.first()['testitem']==0:
         page_obj=pagination.Page(current_page,len(diff_detail),3,9)
         data=diff_detail[page_obj.start:page_obj.end]
         page_str=page_obj.page_str('qo_task_detail_'+task_id+'.html?page=')

@@ -150,7 +150,6 @@
                     <thead>
                     <tr>
                         <td style="width: 30px;">ID</td>
-                        <td>CreateTime</td>
                         <td>StartTime</td>
                         <td style="width: 50px;">Expid</td>
                         <td style="width: 50px;">Rate</td>
@@ -165,7 +164,6 @@
                     {% for item in li %}
                         <tr class="get_data">
                             <td style="width: 20px;">{{ item.id }}</td>
-                            <td>{{ item.create_time }}</td>
                             <td>{{ item.start_time }}</td>
                             <td>{{ item.press_expid }}</td>
                             <td>{{ item.press_rate }}</td>
@@ -195,12 +193,11 @@
                                     {% endifequal %}
                                 </a>
                             </td>
-                            {#                            {% ifequal item.testitem 1 %}#}
-                            {#                                <td style="width: 70px;display: none;">cost</td>#}
-                            {#                            {% else %}#}
-                            {#                                <td style="width: 70px;display: none;">Null</td>#}
-                            {#                            {% endifequal %}#}
-                            <td>{{ item.testitem }}</td>
+                            {% ifequal item.testitem 1 %}
+                                <td style="width: 70px;">cost</td>
+                            {% else %}
+                                <td style="width: 70px;">diff</td>
+                            {% endifequal %}
                             <td style="width: 100px;">{{ item.user }}</td>
                             <td style="display: none;">{{ item.testsvn }}</td>
                             <td style="display: none;">{{ item.basesvn }}</td>

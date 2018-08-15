@@ -45,7 +45,7 @@
                     {% ifequal task_detail.0.testitem 1 %}
                         <td class="tabletd" style="display: none;">cost</td>
                     {% else %}
-                        <td class="tabletd" style="display: none;">Null</td>
+                        <td class="tabletd" style="display: none;">diff</td>
                     {% endifequal %}
                     <td class="tabletd">{{ task_detail.0.user }}</td>
                     <td class="tabletd">
@@ -86,7 +86,7 @@
                 </div>
             {% endautoescape %}
             <span class="badge" style="float: right;"><a id='retopbtn' onclick='returnTop()'
-             tyle="color: aliceblue;cursor: pointer;" class="del_line">[回顶部]</a></span>
+             style="color: aliceblue;cursor: pointer;" class="del_line">[回顶部]</a></span>
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     {{ page_str }}
