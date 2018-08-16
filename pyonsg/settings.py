@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sogotest',
         'USER': 'root',
-        'PASSWORD': 'Zhangjj@sogou123',
+        'PASSWORD': 'Websearch@qa66',
         'HOST': '10.134.110.163',
         'PORT': '3306',
         'OPTIONS': {

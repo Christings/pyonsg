@@ -164,6 +164,7 @@
                     {% for item in li %}
                         <tr class="get_data">
                             <td style="width: 20px;">{{ item.id }}</td>
+                            <td style="display: none;">{{ item.create_time }}</td>
                             <td>{{ item.start_time }}</td>
                             <td>{{ item.press_expid }}</td>
                             <td>{{ item.press_rate }}</td>
@@ -211,6 +212,10 @@
                             <td style="display: none;">{{ item.newdatapath }}</td>
                             <td style="display: none;">{{ item.press_qps }}</td>
                             <td style="display: none;">{{ item.press_time }}</td>
+                            <td style="display: none;">{{ item.query_ip }}</td>
+                            <td style="display: none;">{{ item.query_user }}</td>
+                            <td style="display: none;">{{ item.query_pwd }}</td>
+                            <td style="display: none;">{{ item.query_path }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -377,6 +382,10 @@
             newdatapath = $(linelst[18]).text();
             press_qps = $(linelst[19]).text();
             press_time = $(linelst[20]).text();
+            query_ip = $(linelst[21]).text();
+            query_user = $(linelst[22]).text();
+            query_pwd = $(linelst[23]).text();
+            query_path = $(linelst[24]).text();
 
             $('#qw_testsvn').val(testsvn);
             $('#qw_basesvn').val(basesvn);
@@ -393,6 +402,11 @@
             $('#qw_press_rate').val(press_rate);
             $('#qw_press_expid').val(press_expid);
             $('#testtag').val(testtag);
+            $('#query_ip').val(query_ip);
+            $('#query_user').val(query_user);
+            $('#query_pwd').val(query_pwd);
+            $('#query_path').val(query_path);
+
         })
 
         $('#lan_filter').change(function () {
