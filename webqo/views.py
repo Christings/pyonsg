@@ -251,24 +251,42 @@ def qo_task_cancel(request):
 
 @auth
 def qo_task_readd(request):
+    # user_id='gongyanli'
     user_id = request.COOKIES.get('uid')
     ret = {'status': True, 'errro': None, 'data': None}
-    re_add_task_d = request.POST.get('task_id')
+    re_add_task_id = request.POST.get('task_id')
     try:
-        task_detail = models.webqoqps.objects.get(id=re_add_task_d)
-        task_detail_todic = model_to_dict(task_detail)
-        task_detail_todic.pop('id')
-        task_detail_todic['create_time'] = get_now_time()
-        task_detail_todic['start_time'] = ""
-        task_detail_todic['end_time'] = ""
-        task_detail_todic['testitem'] = 1
-        task_detail_todic['status'] = 0
-        task_detail_todic['errorlog'] = ""
-        task_detail_todic['cost_test'] = ""
-        task_detail_todic['cost_base'] = ""
-        task_detail_todic['runningIP'] = ""
-        task_detail_todic['user'] = user_id
-        models.webqoqps.objects.create(**task_detail_todic)
+        task_detail = models.webqoqps.objects.get(id=re_add_task_id)
+        testitem = models.webqoqps.objects.filter(id=re_add_task_id).values('testitem')
+
+        if testitem.first()['testitem']==1:
+            task_detail_todic = model_to_dict(task_detail)
+            task_detail_todic.pop('id')
+            task_detail_todic['create_time'] = get_now_time()
+            task_detail_todic['start_time'] = ""
+            task_detail_todic['end_time'] = ""
+            task_detail_todic['testitem'] = 1
+            task_detail_todic['status'] = 0
+            task_detail_todic['errorlog'] = ""
+            task_detail_todic['cost_test'] = ""
+            task_detail_todic['cost_base'] = ""
+            task_detail_todic['runningIP'] = ""
+            task_detail_todic['user'] = user_id
+            models.webqoqps.objects.create(**task_detail_todic)
+        elif testitem.first()['testitem']==0:
+            task_detail_todic = model_to_dict(task_detail)
+            task_detail_todic.pop('id')
+            task_detail_todic['create_time'] = get_now_time()
+            task_detail_todic['start_time'] = ""
+            task_detail_todic['end_time'] = ""
+            task_detail_todic['testitem'] = 0
+            task_detail_todic['status'] = 0
+            task_detail_todic['errorlog'] = ""
+            task_detail_todic['cost_test'] = ""
+            task_detail_todic['cost_base'] = ""
+            task_detail_todic['runningIP'] = ""
+            task_detail_todic['user'] = user_id
+            models.webqoqps.objects.create(**task_detail_todic)
     except Exception as e:
         print(e)
         ret['error'] = 'error:' + str(e)
